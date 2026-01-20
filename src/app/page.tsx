@@ -1,3 +1,4 @@
+"use client";
 import CameraFeed from '@/components/CameraFeed';
 import GazeTracker from '@/components/GazeTracker';
 import Keyboard from '@/components/Keyboard';
@@ -19,6 +20,9 @@ export default function Home() {
             <div className="space-y-6">
               <CameraFeed />
               <GazeTracker />
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Use mouse to simulate gaze, or arrow keys for keyboard navigation.
+              </p>
             </div>
 
             <div className="space-y-6">

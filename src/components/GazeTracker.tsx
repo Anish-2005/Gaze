@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { useGaze } from '@/context/GazeContext';
 
 const GazeTracker: React.FC = () => {
-  const { setGazePosition, isTracking } = useGaze();
+  const { gazeX, gazeY, setGazePosition, isTracking } = useGaze();
 
   useEffect(() => {
     if (!isTracking) return;
@@ -15,12 +15,33 @@ const GazeTracker: React.FC = () => {
       setGazePosition(event.clientX, event.clientY);
     };
 
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Keyboard fallback navigation
+      const step = 20; // pixels to move per key press
+      switch (event.key) {
+        case 'ArrowUp':
+          setGazePosition(gazeX, gazeY - step);
+          break;
+        case 'ArrowDown':
+          setGazePosition(gazeX, gazeY + step);
+          break;
+        case 'ArrowLeft':
+          setGazePosition(gazeX - step, gazeY);
+          break;
+        case 'ArrowRight':
+          setGazePosition(gazeX + step, gazeY);
+          break;
+      }
+    };
+
     window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('keydown', handleKeyDown);
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isTracking, setGazePosition]);
+  }, [isTracking, setGazePosition, gazeX, gazeY]);
 
   // TODO: Integrate ONNX Runtime Web for actual eye tracking
   // Load model, process video frames, detect iris position
