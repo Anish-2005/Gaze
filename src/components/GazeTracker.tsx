@@ -26,7 +26,7 @@ const GazeTracker: React.FC = () => {
   const [performanceHistory, setPerformanceHistory] = useState<number[]>([]);
   const [averageFPS, setAverageFPS] = useState(0);
   const [processingFPS, setProcessingFPS] = useState(0);
-  const [useMouseFallback, setUseMouseFallback] = useState(true); // Start with mouse for testing - face detection has model issues
+  const [useMouseFallback, setUseMouseFallback] = useState(false); // Start with face detection now that Python backend is available
   const [windowWidth, setWindowWidth] = useState(1920); // Default fallback
   const [windowHeight, setWindowHeight] = useState(1080); // Default fallback
 
@@ -88,7 +88,7 @@ const GazeTracker: React.FC = () => {
     const connectWebSocket = () => {
       try {
         setConnectionError(null);
-        const ws = new WebSocket(`ws://localhost:8000/ws/face-detection/${clientIdRef.current}`);
+        const ws = new WebSocket(`ws://127.0.0.1:8000/ws/face-detection/${clientIdRef.current}`);
 
         ws.onopen = () => {
           console.log('Connected to Python face detection backend');
@@ -315,7 +315,7 @@ const GazeTracker: React.FC = () => {
         stream.getTracks().forEach(track => track.stop());
       }
     };
-  }, [isTracking, setGazePosition, windowWidth, windowHeight, useMouseFallback]);
+  }, [isTracking, setGazePosition, useMouseFallback]);
 
   // Mouse fallback for testing gaze tracking
   useEffect(() => {
