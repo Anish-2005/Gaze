@@ -26,15 +26,14 @@ const GazeTracker: React.FC = () => {
   const [averageFPS, setAverageFPS] = useState(0);
   const [processingFPS, setProcessingFPS] = useState(0);
   const [lastFrameTime, setLastFrameTime] = useState(Date.now());
-  const [windowSize, setWindowSize] = useState({ width: 1920, height: 1080 }); // Default fallback
+  const [windowWidth, setWindowWidth] = useState(1920); // Default fallback
+  const [windowHeight, setWindowHeight] = useState(1080); // Default fallback
 
   // Set window size after mount to avoid SSR issues
   useEffect(() => {
     const updateWindowSize = () => {
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight
-      });
+      setWindowWidth(window.innerWidth);
+      setWindowHeight(window.innerHeight);
     };
 
     // Set initial size
@@ -81,7 +80,7 @@ const GazeTracker: React.FC = () => {
     );
     setGazeStability(Math.max(0, 100 - distance)); // Higher stability = less movement
     setLastGazePos({ x: gazeX, y: gazeY });
-  }, [gazeX, gazeY, lastGazePos]);
+  }, [gazeX, gazeY]);
 
   useEffect(() => {
     const loadModel = async () => {
@@ -96,7 +95,14 @@ const GazeTracker: React.FC = () => {
         const modelResponse = await fetch(modelUrl);
         const modelData = await modelResponse.arrayBuffer();
 
-        sessionRef.current = await ort.InferenceSession.create(modelData);
+        // Create session with reduced logging to suppress CPU warnings
+        // logSeverityLevel: 3 = only show errors and fatal messages (suppresses warnings)
+        const sessionOptions = {
+          logSeverityLevel: 3, // 0=verbose, 1=info, 2=warning, 3=error, 4=fatal
+          logVerbosityLevel: 0, // 0=verbose, higher numbers reduce verbosity
+        };
+
+        sessionRef.current = await ort.InferenceSession.create(new Uint8Array(modelData), sessionOptions);
 
         setIsModelLoading(false);
         console.log('Face detection model loaded successfully');
@@ -106,7 +112,7 @@ const GazeTracker: React.FC = () => {
         console.error('Failed to load model:', error);
         // Fallback to mouse simulation if model fails
         console.log('Falling back to mouse-based gaze tracking');
-        setGazePosition(windowSize.width / 2, windowSize.height / 2);
+        setGazePosition(windowWidth / 2, windowHeight / 2);
       }
     };
 
@@ -210,8 +216,8 @@ const GazeTracker: React.FC = () => {
 
         if (bestFace) {
           // Map to screen coordinates
-          const screenX = bestFace.x * windowSize.width;
-          const screenY = bestFace.y * windowSize.height;
+          const screenX = bestFace.x * windowWidth;
+          const screenY = bestFace.y * windowHeight;
 
           setGazePosition(screenX, screenY);
         }
@@ -247,7 +253,7 @@ const GazeTracker: React.FC = () => {
         stream.getTracks().forEach(track => track.stop());
       }
     };
-  }, [isTracking, setGazePosition, lastFrameTime]);
+  }, [isTracking, setGazePosition, lastFrameTime, windowWidth, windowHeight]);
 
   // Keyboard fallback navigation
   useEffect(() => {
@@ -530,8 +536,8 @@ const GazeTracker: React.FC = () => {
               <div
                 className="absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-out"
                 style={{
-                  left: `${(gazeX / windowSize.width) * 100}%`,
-                  top: `${(gazeY / windowSize.height) * 100}%`,
+                  left: `${(gazeX / windowWidth) * 100}%`,
+                  top: `${(gazeY / windowHeight) * 100}%`,
                 }}
               >
                 <div className="relative">
