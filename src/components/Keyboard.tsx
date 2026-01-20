@@ -3,8 +3,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useGaze } from '@/context/GazeContext';
 
-const DWELL_TIME = 1000; // 1 second dwell time
-
 const keys = [
   ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
   ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
@@ -13,7 +11,7 @@ const keys = [
 ];
 
 const Keyboard: React.FC = () => {
-  const { gazeX, gazeY, appendText, backspace } = useGaze();
+  const { gazeX, gazeY, appendText, backspace, dwellTime } = useGaze();
   const [hoveredKey, setHoveredKey] = useState<string | null>(null);
   const [dwellProgress, setDwellProgress] = useState(0);
   const dwellTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -62,7 +60,7 @@ const Keyboard: React.FC = () => {
         dwellTimerRef.current = setInterval(() => {
           progress += 100; // Update every 100ms
           setDwellProgress(progress);
-          if (progress >= DWELL_TIME) {
+          if (progress >= dwellTime) {
             // Dwell completed
             if (foundKey === 'SPACE') {
               appendText(' ');

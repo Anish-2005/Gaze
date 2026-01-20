@@ -5,6 +5,9 @@ interface GazeState {
   gazeX: number;
   gazeY: number;
   isTracking: boolean;
+  dwellTime: number;
+  voice: string;
+  keyboardLayout: string;
 }
 
 interface GazeContextType extends GazeState {
@@ -13,6 +16,9 @@ interface GazeContextType extends GazeState {
   setIsTracking: (tracking: boolean) => void;
   appendText: (char: string) => void;
   backspace: () => void;
+  setDwellTime: (time: number) => void;
+  setVoice: (voice: string) => void;
+  setKeyboardLayout: (layout: string) => void;
 }
 
 const GazeContext = createContext<GazeContextType | undefined>(undefined);
@@ -34,6 +40,9 @@ export const GazeProvider: React.FC<GazeProviderProps> = ({ children }) => {
   const [gazeX, setGazeX] = useState(0);
   const [gazeY, setGazeY] = useState(0);
   const [isTracking, setIsTracking] = useState(false);
+  const [dwellTime, setDwellTime] = useState(1000);
+  const [voice, setVoice] = useState('default');
+  const [keyboardLayout, setKeyboardLayout] = useState('qwerty');
 
   const setGazePosition = (x: number, y: number) => {
     setGazeX(x);
@@ -55,11 +64,17 @@ export const GazeProvider: React.FC<GazeProviderProps> = ({ children }) => {
         gazeX,
         gazeY,
         isTracking,
+        dwellTime,
+        voice,
+        keyboardLayout,
         setTypedText,
         setGazePosition,
         setIsTracking,
         appendText,
         backspace,
+        setDwellTime,
+        setVoice,
+        setKeyboardLayout,
       }}
     >
       {children}

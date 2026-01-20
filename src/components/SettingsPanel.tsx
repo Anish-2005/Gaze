@@ -8,10 +8,7 @@ interface SettingsPanelProps {
 }
 
 const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
-  const { typedText, setTypedText } = useGaze();
-  const [dwellTime, setDwellTime] = useState(1000);
-  const [voice, setVoice] = useState('default');
-  const [keyboardLayout, setKeyboardLayout] = useState('qwerty');
+  const { typedText, setTypedText, dwellTime, setDwellTime, voice, setVoice, keyboardLayout, setKeyboardLayout } = useGaze();
 
   const handleSpeak = () => {
     if ('speechSynthesis' in window) {
