@@ -11,7 +11,7 @@ const keys = [
 ];
 
 const Keyboard: React.FC = () => {
-  const { gazeX, gazeY, appendText, backspace, dwellTime } = useGaze();
+  const { gazeX, gazeY, appendText, backspace, dwellTime, isTracking } = useGaze();
   const [hoveredKey, setHoveredKey] = useState<string | null>(null);
   const [dwellProgress, setDwellProgress] = useState(0);
   const dwellTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -24,24 +24,39 @@ const Keyboard: React.FC = () => {
     const isOverKeyboard = gazeX >= rect.left && gazeX <= rect.right &&
                           gazeY >= rect.top && gazeY <= rect.bottom;
 
+    // Debug: Show current gaze position
+    console.log('Keyboard check:', {
+      gazeX, gazeY,
+      keyboardRect: rect,
+      isOverKeyboard,
+      hoveredKey
+    });
+
     if (!isOverKeyboard) {
-      setHoveredKey(null);
-      setDwellProgress(0);
-      if (dwellTimerRef.current) {
-        clearInterval(dwellTimerRef.current);
-        dwellTimerRef.current = null;
+      if (hoveredKey !== null) {
+        setHoveredKey(null);
+        setDwellProgress(0);
+        if (dwellTimerRef.current) {
+          clearInterval(dwellTimerRef.current);
+          dwellTimerRef.current = null;
+        }
       }
       return;
     }
 
     // Find which key is being gazed at
     const keyElements = keyboardRef.current.querySelectorAll('[data-key]');
+    console.log('Key elements found:', keyElements.length);
+
     let foundKey = null;
     for (const element of keyElements) {
       const keyRect = element.getBoundingClientRect();
-      if (gazeX >= keyRect.left && gazeX <= keyRect.right &&
-          gazeY >= keyRect.top && gazeY <= keyRect.bottom) {
+      const isOverKey = gazeX >= keyRect.left && gazeX <= keyRect.right &&
+                       gazeY >= keyRect.top && gazeY <= keyRect.bottom;
+
+      if (isOverKey) {
         foundKey = element.getAttribute('data-key');
+        console.log('Found key:', foundKey, 'at', { gazeX, gazeY, keyRect });
         break;
       }
     }
@@ -79,10 +94,55 @@ const Keyboard: React.FC = () => {
         }, 100);
       }
     }
-  }, [gazeX, gazeY, hoveredKey, appendText]);
+  // Test gaze position with mouse (temporary for debugging)
+  useEffect(() => {
+    const handleMouseMove = (event: MouseEvent) => {
+      // Temporary: Use mouse position to test keyboard interaction
+      setGazePosition(event.clientX, event.clientY);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [setGazePosition]);
 
   return (
-    <div ref={keyboardRef} className="w-full max-w-4xl mx-auto">
+    <>
+      {/* Gaze position indicator */}
+      <div
+        className="fixed pointer-events-none z-50 w-4 h-4 border-2 border-red-500 rounded-full bg-red-500/20"
+        style={{
+          left: gazeX - 8,
+          top: gazeY - 8,
+          transition: 'all 0.1s ease-out'
+        }}
+      />
+
+      <div ref={keyboardRef} className="w-full max-w-4xl mx-auto">
+        {/* Debug Status */}
+        <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-xs font-mono">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <span className="text-gray-600 dark:text-gray-400">Tracking:</span>
+              <span className={`ml-2 px-2 py-1 rounded ${isTracking ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                {isTracking ? 'Active' : 'Inactive'}
+              </span>
+            </div>
+            <div>
+              <span className="text-gray-600 dark:text-gray-400">Gaze:</span>
+              <span className="ml-2 text-blue-600 dark:text-blue-400">
+                {Math.round(gazeX)}, {Math.round(gazeY)}
+              </span>
+            </div>
+          </div>
+          {hoveredKey && (
+            <div className="mt-2">
+              <span className="text-gray-600 dark:text-gray-400">Hovering:</span>
+              <span className="ml-2 text-purple-600 dark:text-purple-400 font-bold">
+                {hoveredKey} ({dwellProgress}%)
+              </span>
+            </div>
+          )}
+        </div>
       <div className="grid gap-3">
         {keys.map((row, rowIndex) => (
           <div key={rowIndex} className="flex justify-center gap-3">

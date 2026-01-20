@@ -97,9 +97,9 @@ const GazeTracker: React.FC = () => {
 
         // Create session with reduced logging to suppress CPU warnings
         // logSeverityLevel: 3 = only show errors and fatal messages (suppresses warnings)
-        const sessionOptions = {
-          logSeverityLevel: 3, // 0=verbose, 1=info, 2=warning, 3=error, 4=fatal
-          logVerbosityLevel: 0, // 0=verbose, higher numbers reduce verbosity
+        const sessionOptions: ort.InferenceSession.SessionOptions = {
+          logSeverityLevel: 3 as 0 | 1 | 2 | 3 | 4, // 0=verbose, 1=info, 2=warning, 3=error, 4=fatal
+          logVerbosityLevel: 0 as 0 | 1 | 2 | 3 | 4, // 0=verbose, higher numbers reduce verbosity
         };
 
         sessionRef.current = await ort.InferenceSession.create(new Uint8Array(modelData), sessionOptions);
@@ -219,6 +219,7 @@ const GazeTracker: React.FC = () => {
           const screenX = bestFace.x * windowWidth;
           const screenY = bestFace.y * windowHeight;
 
+          console.log('Setting gaze position:', { screenX, screenY, bestFace });
           setGazePosition(screenX, screenY);
         }
 
