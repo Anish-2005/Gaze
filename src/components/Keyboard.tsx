@@ -17,23 +17,66 @@ const Keyboard: React.FC = () => {
   const dwellTimerRef = useRef<NodeJS.Timeout | null>(null);
   const keyboardRef = useRef<HTMLDivElement>(null);
 
+  // Only update hoveredKey and dwell timer when gaze position changes
   useEffect(() => {
     if (!keyboardRef.current) return;
 
     const rect = keyboardRef.current.getBoundingClientRect();
     const isOverKeyboard = gazeX >= rect.left && gazeX <= rect.right &&
-                          gazeY >= rect.top && gazeY <= rect.bottom;
+      gazeY >= rect.top && gazeY <= rect.bottom;
 
-    // Debug: Show current gaze position
-    console.log('Keyboard check:', {
-      gazeX, gazeY,
-      keyboardRect: rect,
-      isOverKeyboard,
-      hoveredKey
-    });
+    let foundKey: string | null = null;
+    if (isOverKeyboard) {
+      const keyElements = keyboardRef.current.querySelectorAll('[data-key]');
+      for (const element of keyElements) {
+        const keyRect = element.getBoundingClientRect();
+        const isOverKey = gazeX >= keyRect.left && gazeX <= keyRect.right &&
+          gazeY >= keyRect.top && gazeY <= keyRect.bottom;
+        if (isOverKey) {
+          foundKey = element.getAttribute('data-key');
+          break;
+        }
+      }
+    }
 
-    if (!isOverKeyboard) {
-      if (hoveredKey !== null) {
+    if (foundKey !== hoveredKey) {
+      setHoveredKey(foundKey);
+      setDwellProgress(0);
+    }
+    // If not over keyboard, clear dwell timer
+    if (!isOverKeyboard && hoveredKey !== null) {
+      setHoveredKey(null);
+      setDwellProgress(0);
+    }
+  }, [gazeX, gazeY]);
+
+  // Dwell timer effect: only runs when hoveredKey changes
+  useEffect(() => {
+    if (!hoveredKey) {
+      setDwellProgress(0);
+      if (dwellTimerRef.current) {
+        clearInterval(dwellTimerRef.current);
+        dwellTimerRef.current = null;
+      }
+      return;
+    }
+    let progress = 0;
+    setDwellProgress(0);
+    if (dwellTimerRef.current) {
+      clearInterval(dwellTimerRef.current);
+      dwellTimerRef.current = null;
+    }
+    dwellTimerRef.current = setInterval(() => {
+      progress += 100;
+      setDwellProgress(progress);
+      if (progress >= dwellTime) {
+        if (hoveredKey === 'SPACE') {
+          appendText(' ');
+        } else if (hoveredKey === 'BACKSPACE') {
+          backspace();
+        } else if (hoveredKey) {
+          appendText(hoveredKey);
+        }
         setHoveredKey(null);
         setDwellProgress(0);
         if (dwellTimerRef.current) {
@@ -41,60 +84,14 @@ const Keyboard: React.FC = () => {
           dwellTimerRef.current = null;
         }
       }
-      return;
-    }
-
-    // Find which key is being gazed at
-    const keyElements = keyboardRef.current.querySelectorAll('[data-key]');
-    console.log('Key elements found:', keyElements.length);
-
-    let foundKey = null;
-    for (const element of keyElements) {
-      const keyRect = element.getBoundingClientRect();
-      const isOverKey = gazeX >= keyRect.left && gazeX <= keyRect.right &&
-                       gazeY >= keyRect.top && gazeY <= keyRect.bottom;
-
-      if (isOverKey) {
-        foundKey = element.getAttribute('data-key');
-        console.log('Found key:', foundKey, 'at', { gazeX, gazeY, keyRect });
-        break;
-      }
-    }
-
-    if (foundKey !== hoveredKey) {
-      setHoveredKey(foundKey);
-      setDwellProgress(0);
+    }, 100);
+    return () => {
       if (dwellTimerRef.current) {
         clearInterval(dwellTimerRef.current);
         dwellTimerRef.current = null;
       }
-
-      if (foundKey) {
-        // Start dwell timer
-        let progress = 0;
-        dwellTimerRef.current = setInterval(() => {
-          progress += 100; // Update every 100ms
-          setDwellProgress(progress);
-          if (progress >= dwellTime) {
-            // Dwell completed
-            if (foundKey === 'SPACE') {
-              appendText(' ');
-            } else if (foundKey === 'BACKSPACE') {
-              backspace();
-            } else {
-              appendText(foundKey!);
-            }
-            setHoveredKey(null);
-            setDwellProgress(0);
-            if (dwellTimerRef.current) {
-              clearInterval(dwellTimerRef.current);
-              dwellTimerRef.current = null;
-            }
-          }
-        }, 100);
-      }
-    }
-  }, [gazeX, gazeY, hoveredKey, appendText]);
+    };
+  }, [hoveredKey, dwellTime, appendText, backspace]);
 
   // Test gaze position with mouse (temporary for debugging)
   useEffect(() => {

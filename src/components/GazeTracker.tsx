@@ -1,6 +1,9 @@
-'use client';
+  "use client";
 
 import React, { useEffect, useRef, useState } from 'react';
+import '@mediapipe/face_mesh';
+import '@mediapipe/camera_utils';
+import '@mediapipe/drawing_utils';
 import { useGaze } from '@/context/GazeContext';
 
 interface FaceDetection {
@@ -10,34 +13,19 @@ interface FaceDetection {
   height: number;
   confidence: number;
 }
-
-
-const CALIBRATION_POINTS = [
-  { x: 0.1, y: 0.1 },
-  { x: 0.9, y: 0.1 },
-  { x: 0.5, y: 0.5 },
-  { x: 0.1, y: 0.9 },
-  { x: 0.9, y: 0.9 },
-];
+ 
 
 const GazeTracker: React.FC = () => {
   const { gazeX, gazeY, setGazePosition, isTracking } = useGaze();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const websocketRef = useRef<WebSocket | null>(null);
   const animationRef = useRef<number | null>(null);
-  const clientIdRef = useRef<string>(`client_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
   const lastFrameTimeRef = useRef<number>(Date.now());
 
-  const [isConnected, setIsConnected] = useState(false);
-  const [connectionError, setConnectionError] = useState<string | null>(null);
   const [faceDetection, setFaceDetection] = useState<FaceDetection | null>(null);
-  const [performanceHistory, setPerformanceHistory] = useState<number[]>([]);
-  const [averageFPS, setAverageFPS] = useState(0);
-  const [processingFPS, setProcessingFPS] = useState(0);
-  const [useMouseFallback, setUseMouseFallback] = useState(false); // Start with face detection now that Python backend is available
-  const [windowWidth, setWindowWidth] = useState(1920); // Default fallback
-  const [windowHeight, setWindowHeight] = useState(1080); // Default fallback
+  const [useMouseFallback, setUseMouseFallback] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(1920);
+  const [windowHeight, setWindowHeight] = useState(1080);
 
   // Calibration state
   const [isCalibrating, setIsCalibrating] = useState(false);
@@ -52,7 +40,103 @@ const GazeTracker: React.FC = () => {
     setCalibrationData([]);
     setCalibrationMap(null);
   };
+ 
 
+  // Refs for calibrationMap, windowWidth, windowHeight to use in callback
+  const calibrationMapRef = useRef(calibrationMap);
+  const windowWidthRef = useRef(windowWidth);
+  const windowHeightRef = useRef(windowHeight);
+
+  useEffect(() => { calibrationMapRef.current = calibrationMap; }, [calibrationMap]);
+  useEffect(() => { windowWidthRef.current = windowWidth; }, [windowWidth]);
+  useEffect(() => { windowHeightRef.current = windowHeight; }, [windowHeight]);
+
+  // MediaPipe Face Mesh setup and iris tracking (run only once on mount)
+  useEffect(() => {
+    let faceMesh: any;
+    let camera: any;
+    let running = true;
+
+    async function loadFaceMesh() {
+      const { FaceMesh } = await import('@mediapipe/face_mesh');
+      const { Camera } = await import('@mediapipe/camera_utils');
+
+      faceMesh = new FaceMesh({
+        locateFile: (file: string) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`,
+      });
+      faceMesh.setOptions({
+        maxNumFaces: 1,
+        refineLandmarks: true, // enables iris landmarks
+        minDetectionConfidence: 0.5,
+        minTrackingConfidence: 0.5,
+      });
+
+      faceMesh.onResults((results: any) => {
+        if (!running) return;
+        if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
+          const landmarks = results.multiFaceLandmarks[0];
+          // Iris center: left = 468, right = 473 (see MediaPipe docs)
+          const leftIris = landmarks[468];
+          const rightIris = landmarks[473];
+          // Use average of both irises for gaze
+          const irisX = (leftIris.x + rightIris.x) / 2;
+          const irisY = (leftIris.y + rightIris.y) / 2;
+          setFaceDetection({
+            x: irisX,
+            y: irisY,
+            width: 0,
+            height: 0,
+            confidence: 1,
+          });
+          // Map and smooth using latest refs
+          const mapFaceToScreenRef = (face: {x: number, y: number}) => {
+            const map = calibrationMapRef.current;
+            const w = windowWidthRef.current;
+            const h = windowHeightRef.current;
+            if (!map) return { x: face.x * w, y: face.y * h };
+            return {
+              x: map.aX * face.x + map.bX,
+              y: map.aY * face.y + map.bY,
+            };
+          };
+          const mapped = mapFaceToScreenRef({ x: irisX, y: irisY });
+          const smoothed = getSmoothedGaze(
+            Math.max(0, Math.min(windowWidthRef.current, mapped.x)),
+            Math.max(0, Math.min(windowHeightRef.current, mapped.y))
+          );
+          setGazePosition(smoothed.x, smoothed.y);
+        }
+      });
+
+      if (videoRef.current) {
+        camera = new Camera(videoRef.current, {
+          onFrame: async () => {
+            await faceMesh.send({ image: videoRef.current });
+          },
+          width: 640,
+          height: 480,
+        });
+        camera.start();
+      }
+    }
+
+    loadFaceMesh();
+
+    return () => {
+      running = false;
+      if (camera) camera.stop();
+    };
+  }, []);
+
+
+
+const CALIBRATION_POINTS = [
+  { x: 0.1, y: 0.1 },
+  { x: 0.9, y: 0.1 },
+  { x: 0.5, y: 0.5 },
+  { x: 0.1, y: 0.9 },
+  { x: 0.9, y: 0.9 },
+];
   // Collect calibration data
   useEffect(() => {
     if (!isCalibrating || calibrationStep >= CALIBRATION_POINTS.length) return;
@@ -133,40 +217,12 @@ const GazeTracker: React.FC = () => {
       setWindowWidth(window.innerWidth);
       setWindowHeight(window.innerHeight);
     };
-
-    // Set initial size
     updateWindowSize();
-
-    // Add resize listener
     window.addEventListener('resize', updateWindowSize);
-
-    return () => {
-      window.removeEventListener('resize', updateWindowSize);
-    };
+    return () => window.removeEventListener('resize', updateWindowSize);
   }, []);
 
-  const performanceHistoryRef = useRef<number[]>([]);
-  const currentFPSRef = useRef(0);
-
-  // Update FPS ref whenever processingFPS changes
-  useEffect(() => {
-    currentFPSRef.current = processingFPS;
-  }, [processingFPS]);
-
-  // Track performance over time (update every second to avoid infinite loops)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const currentFPS = currentFPSRef.current;
-      if (currentFPS > 0) {
-        const newHistory = [...performanceHistoryRef.current, currentFPS].slice(-10);
-        setPerformanceHistory(newHistory);
-        setAverageFPS(Math.round(newHistory.reduce((a, b) => a + b, 0) / newHistory.length));
-        performanceHistoryRef.current = newHistory;
-      }
-    }, 1000); // Update every second
-
-    return () => clearInterval(interval);
-  }, []); // Empty dependency array - only run once
+  // (Performance metrics removed for simplicity)
 
   // Calculate gaze stability (how much the gaze position changes)
   const [gazeStability, setGazeStability] = useState(0);
@@ -180,227 +236,7 @@ const GazeTracker: React.FC = () => {
     setLastGazePos({ x: gazeX, y: gazeY });
   }, [gazeX, gazeY]);
 
-  // WebSocket connection to Python backend
-  useEffect(() => {
-    const connectWebSocket = () => {
-      try {
-        setConnectionError(null);
-        const ws = new WebSocket(`ws://127.0.0.1:8000/ws/face-detection/${clientIdRef.current}`);
-
-        ws.onopen = () => {
-          console.log('Connected to Python face detection backend');
-          setIsConnected(true);
-        };
-
-        ws.onmessage = (event) => {
-          try {
-            const data = JSON.parse(event.data);
-
-            if (data.type === 'detection_result' && data.faces && data.faces.length > 0) {
-              // Use the first detected face
-              const face = data.faces[0];
-              setFaceDetection(face);
-
-              // Use calibration map if available, then smooth
-              const mapped = mapFaceToScreen(face);
-              const smoothed = getSmoothedGaze(
-                Math.max(0, Math.min(windowWidth, mapped.x)),
-                Math.max(0, Math.min(windowHeight, mapped.y))
-              );
-              setGazePosition(smoothed.x, smoothed.y);
-            } else if (data.type === 'error') {
-              console.error('Backend error:', data.message);
-            }
-          } catch (error) {
-            console.error('Error parsing WebSocket message:', error);
-          }
-        };
-
-        ws.onclose = () => {
-          console.log('Disconnected from Python backend');
-          setIsConnected(false);
-          setFaceDetection(null);
-
-          // Try to reconnect after 3 seconds
-          setTimeout(() => {
-            if (!websocketRef.current || websocketRef.current.readyState === WebSocket.CLOSED) {
-              console.log('Attempting to reconnect to Python backend...');
-              connectWebSocket();
-            }
-          }, 3000);
-        };
-
-        ws.onerror = (error) => {
-          console.error('WebSocket error:', error);
-          setConnectionError('Failed to connect to face detection backend');
-          setIsConnected(false);
-        };
-
-        websocketRef.current = ws;
-      } catch (error) {
-        console.error('Failed to create WebSocket connection:', error);
-        setConnectionError('Failed to connect to face detection backend');
-      }
-    };
-
-    connectWebSocket();
-
-    return () => {
-      if (websocketRef.current) {
-        websocketRef.current.close();
-        websocketRef.current = null;
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!isTracking || useMouseFallback || !isConnected || !websocketRef.current) {
-      return;
-    }
-
-    // Set up video from camera
-    const setupVideo = async () => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { width: 640, height: 480 }
-        });
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-          videoRef.current.play();
-        }
-      } catch (error) {
-        console.error('Error accessing camera:', error);
-      }
-    };
-
-    setupVideo();
-
-    const captureFrame = async () => {
-      if (!videoRef.current || !canvasRef.current || !websocketRef.current) {
-        return;
-      }
-
-      const video = videoRef.current;
-      const canvas = canvasRef.current;
-      const ctx = canvas.getContext('2d');
-
-      if (!ctx || video.videoWidth === 0 || video.videoHeight === 0) {
-        return;
-      }
-
-      // Set canvas size to video size
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-
-      // Draw video frame to canvas
-      ctx.drawImage(video, 0, 0);
-
-      try {
-        // Convert canvas to base64
-        const imageData = canvas.toDataURL('image/jpeg', 0.8);
-
-        // Send frame to Python backend
-        websocketRef.current.send(JSON.stringify({
-          type: 'frame',
-          image: imageData,
-          timestamp: Date.now()
-        }));
-
-        // Calculate FPS
-        const now = Date.now();
-        const fps = 1000 / (now - lastFrameTimeRef.current);
-        setProcessingFPS(Math.round(fps));
-        lastFrameTimeRef.current = now;
-
-      } catch (error) {
-        console.error('Error sending frame to backend:', error);
-      }
-    };
-
-    const startCapture = () => {
-      const loop = () => {
-        captureFrame();
-        animationRef.current = requestAnimationFrame(loop);
-      };
-      loop();
-    };
-
-    startCapture();
-
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-      // Cleanup stream
-      if (videoRef.current && videoRef.current.srcObject) {
-        const stream = videoRef.current.srcObject as MediaStream;
-        stream.getTracks().forEach(track => track.stop());
-      }
-    };
-
-    const processFrame = async () => {
-      if (!videoRef.current || !canvasRef.current || !websocketRef.current) {
-        return;
-      }
-
-      const video = videoRef.current;
-      const canvas = canvasRef.current;
-      const ctx = canvas.getContext('2d');
-
-      if (!ctx || video.videoWidth === 0 || video.videoHeight === 0) {
-        return;
-      }
-
-      // Set canvas size to video size
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-
-      // Draw video frame to canvas
-      ctx.drawImage(video, 0, 0);
-
-      try {
-        // Convert canvas to base64
-        const imageData = canvas.toDataURL('image/jpeg', 0.8);
-
-        // Send frame to Python backend
-        websocketRef.current.send(JSON.stringify({
-          type: 'frame',
-          image: imageData,
-          timestamp: Date.now()
-        }));
-
-        // Calculate FPS
-        const now = Date.now();
-        const fps = 1000 / (now - lastFrameTimeRef.current);
-        setProcessingFPS(Math.round(fps));
-        lastFrameTimeRef.current = now;
-
-      } catch (error) {
-        console.error('Error sending frame to backend:', error);
-      }
-    };
-
-    const startProcessing = () => {
-      const loop = () => {
-        processFrame();
-        animationRef.current = requestAnimationFrame(loop);
-      };
-      loop();
-    };
-
-    startProcessing();
-
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-      // Cleanup stream
-      if (videoRef.current && videoRef.current.srcObject) {
-        const stream = videoRef.current.srcObject as MediaStream;
-        stream.getTracks().forEach(track => track.stop());
-      }
-    };
-  }, [isTracking, setGazePosition, useMouseFallback]);
+  // (Removed old backend video/canvas setup and frame capture logic)
 
   // Mouse fallback for testing gaze tracking
   useEffect(() => {
@@ -476,21 +312,17 @@ const GazeTracker: React.FC = () => {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <div className="relative">
-              <span className="text-3xl">🤖</span>
-              {isConnected && (
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse border-2 border-white dark:border-gray-800"></div>
-              )}
+              <span className="text-3xl">👁️</span>
             </div>
             <div>
               <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
-                AI Gaze Tracking
+                Iris Gaze Tracking
               </h3>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Python backend face detection & eye tracking
+                All inference runs in your browser. No backend required.
               </p>
             </div>
           </div>
-
           <div className="flex items-center gap-4">
             {/* Tracking Mode Toggle */}
             <button
@@ -498,69 +330,20 @@ const GazeTracker: React.FC = () => {
               className={`px-4 py-2 rounded-lg font-medium transition-all ${
                 useMouseFallback
                   ? 'bg-blue-500 text-white hover:bg-blue-600'
-                  : 'bg-red-500 text-white hover:bg-red-600 cursor-not-allowed opacity-50'
+                  : 'bg-gray-300 text-gray-700 dark:bg-gray-700 dark:text-gray-300 cursor-not-allowed opacity-50'
               }`}
-              disabled={!useMouseFallback} // Disable face mode button since it's broken
+              disabled={!useMouseFallback}
             >
-              {useMouseFallback ? '🐭 Mouse Mode' : '👁️ Face Mode (Disabled)'}
+              {useMouseFallback ? '🐭 Mouse Mode' : '👁️ Iris Mode'}
             </button>
-
-            {/* Live Status Indicator */}
             <div className="flex items-center gap-2 px-3 py-1 bg-white dark:bg-gray-800 rounded-full shadow-sm">
-              <div className={`w-2 h-2 rounded-full ${
-                isConnected && isTracking && (!useMouseFallback ? faceDetection : true)
-                  ? 'bg-green-500 animate-pulse'
-                  : isConnected && isTracking && !useMouseFallback
-                  ? 'bg-yellow-500 animate-pulse'
-                  : 'bg-red-500'
-              }`}></div>
+              <div className={`w-2 h-2 rounded-full ${isTracking && !useMouseFallback && faceDetection ? 'bg-green-500 animate-pulse' : 'bg-yellow-500 animate-pulse'}`}></div>
               <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
-                {useMouseFallback
-                  ? 'Mouse Tracking Active'
-                  : isConnected
-                  ? (faceDetection ? 'Face Tracking Active' : 'Face Searching...')
-                  : 'Backend Disconnected'}
+                {useMouseFallback ? 'Mouse Tracking Active' : (faceDetection ? 'Iris Tracking Active' : 'Searching...')}
               </span>
-            </div>
-
-            {/* FPS Counter */}
-            <div className="text-right">
-              <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">FPS</div>
-              <div className="font-mono text-lg font-bold text-gray-900 dark:text-white">
-                {processingFPS}
-              </div>
             </div>
           </div>
         </div>
-
-        {connectionError && (
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4">
-            <div className="flex items-center gap-3">
-              <span className="text-red-500 text-xl">⚠️</span>
-              <div>
-                <div className="font-semibold text-red-800 dark:text-red-200">Backend Connection Error</div>
-                <div className="text-sm text-red-700 dark:text-red-300">{connectionError}</div>
-                <div className="text-xs text-red-600 dark:text-red-400 mt-1">
-                  Make sure the Python backend is running: <code>cd backend && python main.py</code>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {!useMouseFallback && !isConnected && (
-          <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-4">
-            <div className="flex items-center gap-3">
-              <span className="text-yellow-500 text-xl">🔌</span>
-              <div>
-                <div className="font-semibold text-yellow-800 dark:text-yellow-200">Python Backend Required</div>
-                <div className="text-sm text-yellow-700 dark:text-yellow-300">
-                  Face detection requires the Python backend. Start it with: <code>cd backend && python main.py</code>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Advanced Metrics Dashboard */}
@@ -657,62 +440,7 @@ const GazeTracker: React.FC = () => {
           )}
         </div>
 
-        {/* System Performance Panel */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
-          <h4 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
-            <span className="text-2xl">⚡</span>
-            Performance
-          </h4>
-
-          <div className="space-y-4">
-            {/* FPS with Trend */}
-            <div className="bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-xl p-4 border border-blue-200 dark:border-blue-800">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold text-blue-800 dark:text-blue-200">Processing Speed</span>
-                <span className="text-xs text-blue-600 dark:text-blue-400">FPS</span>
-              </div>
-              <div className="font-mono text-2xl font-bold text-blue-900 dark:text-blue-100">
-                {processingFPS}
-              </div>
-              <div className="text-xs text-blue-700 dark:text-blue-300 mt-1">
-                Avg: {averageFPS} fps
-              </div>
-            </div>
-
-            {/* System Status Grid */}
-            <div className="grid grid-cols-1 gap-3">
-              <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <span className="text-sm text-gray-600 dark:text-gray-400">Backend Status</span>
-                <div className="flex items-center gap-2">
-                  <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                  <span className="text-xs font-medium text-gray-900 dark:text-white">
-                    {isConnected ? 'Connected' : 'Disconnected'}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <span className="text-sm text-gray-600 dark:text-gray-400">Tracking Mode</span>
-                <div className="flex items-center gap-2">
-                  <div className={`w-2 h-2 rounded-full ${isTracking ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></div>
-                  <span className="text-xs font-medium text-gray-900 dark:text-white">
-                    {isTracking ? 'Active' : 'Paused'}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <span className="text-sm text-gray-600 dark:text-gray-400">Face Lock</span>
-                <div className="flex items-center gap-2">
-                  <div className={`w-2 h-2 rounded-full ${faceDetection ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                  <span className="text-xs font-medium text-gray-900 dark:text-white">
-                    {faceDetection ? 'Locked' : 'Searching'}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* System Performance Panel removed for simplicity */}
       </div>
 
       {/* Enhanced Gaze Visualization */}
@@ -796,24 +524,6 @@ const GazeTracker: React.FC = () => {
                   <span className="font-mono font-bold text-green-900 dark:text-green-100">
                     {faceDetection ? (faceDetection.confidence * 100).toFixed(0) : 0}%
                   </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-xl p-4 border border-purple-200 dark:border-purple-800">
-              <div className="text-sm font-semibold text-purple-800 dark:text-purple-200 mb-2">Performance Metrics</div>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-purple-700 dark:text-purple-300">Current FPS</span>
-                  <span className="font-mono font-bold text-purple-900 dark:text-purple-100">{processingFPS}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-purple-700 dark:text-purple-300">Average FPS</span>
-                  <span className="font-mono font-bold text-purple-900 dark:text-purple-100">{averageFPS}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-purple-700 dark:text-purple-300">Samples</span>
-                  <span className="font-mono font-bold text-purple-900 dark:text-purple-100">{performanceHistory.length}</span>
                 </div>
               </div>
             </div>
