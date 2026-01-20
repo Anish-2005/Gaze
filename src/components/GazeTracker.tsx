@@ -11,6 +11,15 @@ interface FaceDetection {
   confidence: number;
 }
 
+
+const CALIBRATION_POINTS = [
+  { x: 0.1, y: 0.1 },
+  { x: 0.9, y: 0.1 },
+  { x: 0.5, y: 0.5 },
+  { x: 0.1, y: 0.9 },
+  { x: 0.9, y: 0.9 },
+];
+
 const GazeTracker: React.FC = () => {
   const { gazeX, gazeY, setGazePosition, isTracking } = useGaze();
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -29,6 +38,94 @@ const GazeTracker: React.FC = () => {
   const [useMouseFallback, setUseMouseFallback] = useState(false); // Start with face detection now that Python backend is available
   const [windowWidth, setWindowWidth] = useState(1920); // Default fallback
   const [windowHeight, setWindowHeight] = useState(1080); // Default fallback
+
+  // Calibration state
+  const [isCalibrating, setIsCalibrating] = useState(false);
+  const [calibrationStep, setCalibrationStep] = useState(0);
+  const [calibrationData, setCalibrationData] = useState<{screen: {x: number, y: number}, face: {x: number, y: number}}[]>([]);
+  const [calibrationMap, setCalibrationMap] = useState<{aX: number, bX: number, aY: number, bY: number} | null>(null);
+
+  // Start calibration
+  const startCalibration = () => {
+    setIsCalibrating(true);
+    setCalibrationStep(0);
+    setCalibrationData([]);
+    setCalibrationMap(null);
+  };
+
+  // Collect calibration data
+  useEffect(() => {
+    if (!isCalibrating || calibrationStep >= CALIBRATION_POINTS.length) return;
+    if (!faceDetection) return;
+
+    // Wait 1s for user to look at the dot, then record
+    const timeout = setTimeout(() => {
+      setCalibrationData(prev => [
+        ...prev,
+        {
+          screen: {
+            x: CALIBRATION_POINTS[calibrationStep].x * windowWidth,
+            y: CALIBRATION_POINTS[calibrationStep].y * windowHeight,
+          },
+          face: {
+            x: faceDetection.x,
+            y: faceDetection.y,
+          },
+        },
+      ]);
+      setCalibrationStep(step => step + 1);
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, [isCalibrating, calibrationStep, faceDetection, windowWidth, windowHeight]);
+
+  // When calibration is done, compute mapping
+  useEffect(() => {
+    if (isCalibrating && calibrationStep === CALIBRATION_POINTS.length && calibrationData.length === CALIBRATION_POINTS.length) {
+      // Simple linear mapping: screen = a * face + b
+      // Solve for a, b using least squares for x and y separately
+      const n = calibrationData.length;
+      let sumFaceX = 0, sumScreenX = 0, sumFaceY = 0, sumScreenY = 0, sumFaceX2 = 0, sumFaceY2 = 0, sumFaceXScreenX = 0, sumFaceYScreenY = 0;
+      for (const d of calibrationData) {
+        sumFaceX += d.face.x;
+        sumScreenX += d.screen.x;
+        sumFaceX2 += d.face.x * d.face.x;
+        sumFaceXScreenX += d.face.x * d.screen.x;
+        sumFaceY += d.face.y;
+        sumScreenY += d.screen.y;
+        sumFaceY2 += d.face.y * d.face.y;
+        sumFaceYScreenY += d.face.y * d.screen.y;
+      }
+      const aX = (n * sumFaceXScreenX - sumFaceX * sumScreenX) / (n * sumFaceX2 - sumFaceX * sumFaceX);
+      const bX = (sumScreenX - aX * sumFaceX) / n;
+      const aY = (n * sumFaceYScreenY - sumFaceY * sumScreenY) / (n * sumFaceY2 - sumFaceY * sumFaceY);
+      const bY = (sumScreenY - aY * sumFaceY) / n;
+      setCalibrationMap({ aX, bX, aY, bY });
+      setIsCalibrating(false);
+    }
+  }, [isCalibrating, calibrationStep, calibrationData]);
+
+  // Use calibration map for gaze mapping
+  const mapFaceToScreen = (face: {x: number, y: number}) => {
+    if (!calibrationMap) return { x: face.x * windowWidth, y: face.y * windowHeight };
+    return {
+      x: calibrationMap.aX * face.x + calibrationMap.bX,
+      y: calibrationMap.aY * face.y + calibrationMap.bY,
+    };
+  };
+
+  // Smoothing: moving average for gaze
+  const SMOOTHING_WINDOW = 7;
+  const gazeHistory = useRef<{x: number, y: number}[]>([]);
+
+  const getSmoothedGaze = (x: number, y: number) => {
+    gazeHistory.current.push({ x, y });
+    if (gazeHistory.current.length > SMOOTHING_WINDOW) {
+      gazeHistory.current.shift();
+    }
+    const avg = gazeHistory.current.reduce((acc, val) => ({ x: acc.x + val.x, y: acc.y + val.y }), { x: 0, y: 0 });
+    const n = gazeHistory.current.length;
+    return { x: avg.x / n, y: avg.y / n };
+  };
 
   // Set window size after mount to avoid SSR issues
   useEffect(() => {
@@ -104,25 +201,13 @@ const GazeTracker: React.FC = () => {
               const face = data.faces[0];
               setFaceDetection(face);
 
-              // Calculate gaze position based on face center
-              const screenX = Math.max(0, Math.min(windowWidth, face.x * windowWidth));
-              const screenY = Math.max(0, Math.min(windowHeight, face.y * windowHeight));
-
-              // Add some variation based on face tilt/size (simulating gaze direction)
-              const gazeOffsetX = (face.x - 0.5) * 200; // Face tilt affects horizontal gaze
-              const gazeOffsetY = (face.y - 0.5) * 150; // Face position affects vertical gaze
-
-              const finalX = Math.max(0, Math.min(windowWidth, screenX + gazeOffsetX));
-              const finalY = Math.max(0, Math.min(windowHeight, screenY + gazeOffsetY));
-
-              console.log('Face detected via Python backend:', {
-                face,
-                screenPos: { x: screenX, y: screenY },
-                gazeOffset: { x: gazeOffsetX, y: gazeOffsetY },
-                finalGaze: { x: finalX, y: finalY }
-              });
-
-              setGazePosition(finalX, finalY);
+              // Use calibration map if available, then smooth
+              const mapped = mapFaceToScreen(face);
+              const smoothed = getSmoothedGaze(
+                Math.max(0, Math.min(windowWidth, mapped.x)),
+                Math.max(0, Math.min(windowHeight, mapped.y))
+              );
+              setGazePosition(smoothed.x, smoothed.y);
             } else if (data.type === 'error') {
               console.error('Backend error:', data.message);
             }
@@ -354,6 +439,38 @@ const GazeTracker: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* Calibration UI */}
+      <div className="mb-4">
+        {!calibrationMap && !isCalibrating && (
+          <button
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold shadow hover:bg-blue-700"
+            onClick={startCalibration}
+          >
+            Start Calibration
+          </button>
+        )}
+        {isCalibrating && calibrationStep < CALIBRATION_POINTS.length && (
+          <div className="flex flex-col items-center justify-center">
+            <div className="mb-2 text-lg font-semibold">Calibration Step {calibrationStep + 1} / {CALIBRATION_POINTS.length}</div>
+            <div className="relative w-full h-64 bg-gray-100 dark:bg-gray-800 rounded-lg">
+              {CALIBRATION_POINTS.map((pt, idx) => (
+                <div
+                  key={idx}
+                  className={`absolute w-8 h-8 rounded-full ${idx === calibrationStep ? 'bg-blue-500 animate-pulse' : 'bg-gray-400 opacity-30'} border-4 border-white`}
+                  style={{
+                    left: `calc(${pt.x * 100}% - 16px)`,
+                    top: `calc(${pt.y * 100}% - 16px)`
+                  }}
+                />
+              ))}
+            </div>
+            <div className="mt-2 text-gray-600 dark:text-gray-300">Look at the highlighted dot...</div>
+          </div>
+        )}
+        {calibrationMap && (
+          <div className="text-green-700 dark:text-green-300 font-semibold">Calibration complete!</div>
+        )}
+      </div>
       {/* Enhanced Header with Live Status */}
       <div className="bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-800 dark:via-gray-700 dark:to-gray-600 rounded-2xl p-6 border border-blue-100 dark:border-gray-600 shadow-lg">
         <div className="flex items-center justify-between mb-4">
@@ -628,18 +745,18 @@ const GazeTracker: React.FC = () => {
                 <div className="absolute top-1/2 left-1/2 w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
               </div>
 
-              {/* Current gaze point */}
+              {/* Custom on-screen cursor following gaze */}
               <div
-                className="absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-out"
+                className="absolute z-50 pointer-events-none"
                 style={{
                   left: `${(gazeX / windowWidth) * 100}%`,
                   top: `${(gazeY / windowHeight) * 100}%`,
+                  transform: 'translate(-50%, -50%)',
+                  transition: 'left 0.15s, top 0.15s',
                 }}
               >
-                <div className="relative">
-                  <div className="w-6 h-6 bg-blue-500 rounded-full border-4 border-white dark:border-gray-800 shadow-lg animate-pulse"></div>
-                  <div className="absolute inset-0 w-6 h-6 bg-blue-400 rounded-full animate-ping opacity-75"></div>
-                </div>
+                <div className="w-8 h-8 rounded-full border-4 border-blue-500 bg-blue-200/60 shadow-lg animate-pulse"></div>
+                <div className="absolute left-1/2 top-1/2 w-2 h-2 bg-blue-700 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
               </div>
 
               {/* Face detection indicator */}

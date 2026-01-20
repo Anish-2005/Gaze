@@ -27,6 +27,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <div className="w-full bg-blue-50 dark:bg-gray-900 text-blue-900 dark:text-blue-200 text-xs py-2 px-4 text-center border-b border-blue-200 dark:border-gray-700">
+          <strong>Privacy Notice:</strong> No video is stored. All inference runs on your device. Offline mode is supported. Your privacy is protected.
+        </div>
         {children}
       </body>
     </html>

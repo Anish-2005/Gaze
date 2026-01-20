@@ -97,7 +97,7 @@ const CameraFeed: React.FC = () => {
           playsInline
           muted
           className={`w-full h-auto ${isLoading || error ? 'invisible' : 'visible'}`}
-          style={{ maxHeight: '300px' }}
+          style={{ maxHeight: '300px', transform: 'scaleX(-1)' }}
         />
 
         {/* Face detection overlay */}
