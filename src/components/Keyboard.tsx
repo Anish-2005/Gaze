@@ -11,7 +11,9 @@ const keys = [
 ];
 
 const Keyboard: React.FC = () => {
-  const { gazeX, gazeY, appendText, backspace, dwellTime, isTracking, setGazePosition } = useGaze();
+  const { gazeX, gazeY, appendText, backspace, isTracking, setGazePosition } = useGaze();
+  // Reduce dwell time for faster selection
+  const dwellTime = 400; // ms
   const [hoveredKey, setHoveredKey] = useState<string | null>(null);
   const [dwellProgress, setDwellProgress] = useState(0);
   const dwellTimerRef = useRef<NodeJS.Timeout | null>(null);
