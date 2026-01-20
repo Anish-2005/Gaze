@@ -2,16 +2,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useGaze } from '@/context/GazeContext';
-import * as ort from 'onnxruntime-web';
-
-// Suppress ONNX Runtime CPU vendor warnings
-const originalWarn = console.warn;
-console.warn = (...args) => {
-  if (args[0] && typeof args[0] === 'string' && args[0].includes('Unknown CPU vendor')) {
-    return; // Suppress this specific warning
-  }
-  originalWarn.apply(console, args);
-};
 
 interface FaceDetection {
   x: number;
@@ -23,19 +13,20 @@ interface FaceDetection {
 
 const GazeTracker: React.FC = () => {
   const { gazeX, gazeY, setGazePosition, isTracking } = useGaze();
-  const sessionRef = useRef<ort.InferenceSession | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const websocketRef = useRef<WebSocket | null>(null);
   const animationRef = useRef<number | null>(null);
+  const clientIdRef = useRef<string>(`client_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
   const lastFrameTimeRef = useRef<number>(Date.now());
 
-  const [isModelLoading, setIsModelLoading] = useState(true);
-  const [modelError, setModelError] = useState<string | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
+  const [connectionError, setConnectionError] = useState<string | null>(null);
   const [faceDetection, setFaceDetection] = useState<FaceDetection | null>(null);
   const [performanceHistory, setPerformanceHistory] = useState<number[]>([]);
   const [averageFPS, setAverageFPS] = useState(0);
   const [processingFPS, setProcessingFPS] = useState(0);
-  const [useMouseFallback, setUseMouseFallback] = useState(true); // Start with mouse for testing
+  const [useMouseFallback, setUseMouseFallback] = useState(true); // Start with mouse for testing - face detection has model issues
   const [windowWidth, setWindowWidth] = useState(1920); // Default fallback
   const [windowHeight, setWindowHeight] = useState(1080); // Default fallback
 
@@ -92,54 +83,95 @@ const GazeTracker: React.FC = () => {
     setLastGazePos({ x: gazeX, y: gazeY });
   }, [gazeX, gazeY]);
 
+  // WebSocket connection to Python backend
   useEffect(() => {
-    const loadModel = async () => {
+    const connectWebSocket = () => {
       try {
-        setIsModelLoading(true);
-        setModelError(null);
+        setConnectionError(null);
+        const ws = new WebSocket(`ws://localhost:8000/ws/face-detection/${clientIdRef.current}`);
 
-        // Load YuNet face detection model from local public folder
-        const modelUrl = '/models/face_detection_yunet_2023mar.onnx';
-
-        console.log('Loading model from:', modelUrl);
-
-        // Check if model file exists
-        const modelResponse = await fetch(modelUrl);
-        if (!modelResponse.ok) {
-          throw new Error(`Model file not found: ${modelResponse.status} ${modelResponse.statusText}`);
-        }
-
-        const modelData = await modelResponse.arrayBuffer();
-        console.log('Model file loaded, size:', modelData.byteLength, 'bytes');
-
-        // Create session with reduced logging to suppress CPU warnings
-        // logSeverityLevel: 4 = only show fatal messages (suppresses all warnings and errors)
-        const sessionOptions: ort.InferenceSession.SessionOptions = {
-          logSeverityLevel: 4 as 0 | 1 | 2 | 3 | 4, // 0=verbose, 1=info, 2=warning, 3=error, 4=fatal
-          logVerbosityLevel: 0 as 0 | 1 | 2 | 3 | 4, // 0=verbose, higher numbers reduce verbosity
-          enableCpuMemArena: true,
-          enableMemPattern: true,
+        ws.onopen = () => {
+          console.log('Connected to Python face detection backend');
+          setIsConnected(true);
         };
 
-        sessionRef.current = await ort.InferenceSession.create(new Uint8Array(modelData), sessionOptions);
+        ws.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
 
-        setIsModelLoading(false);
-        console.log('Face detection model loaded successfully');
+            if (data.type === 'detection_result' && data.faces && data.faces.length > 0) {
+              // Use the first detected face
+              const face = data.faces[0];
+              setFaceDetection(face);
+
+              // Calculate gaze position based on face center
+              const screenX = Math.max(0, Math.min(windowWidth, face.x * windowWidth));
+              const screenY = Math.max(0, Math.min(windowHeight, face.y * windowHeight));
+
+              // Add some variation based on face tilt/size (simulating gaze direction)
+              const gazeOffsetX = (face.x - 0.5) * 200; // Face tilt affects horizontal gaze
+              const gazeOffsetY = (face.y - 0.5) * 150; // Face position affects vertical gaze
+
+              const finalX = Math.max(0, Math.min(windowWidth, screenX + gazeOffsetX));
+              const finalY = Math.max(0, Math.min(windowHeight, screenY + gazeOffsetY));
+
+              console.log('Face detected via Python backend:', {
+                face,
+                screenPos: { x: screenX, y: screenY },
+                gazeOffset: { x: gazeOffsetX, y: gazeOffsetY },
+                finalGaze: { x: finalX, y: finalY }
+              });
+
+              setGazePosition(finalX, finalY);
+            } else if (data.type === 'error') {
+              console.error('Backend error:', data.message);
+            }
+          } catch (error) {
+            console.error('Error parsing WebSocket message:', error);
+          }
+        };
+
+        ws.onclose = () => {
+          console.log('Disconnected from Python backend');
+          setIsConnected(false);
+          setFaceDetection(null);
+
+          // Try to reconnect after 3 seconds
+          setTimeout(() => {
+            if (!websocketRef.current || websocketRef.current.readyState === WebSocket.CLOSED) {
+              console.log('Attempting to reconnect to Python backend...');
+              connectWebSocket();
+            }
+          }, 3000);
+        };
+
+        ws.onerror = (error) => {
+          console.error('WebSocket error:', error);
+          setConnectionError('Failed to connect to face detection backend');
+          setIsConnected(false);
+        };
+
+        websocketRef.current = ws;
       } catch (error) {
-        setIsModelLoading(false);
-        setModelError('Failed to load face detection model');
-        console.error('Failed to load model:', error);
-        // Fallback to mouse simulation if model fails
-        console.log('Falling back to mouse-based gaze tracking');
-        setGazePosition(windowWidth / 2, windowHeight / 2);
+        console.error('Failed to create WebSocket connection:', error);
+        setConnectionError('Failed to connect to face detection backend');
       }
     };
 
-    loadModel();
-  }, [setGazePosition]);
+    connectWebSocket();
+
+    return () => {
+      if (websocketRef.current) {
+        websocketRef.current.close();
+        websocketRef.current = null;
+      }
+    };
+  }, []);
 
   useEffect(() => {
-    if (!isTracking || useMouseFallback || !sessionRef.current) return;
+    if (!isTracking || useMouseFallback || !isConnected || !websocketRef.current) {
+      return;
+    }
 
     // Set up video from camera
     const setupVideo = async () => {
@@ -158,27 +190,18 @@ const GazeTracker: React.FC = () => {
 
     setupVideo();
 
-    const processFrame = async () => {
-      if (!videoRef.current || !canvasRef.current || !sessionRef.current) {
-        console.log('Missing refs:', {
-          video: !!videoRef.current,
-          canvas: !!canvasRef.current,
-          session: !!sessionRef.current
-        });
+    const captureFrame = async () => {
+      if (!videoRef.current || !canvasRef.current || !websocketRef.current) {
         return;
       }
 
       const video = videoRef.current;
-      if (video.videoWidth === 0 || video.videoHeight === 0) {
-        console.log('Video not ready:', { width: video.videoWidth, height: video.videoHeight });
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext('2d');
+
+      if (!ctx || video.videoWidth === 0 || video.videoHeight === 0) {
         return;
       }
-
-      console.log('Processing frame...');
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
 
       // Set canvas size to video size
       canvas.width = video.videoWidth;
@@ -187,153 +210,16 @@ const GazeTracker: React.FC = () => {
       // Draw video frame to canvas
       ctx.drawImage(video, 0, 0);
 
-      // Preprocess for model (YuNet expects 640x640)
-      const inputWidth = 640;
-      const inputHeight = 640;
-      const resizedCanvas = document.createElement('canvas');
-      resizedCanvas.width = inputWidth;
-      resizedCanvas.height = inputHeight;
-      const resizedCtx = resizedCanvas.getContext('2d');
-      if (!resizedCtx) return;
-
-      // Draw and scale the video frame to 640x640, maintaining aspect ratio
-      const scale = Math.min(inputWidth / canvas.width, inputHeight / canvas.height);
-      const scaledWidth = canvas.width * scale;
-      const scaledHeight = canvas.height * scale;
-      const offsetX = (inputWidth - scaledWidth) / 2;
-      const offsetY = (inputHeight - scaledHeight) / 2;
-
-      resizedCtx.drawImage(canvas, offsetX, offsetY, scaledWidth, scaledHeight);
-
-      // Get image data
-      const imageData = resizedCtx.getImageData(0, 0, inputWidth, inputHeight);
-      const { data, width, height } = imageData;
-
-      console.log('Tensor dimensions:', { width, height, expectedWidth: inputWidth, expectedHeight: inputHeight });
-
-      // Convert to tensor (RGB, normalize)
-      const inputTensor = new Float32Array(width * height * 3);
-      for (let i = 0; i < data.length; i += 4) {
-        const idx = (i / 4) * 3;
-        inputTensor[idx] = data[i] / 255.0;     // R
-        inputTensor[idx + 1] = data[i + 1] / 255.0; // G
-        inputTensor[idx + 2] = data[i + 2] / 255.0; // B
-      }
-
-      // Create ONNX tensor - ensure dimensions match model expectations
-      const tensor = new ort.Tensor('float32', inputTensor, [1, 3, inputHeight, inputWidth]);
-      console.log('Created tensor with shape:', tensor.dims);
-
       try {
-        // Run inference
-        const feeds = { input: tensor };
-        const results = await sessionRef.current.run(feeds);
+        // Convert canvas to base64
+        const imageData = canvas.toDataURL('image/jpeg', 0.8);
 
-        console.log('ONNX results keys:', Object.keys(results));
-
-        // Inspect all outputs and their shapes
-        Object.keys(results).forEach(key => {
-          const output = results[key];
-          console.log(`Output "${key}":`, {
-            type: output.type,
-            dims: output.dims,
-            data: output.data ? `Float32Array(${output.data.length})` : 'null'
-          });
-        });
-
-        // Try different possible output names for YuNet
-        const possibleLocNames = ['loc', 'locations', 'bbox', 'boxes', 'output1', 'output'];
-        const possibleConfNames = ['conf', 'confidence', 'scores', 'cls', 'output2'];
-
-        let loc: Float32Array | null = null;
-        let conf: Float32Array | null = null;
-
-        // Try to find the correct output names
-        for (const name of possibleLocNames) {
-          if (results[name] && results[name].data) {
-            loc = results[name].data as Float32Array;
-            console.log('Found locations output:', name, 'shape:', results[name].dims);
-            break;
-          }
-        }
-
-        for (const name of possibleConfNames) {
-          if (results[name] && results[name].data) {
-            conf = results[name].data as Float32Array;
-            console.log('Found confidence output:', name, 'shape:', results[name].dims);
-            break;
-          }
-        }
-
-        if (!loc || !conf) {
-          console.error('Could not find expected model outputs. Available outputs:', Object.keys(results));
-          console.error('This might indicate the wrong model file or model format');
-          return;
-        }
-
-        if (!loc || !conf) {
-          console.error('Model output data is null or undefined');
-          return;
-        }
-
-        const numFaces = loc.length / 4;
-        console.log('Detected faces:', numFaces);
-
-        // Find the best face detection
-        let bestScore = 0;
-        let bestFace: FaceDetection | null = null;
-
-        for (let i = 0; i < numFaces; i++) {
-          const faceConf = conf[i * 2 + 1]; // face confidence
-          if (faceConf > bestScore && faceConf > 0.5) {
-            bestScore = faceConf;
-            const x = loc[i * 4];
-            const y = loc[i * 4 + 1];
-            const w = loc[i * 4 + 2];
-            const h = loc[i * 4 + 3];
-            bestFace = {
-              x: x / inputWidth,
-              y: y / inputHeight,
-              width: w / inputWidth,
-              height: h / inputHeight,
-              confidence: faceConf
-            };
-          }
-        }
-
-        setFaceDetection(bestFace);
-
-        if (bestFace) {
-          // Calculate eye positions within the face (approximate based on face detection)
-          // Eyes are typically at ~0.3 and ~0.7 of face height, centered horizontally
-          const leftEyeX = bestFace.x - bestFace.width * 0.15; // Left eye relative to face center
-          const rightEyeX = bestFace.x + bestFace.width * 0.15; // Right eye relative to face center
-          const eyeY = bestFace.y - bestFace.height * 0.1; // Eyes are above face center
-
-          // For gaze estimation, we'll use head pose as a proxy
-          // In a real implementation, you'd use eye landmarks and pupil detection
-          // For now, we'll simulate gaze based on face position with some smoothing
-
-          // Map face position to screen coordinates with smoothing
-          const screenX = Math.max(0, Math.min(windowWidth, bestFace.x * windowWidth));
-          const screenY = Math.max(0, Math.min(windowHeight, bestFace.y * windowHeight));
-
-          // Add some variation based on face tilt/size (simulating gaze direction)
-          const gazeOffsetX = (bestFace.x - 0.5) * 200; // Face tilt affects horizontal gaze
-          const gazeOffsetY = (bestFace.y - 0.5) * 150; // Face position affects vertical gaze
-
-          const finalX = Math.max(0, Math.min(windowWidth, screenX + gazeOffsetX));
-          const finalY = Math.max(0, Math.min(windowHeight, screenY + gazeOffsetY));
-
-          console.log('Face detected:', {
-            face: bestFace,
-            screenPos: { x: screenX, y: screenY },
-            gazeOffset: { x: gazeOffsetX, y: gazeOffsetY },
-            finalGaze: { x: finalX, y: finalY }
-          });
-
-          setGazePosition(finalX, finalY);
-        }
+        // Send frame to Python backend
+        websocketRef.current.send(JSON.stringify({
+          type: 'frame',
+          image: imageData,
+          timestamp: Date.now()
+        }));
 
         // Calculate FPS
         const now = Date.now();
@@ -342,9 +228,70 @@ const GazeTracker: React.FC = () => {
         lastFrameTimeRef.current = now;
 
       } catch (error) {
-        console.error('Inference error:', error);
-        // Don't set modelError here as it might be a temporary issue
-        // Just skip this frame and continue
+        console.error('Error sending frame to backend:', error);
+      }
+    };
+
+    const startCapture = () => {
+      const loop = () => {
+        captureFrame();
+        animationRef.current = requestAnimationFrame(loop);
+      };
+      loop();
+    };
+
+    startCapture();
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+      // Cleanup stream
+      if (videoRef.current && videoRef.current.srcObject) {
+        const stream = videoRef.current.srcObject as MediaStream;
+        stream.getTracks().forEach(track => track.stop());
+      }
+    };
+
+    const processFrame = async () => {
+      if (!videoRef.current || !canvasRef.current || !websocketRef.current) {
+        return;
+      }
+
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext('2d');
+
+      if (!ctx || video.videoWidth === 0 || video.videoHeight === 0) {
+        return;
+      }
+
+      // Set canvas size to video size
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+
+      // Draw video frame to canvas
+      ctx.drawImage(video, 0, 0);
+
+      try {
+        // Convert canvas to base64
+        const imageData = canvas.toDataURL('image/jpeg', 0.8);
+
+        // Send frame to Python backend
+        websocketRef.current.send(JSON.stringify({
+          type: 'frame',
+          image: imageData,
+          timestamp: Date.now()
+        }));
+
+        // Calculate FPS
+        const now = Date.now();
+        const fps = 1000 / (now - lastFrameTimeRef.current);
+        setProcessingFPS(Math.round(fps));
+        lastFrameTimeRef.current = now;
+
+      } catch (error) {
+        console.error('Error sending frame to backend:', error);
       }
     };
 
@@ -374,23 +321,34 @@ const GazeTracker: React.FC = () => {
   useEffect(() => {
     if (!isTracking) return;
 
+    let lastMoveTime = Date.now();
+
     const handleMouseMove = (event: MouseEvent) => {
       // Use mouse position as gaze position for testing
       setGazePosition(event.clientX, event.clientY);
-      console.log('Mouse gaze:', { x: event.clientX, y: event.clientY });
+      lastMoveTime = Date.now();
+
+      // Add visual feedback for mouse tracking
+      console.log('🎯 Mouse gaze active:', { x: event.clientX, y: event.clientY });
     };
 
     const handleMouseClick = () => {
-      // Optional: Add click feedback
-      console.log('Mouse click detected');
+      console.log('🖱️ Mouse click detected - use gaze for keyboard interaction');
+    };
+
+    // Add mouse tracking indicator
+    const handleMouseEnter = () => {
+      console.log('🎯 Mouse tracking activated - move cursor to control gaze');
     };
 
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('click', handleMouseClick);
+    window.addEventListener('mouseenter', handleMouseEnter);
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('click', handleMouseClick);
+      window.removeEventListener('mouseenter', handleMouseEnter);
     };
   }, [isTracking, setGazePosition]);
 
@@ -402,7 +360,7 @@ const GazeTracker: React.FC = () => {
           <div className="flex items-center gap-3">
             <div className="relative">
               <span className="text-3xl">🤖</span>
-              {sessionRef.current && !isModelLoading && (
+              {isConnected && (
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse border-2 border-white dark:border-gray-800"></div>
               )}
             </div>
@@ -411,7 +369,7 @@ const GazeTracker: React.FC = () => {
                 AI Gaze Tracking
               </h3>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Real-time face detection & eye tracking
+                Python backend face detection & eye tracking
               </p>
             </div>
           </div>
@@ -423,29 +381,28 @@ const GazeTracker: React.FC = () => {
               className={`px-4 py-2 rounded-lg font-medium transition-all ${
                 useMouseFallback
                   ? 'bg-blue-500 text-white hover:bg-blue-600'
-                  : 'bg-purple-500 text-white hover:bg-purple-600'
+                  : 'bg-red-500 text-white hover:bg-red-600 cursor-not-allowed opacity-50'
               }`}
+              disabled={!useMouseFallback} // Disable face mode button since it's broken
             >
-              {useMouseFallback ? '🐭 Mouse Mode' : '👁️ Face Mode'}
+              {useMouseFallback ? '🐭 Mouse Mode' : '👁️ Face Mode (Disabled)'}
             </button>
 
             {/* Live Status Indicator */}
             <div className="flex items-center gap-2 px-3 py-1 bg-white dark:bg-gray-800 rounded-full shadow-sm">
               <div className={`w-2 h-2 rounded-full ${
-                sessionRef.current && !isModelLoading && isTracking && (!useMouseFallback ? faceDetection : true)
+                isConnected && isTracking && (!useMouseFallback ? faceDetection : true)
                   ? 'bg-green-500 animate-pulse'
-                  : sessionRef.current && !isModelLoading && isTracking && !useMouseFallback
+                  : isConnected && isTracking && !useMouseFallback
                   ? 'bg-yellow-500 animate-pulse'
                   : 'bg-red-500'
               }`}></div>
               <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
                 {useMouseFallback
-                  ? 'Mouse Tracking'
-                  : sessionRef.current && !isModelLoading && isTracking && faceDetection
-                  ? 'Face Tracking Active'
-                  : sessionRef.current && !isModelLoading && isTracking
-                  ? 'Face Searching...'
-                  : 'Inactive'}
+                  ? 'Mouse Tracking Active'
+                  : isConnected
+                  ? (faceDetection ? 'Face Tracking Active' : 'Face Searching...')
+                  : 'Backend Disconnected'}
               </span>
             </div>
 
@@ -459,13 +416,30 @@ const GazeTracker: React.FC = () => {
           </div>
         </div>
 
-        {modelError && (
+        {connectionError && (
           <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4">
             <div className="flex items-center gap-3">
               <span className="text-red-500 text-xl">⚠️</span>
               <div>
-                <div className="font-semibold text-red-800 dark:text-red-200">Model Loading Error</div>
-                <div className="text-sm text-red-700 dark:text-red-300">{modelError}</div>
+                <div className="font-semibold text-red-800 dark:text-red-200">Backend Connection Error</div>
+                <div className="text-sm text-red-700 dark:text-red-300">{connectionError}</div>
+                <div className="text-xs text-red-600 dark:text-red-400 mt-1">
+                  Make sure the Python backend is running: <code>cd backend && python main.py</code>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {!useMouseFallback && !isConnected && (
+          <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-4">
+            <div className="flex items-center gap-3">
+              <span className="text-yellow-500 text-xl">🔌</span>
+              <div>
+                <div className="font-semibold text-yellow-800 dark:text-yellow-200">Python Backend Required</div>
+                <div className="text-sm text-yellow-700 dark:text-yellow-300">
+                  Face detection requires the Python backend. Start it with: <code>cd backend && python main.py</code>
+                </div>
               </div>
             </div>
           </div>
@@ -591,13 +565,11 @@ const GazeTracker: React.FC = () => {
             {/* System Status Grid */}
             <div className="grid grid-cols-1 gap-3">
               <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <span className="text-sm text-gray-600 dark:text-gray-400">Model Status</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">Backend Status</span>
                 <div className="flex items-center gap-2">
-                  <div className={`w-2 h-2 rounded-full ${
-                    sessionRef.current && !isModelLoading ? 'bg-green-500' : isModelLoading ? 'bg-yellow-500 animate-pulse' : 'bg-red-500'
-                  }`}></div>
+                  <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`}></div>
                   <span className="text-xs font-medium text-gray-900 dark:text-white">
-                    {sessionRef.current && !isModelLoading ? 'Loaded' : isModelLoading ? 'Loading' : 'Error'}
+                    {isConnected ? 'Connected' : 'Disconnected'}
                   </span>
                 </div>
               </div>
