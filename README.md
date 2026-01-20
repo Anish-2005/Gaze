@@ -32,14 +32,22 @@ An assistive communication web application that enables eye-gaze-based typing us
    npm install
    ```
 
-2. **Run the development server**:
+2. **Download the ML model** (required for face detection):
+   ```bash
+   mkdir public\models
+   curl -L -o public/models/face_detection_yunet_2023mar.onnx \
+     "https://github.com/opencv/opencv_zoo/raw/main/models/face_detection_yunet/face_detection_yunet_2023mar.onnx"
+   ```
+   *Note: This downloads the YuNet face detection model (~400KB) from OpenCV's official model zoo.*
+
+3. **Run the development server**:
    ```bash
    npm run dev
    ```
 
-3. **Open** [http://localhost:3000](http://localhost:3000) in your browser
+4. **Open** [http://localhost:3000](http://localhost:3000) in your browser
 
-4. **Grant camera permission** when prompted
+5. **Grant camera permission** when prompted
 
 ## How to Use
 

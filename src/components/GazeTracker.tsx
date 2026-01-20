@@ -14,9 +14,9 @@ const GazeTracker: React.FC = () => {
   useEffect(() => {
     const loadModel = async () => {
       try {
-        // Load YOLOv8 face detection model
-        // Model expects 640x640 input
-        const modelUrl = 'https://huggingface.co/derronqi/yolov8-face/resolve/main/yolov8n-face.onnx';
+        // Load YuNet face detection model from local public folder
+        // Model has dynamic input size, we'll use 160x120
+        const modelUrl = '/models/face_detection_yunet_2023mar.onnx';
         const dataUrl = modelUrl + '.data';
 
         // Fetch model
@@ -29,6 +29,7 @@ const GazeTracker: React.FC = () => {
       } catch (error) {
         console.error('Failed to load model:', error);
         // Fallback to mouse simulation if model fails
+        console.log('Falling back to mouse-based gaze tracking');
         setGazePosition(window.innerWidth / 2, window.innerHeight / 2);
       }
     };
@@ -71,9 +72,9 @@ const GazeTracker: React.FC = () => {
       // Draw video frame to canvas
       ctx.drawImage(video, 0, 0);
 
-      // Preprocess for model (resize to 640x640)
-      const inputWidth = 640;
-      const inputHeight = 640;
+      // Preprocess for model (YuNet expects 160x120)
+      const inputWidth = 160;
+      const inputHeight = 120;
       const resizedCanvas = document.createElement('canvas');
       resizedCanvas.width = inputWidth;
       resizedCanvas.height = inputHeight;
@@ -99,37 +100,36 @@ const GazeTracker: React.FC = () => {
 
       try {
         // Run inference
-        const feeds = { images: tensor }; // YOLOv8 uses 'images' as input name
+        const feeds = { input: tensor };
         const results = await sessionRef.current.run(feeds);
 
-        // Process results (YOLOv8 outputs detections)
-        const output = results.output0.data as Float32Array; // [1, 5, 8400]
-        const numDetections = 8400;
-        const numClasses = 1; // face
+        // Process YuNet results
+        const loc = results.loc.data as Float32Array; // [num_faces, 4] - x, y, w, h
+        const conf = results.conf.data as Float32Array; // [num_faces, 2] - background, face
+        const numFaces = loc.length / 4;
 
         // Find the best face detection
         let bestScore = 0;
-        let centerX = 0.5; // default center
-        let centerY = 0.5;
-        for (let i = 0; i < numDetections; i++) {
-          const offset = i * 5;
-          const x = output[offset];
-          const y = output[offset + 1];
-          const w = output[offset + 2];
-          const h = output[offset + 3];
-          const conf = output[offset + 4];
+        let bestCenterX = 0.5;
+        let bestCenterY = 0.5;
 
-          if (conf > bestScore && conf > 0.5) { // confidence threshold
-            bestScore = conf;
-            centerX = x;
-            centerY = y;
+        for (let i = 0; i < numFaces; i++) {
+          const faceConf = conf[i * 2 + 1]; // face confidence
+          if (faceConf > bestScore && faceConf > 0.5) {
+            bestScore = faceConf;
+            const x = loc[i * 4];
+            const y = loc[i * 4 + 1];
+            const w = loc[i * 4 + 2];
+            const h = loc[i * 4 + 3];
+            bestCenterX = (x + w / 2) / inputWidth; // normalize to 0-1
+            bestCenterY = (y + h / 2) / inputHeight;
           }
         }
 
         if (bestScore > 0) {
           // Map to screen coordinates
-          const screenX = centerX * window.innerWidth;
-          const screenY = centerY * window.innerHeight;
+          const screenX = bestCenterX * window.innerWidth;
+          const screenY = bestCenterY * window.innerHeight;
 
           setGazePosition(screenX, screenY);
         }
