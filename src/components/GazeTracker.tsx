@@ -48,16 +48,28 @@ const GazeTracker: React.FC = () => {
     };
   }, []);
 
-  // Track performance over time
+  const performanceHistoryRef = useRef<number[]>([]);
+  const currentFPSRef = useRef(0);
+
+  // Update FPS ref whenever processingFPS changes
   useEffect(() => {
-    if (processingFPS > 0) {
-      setPerformanceHistory(prev => {
-        const newHistory = [...prev, processingFPS].slice(-10); // Keep last 10 readings
-        setAverageFPS(Math.round(newHistory.reduce((a, b) => a + b, 0) / newHistory.length));
-        return newHistory;
-      });
-    }
+    currentFPSRef.current = processingFPS;
   }, [processingFPS]);
+
+  // Track performance over time (update every second to avoid infinite loops)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const currentFPS = currentFPSRef.current;
+      if (currentFPS > 0) {
+        const newHistory = [...performanceHistoryRef.current, currentFPS].slice(-10);
+        setPerformanceHistory(newHistory);
+        setAverageFPS(Math.round(newHistory.reduce((a, b) => a + b, 0) / newHistory.length));
+        performanceHistoryRef.current = newHistory;
+      }
+    }, 1000); // Update every second
+
+    return () => clearInterval(interval);
+  }, []); // Empty dependency array - only run once
 
   // Calculate gaze stability (how much the gaze position changes)
   const [gazeStability, setGazeStability] = useState(0);
