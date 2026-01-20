@@ -24,6 +24,29 @@ const GazeTracker: React.FC = () => {
   const [faceDetection, setFaceDetection] = useState<FaceDetection | null>(null);
   const [performanceHistory, setPerformanceHistory] = useState<number[]>([]);
   const [averageFPS, setAverageFPS] = useState(0);
+  const [processingFPS, setProcessingFPS] = useState(0);
+  const [lastFrameTime, setLastFrameTime] = useState(Date.now());
+  const [windowSize, setWindowSize] = useState({ width: 1920, height: 1080 }); // Default fallback
+
+  // Set window size after mount to avoid SSR issues
+  useEffect(() => {
+    const updateWindowSize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    };
+
+    // Set initial size
+    updateWindowSize();
+
+    // Add resize listener
+    window.addEventListener('resize', updateWindowSize);
+
+    return () => {
+      window.removeEventListener('resize', updateWindowSize);
+    };
+  }, []);
 
   // Track performance over time
   useEffect(() => {
@@ -71,7 +94,7 @@ const GazeTracker: React.FC = () => {
         console.error('Failed to load model:', error);
         // Fallback to mouse simulation if model fails
         console.log('Falling back to mouse-based gaze tracking');
-        setGazePosition(window.innerWidth / 2, window.innerHeight / 2);
+        setGazePosition(windowSize.width / 2, windowSize.height / 2);
       }
     };
 
@@ -175,8 +198,8 @@ const GazeTracker: React.FC = () => {
 
         if (bestFace) {
           // Map to screen coordinates
-          const screenX = bestFace.x * window.innerWidth;
-          const screenY = bestFace.y * window.innerHeight;
+          const screenX = bestFace.x * windowSize.width;
+          const screenY = bestFace.y * windowSize.height;
 
           setGazePosition(screenX, screenY);
         }
@@ -495,8 +518,8 @@ const GazeTracker: React.FC = () => {
               <div
                 className="absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-out"
                 style={{
-                  left: `${(gazeX / window.innerWidth) * 100}%`,
-                  top: `${(gazeY / window.innerHeight) * 100}%`,
+                  left: `${(gazeX / windowSize.width) * 100}%`,
+                  top: `${(gazeY / windowSize.height) * 100}%`,
                 }}
               >
                 <div className="relative">
