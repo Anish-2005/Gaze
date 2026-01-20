@@ -11,7 +11,7 @@ const keys = [
 ];
 
 const Keyboard: React.FC = () => {
-  const { gazeX, gazeY, appendText, backspace, dwellTime, isTracking } = useGaze();
+  const { gazeX, gazeY, appendText, backspace, dwellTime, isTracking, setGazePosition } = useGaze();
   const [hoveredKey, setHoveredKey] = useState<string | null>(null);
   const [dwellProgress, setDwellProgress] = useState(0);
   const dwellTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -94,6 +94,8 @@ const Keyboard: React.FC = () => {
         }, 100);
       }
     }
+  }, [gazeX, gazeY, hoveredKey, appendText]);
+
   // Test gaze position with mouse (temporary for debugging)
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
@@ -106,7 +108,7 @@ const Keyboard: React.FC = () => {
   }, [setGazePosition]);
 
   return (
-    <>
+    <div>
       {/* Gaze position indicator */}
       <div
         className="fixed pointer-events-none z-50 w-4 h-4 border-2 border-red-500 rounded-full bg-red-500/20"
@@ -194,6 +196,7 @@ const Keyboard: React.FC = () => {
           <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
           <span>Available</span>
         </div>
+      </div>
       </div>
     </div>
   );
