@@ -5,11 +5,13 @@ An assistive communication web application that enables eye-gaze-based typing us
 ## Features
 
 - **Webcam Integration**: Live video feed with camera permission handling
-- **Gaze Tracking**: Eye/iris position detection (currently simulated with mouse for MVP)
+- **Eye Tracking**: Real-time face detection using ONNX Runtime Web and UltraFace model
+- **Gaze Estimation**: Maps detected face center to screen coordinates for gaze control
 - **On-Screen Keyboard**: Large, high-contrast keys with dwell-time selection
 - **Text Output**: Real-time display of typed text
 - **Text-to-Speech**: Web Speech API integration for audio playback
 - **Dark/Light Mode**: Automatic system preference detection with manual toggle
+- **Keyboard Fallback**: Arrow key navigation for accessibility
 - **Responsive Design**: Works on desktop and mobile devices
 
 ## Tech Stack
@@ -20,7 +22,8 @@ An assistive communication web application that enables eye-gaze-based typing us
 - **State Management**: React Context
 - **Camera**: WebRTC API
 - **Speech**: Web Speech API
-- **Future ML**: ONNX Runtime Web (placeholder ready)
+- **ML Inference**: ONNX Runtime Web
+- **Model**: UltraFace (face detection)
 
 ## Getting Started
 
@@ -41,8 +44,8 @@ An assistive communication web application that enables eye-gaze-based typing us
 ## How to Use
 
 1. **Allow Camera Access**: The app will request permission to use your webcam
-2. **Position Yourself**: Center your face in the camera view
-3. **Gaze at Keys**: Look at the on-screen keyboard keys
+2. **Position Yourself**: Center your face in the camera view for face detection
+3. **Gaze at Keys**: Look at the on-screen keyboard keys (face center controls gaze)
 4. **Dwell to Select**: Hold your gaze on a key for 1 second to type it
 5. **Use Special Keys**:
    - **␣ (Space)**: Add space between words
@@ -59,7 +62,7 @@ For users who cannot use gaze tracking:
 
 ### Components
 - `CameraFeed`: Handles webcam access and video display
-- `GazeTracker`: Processes gaze position (mouse simulation for MVP)
+- `GazeTracker`: Processes video frames with ONNX model for face detection and gaze estimation
 - `Keyboard`: On-screen keyboard with dwell-time selection
 - `TextOutput`: Displays typed text and TTS controls
 - `DarkModeToggle`: Theme switching
@@ -68,11 +71,12 @@ For users who cannot use gaze tracking:
 - `GazeContext`: Centralized state for typed text, gaze position, and tracking status
 
 ### Future Enhancements
-- Real eye-tracking using ONNX Runtime Web
-- Advanced keyboard layouts (numbers, punctuation)
-- Word prediction
-- Customizable dwell times
-- Accessibility improvements
+- Upgrade to eye landmark detection model for more precise gaze tracking
+- Add pupil/iris position detection for better accuracy
+- Implement head pose estimation
+- Add calibration step for personalized gaze mapping
+- Word prediction and auto-complete features
+- Customizable dwell times and keyboard layouts
 
 ## Building for Production
 
