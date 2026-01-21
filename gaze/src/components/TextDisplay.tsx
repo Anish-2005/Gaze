@@ -4,22 +4,29 @@ interface TextDisplayProps {
   text: string;
   onSpeak: () => void;
   onClear: () => void;
-  onUndo: () => void;
 }
 
-export default function TextDisplay({ text, onSpeak, onClear, onUndo }: TextDisplayProps) {
+export default function TextDisplay({ text, onSpeak, onClear }: TextDisplayProps) {
+  useEffect(() => {
+    // Auto speak when text changes, or on button
+  }, [text]);
+
+  const speak = () => {
+    if ('speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
   return (
-    <div className="fixed top-0 left-0 right-0 h-[15vh] bg-gray-900 text-white flex flex-col justify-center items-center p-4">
-      <div className="text-3xl mb-4 text-center">{text || 'Start typing...'}</div>
-      <div className="flex gap-4">
-        <button onClick={onSpeak} className="px-6 py-3 bg-green-600 text-white rounded-lg text-xl">
+    <div className="fixed top-4 left-4 right-4 bg-white border rounded-lg p-4 shadow-lg">
+      <div className="text-2xl mb-4 min-h-[3rem]">{text || 'Start typing...'}</div>
+      <div className="flex gap-2">
+        <button onClick={speak} className="px-4 py-2 bg-blue-500 text-white rounded">
           Speak
         </button>
-        <button onClick={onClear} className="px-6 py-3 bg-red-600 text-white rounded-lg text-xl">
+        <button onClick={onClear} className="px-4 py-2 bg-red-500 text-white rounded">
           Clear
-        </button>
-        <button onClick={onUndo} className="px-6 py-3 bg-yellow-600 text-white rounded-lg text-xl">
-          Undo
         </button>
       </div>
     </div>
