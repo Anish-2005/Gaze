@@ -36,13 +36,13 @@ const trustSignals = [
 export default function Footer() {
   return (
     <footer className="bg-[#0B1220] text-slate-300">
-      <div className="max-w-8xl mx-auto px-6 lg:px-12 py-16">
+      <div className="max-w-8xl mx-auto px-5 sm:px-6 lg:px-12 py-14 sm:py-16">
 
         {/* Top */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 mb-14 sm:mb-16">
 
-          {/* Brand */}
-          <div className="lg:col-span-2">
+          {/* Brand — always full width on mobile */}
+          <div className="lg:col-span-2 text-center lg:text-left">
             <div className="mb-6">
               <div className="text-2xl font-semibold text-white tracking-tight">
                 GAZE
@@ -52,13 +52,13 @@ export default function Footer() {
               </div>
             </div>
 
-            <p className="max-w-md text-slate-400 leading-relaxed mb-6">
+            <p className="max-w-md mx-auto lg:mx-0 text-slate-400 leading-relaxed mb-6 text-sm sm:text-base">
               GAZE is a software-based assistive communication system designed
               to restore basic human interaction for individuals who are unable
               to speak or use traditional input devices.
             </p>
 
-            <div className="space-y-3 text-sm">
+            <div className="space-y-3 text-sm flex flex-col items-center lg:items-start">
               <div className="flex items-center gap-3">
                 <Mail className="w-4 h-4" />
                 <span>contact@gaze.global</span>
@@ -70,36 +70,39 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Links */}
-          {Object.entries(footerLinks).map(([section, links]) => (
-            <div key={section}>
-              <h4 className="text-sm font-semibold text-white mb-4">
-                {section}
-              </h4>
-              <ul className="space-y-3 text-sm">
-                {links.map(link => (
-                  <li key={link.label}>
-                    <a
-                      href={link.href}
-                      className="hover:text-white transition-colors"
-                    >
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {/* Links — NOT tabular on mobile */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:col-span-3">
+            {Object.entries(footerLinks).map(([section, links]) => (
+              <div key={section}>
+                <h4 className="text-sm font-semibold text-white mb-4">
+                  {section}
+                </h4>
+                <ul className="space-y-3 text-sm">
+                  {links.map(link => (
+                    <li key={link.label}>
+                      <a
+                        href={link.href}
+                        className="hover:text-white transition-colors"
+                      >
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
         </div>
 
         {/* Trust Signals */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6 mb-10 sm:mb-12">
           {trustSignals.map((item, index) => {
             const Icon = item.icon
             return (
               <div
                 key={index}
-                className="flex items-center gap-3 text-sm text-slate-400"
+                className="flex items-center justify-center sm:justify-start gap-3 text-sm text-slate-400"
               >
                 <Icon className="w-4 h-4 text-slate-300" />
                 <span>{item.text}</span>
@@ -109,26 +112,18 @@ export default function Footer() {
         </div>
 
         {/* Divider */}
-        <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-start md:items-center text-sm text-slate-400">
-          <div className="mb-4 md:mb-0">
+        <div className="border-t border-slate-800 pt-6 sm:pt-8 flex flex-col md:flex-row gap-6 justify-between items-center text-sm text-slate-400">
+          <div className="text-center md:text-left leading-relaxed">
             © {new Date().getFullYear()} GAZE.
             <br className="md:hidden" />
             Assistive communication as public infrastructure.
           </div>
 
-          <div className="flex flex-wrap gap-6">
-            <a href="#" className="hover:text-white transition-colors">
-              Privacy
-            </a>
-            <a href="#" className="hover:text-white transition-colors">
-              Terms
-            </a>
-            <a href="#" className="hover:text-white transition-colors">
-              Accessibility
-            </a>
-            <a href="#" className="hover:text-white transition-colors">
-              Compliance
-            </a>
+          <div className="flex flex-wrap justify-center gap-6">
+            <a href="#" className="hover:text-white transition-colors">Privacy</a>
+            <a href="#" className="hover:text-white transition-colors">Terms</a>
+            <a href="#" className="hover:text-white transition-colors">Accessibility</a>
+            <a href="#" className="hover:text-white transition-colors">Compliance</a>
           </div>
         </div>
 
