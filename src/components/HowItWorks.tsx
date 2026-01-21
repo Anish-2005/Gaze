@@ -5,92 +5,96 @@ import { Play, Target, Zap } from 'lucide-react'
 
 const steps = [
   {
-    number: '1',
-    icon: <Play className="w-6 h-6" />,
-    title: 'Open GAZE',
-    description: 'Access directly in your browser or download our app',
+    icon: Play,
+    title: 'Access the system',
+    description:
+      'GAZE runs directly in a web browser or mobile application, requiring no installation or specialized setup.',
   },
   {
-    number: '2',
-    icon: <Target className="w-6 h-6" />,
-    title: 'Calibrate in 30 seconds',
-    description: 'Follow the moving dot to calibrate eye tracking',
+    icon: Target,
+    title: 'Complete a short calibration',
+    description:
+      'A brief guided calibration aligns eye movement with screen coordinates for accurate interaction.',
   },
   {
-    number: '3',
-    icon: <Zap className="w-6 h-6" />,
-    title: 'Control hands-free',
-    description: 'Start typing, clicking, and communicating with just your eyes',
+    icon: Zap,
+    title: 'Begin hands-free communication',
+    description:
+      'Users can immediately start selecting, typing, and speaking using gaze-based interaction.',
   },
 ]
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="py-20">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Simple as <span className="text-gradient">1-2-3</span>
-            </h2>
-            <p className="text-lg text-gray-600">
-              No complex setup. No expensive hardware. Just communication.
-            </p>
-          </motion.div>
+    <section id="how-it-works" className="py-24 bg-[#F7F9FC] text-[#0F172A]">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12">
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {steps.map((step, index) => (
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="max-w-3xl mb-20"
+        >
+          <h2 className="text-3xl md:text-4xl font-semibold leading-tight mb-6">
+            Deployment workflow
+          </h2>
+          <p className="text-lg text-slate-600">
+            GAZE is designed to minimize setup complexity while maintaining
+            reliability in clinical and home environments.
+          </p>
+        </motion.div>
+
+        {/* Steps */}
+        <div className="grid md:grid-cols-3 gap-12">
+          {steps.map((step, index) => {
+            const Icon = step.icon
+            return (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.2 }}
-                className="relative"
+                transition={{ delay: index * 0.1 }}
+                className="bg-white border border-slate-200 rounded-xl p-8"
               >
-                {/* Connection Line */}
-                {index < steps.length - 1 && (
-                  <div className="hidden md:block absolute top-12 -right-4 w-8 h-0.5 bg-gradient-to-r from-blue-300 to-teal-300 z-0"></div>
-                )}
-
-                <div className="relative bg-white rounded-2xl p-8 border border-gray-100 shadow-lg h-full">
-                  {/* Step Number Background */}
-                  <div className="absolute -top-4 -left-4 w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-teal-400 flex items-center justify-center text-white text-2xl font-bold">
-                    {step.number}
+                <div className="mb-6 flex items-center justify-between">
+                  <div className="w-10 h-10 rounded-md bg-slate-900 text-white flex items-center justify-center">
+                    <Icon className="w-5 h-5" />
                   </div>
-
-                  <div className="mt-4 mb-6">
-                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-100 to-teal-100 flex items-center justify-center">
-                      <div className="text-blue-600">{step.icon}</div>
-                    </div>
+                  <div className="text-sm text-slate-400 font-medium">
+                    Step {index + 1}
                   </div>
-
-                  <h3 className="text-xl font-semibold mb-3">{step.title}</h3>
-                  <p className="text-gray-600">{step.description}</p>
                 </div>
-              </motion.div>
-            ))}
-          </div>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.6 }}
-            className="mt-16 text-center"
-          >
-            <div className="inline-block bg-green-50 border border-green-200 rounded-full px-6 py-3">
-              <p className="text-green-700 font-medium">
-                That's it. Simple = trust.
-              </p>
-            </div>
-          </motion.div>
+                <h3 className="text-lg font-semibold mb-3">
+                  {step.title}
+                </h3>
+
+                <p className="text-slate-600 leading-relaxed">
+                  {step.description}
+                </p>
+              </motion.div>
+            )
+          })}
         </div>
+
+        {/* Closing Statement */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+          className="mt-20 max-w-4xl"
+        >
+          <p className="text-slate-600 text-lg leading-relaxed">
+            The entire process is designed to be completed within minutes,
+            enabling rapid deployment in time-sensitive environments such as
+            intensive care units and rehabilitation centers.
+          </p>
+        </motion.div>
+
       </div>
     </section>
   )

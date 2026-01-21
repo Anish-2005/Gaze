@@ -5,94 +5,104 @@ import { TrendingDown, Globe, Zap, DollarSign } from 'lucide-react'
 
 const metrics = [
   {
-    icon: <TrendingDown className="w-8 h-8" />,
-    value: '90%',
-    label: 'cheaper than hardware',
-    description: 'Compared to $10,000+ alternatives',
+    icon: TrendingDown,
+    value: '≥90%',
+    label: 'cost reduction',
+    description:
+      'Compared to proprietary eye-tracking hardware systems currently in use.',
   },
   {
-    icon: <Globe className="w-8 h-8" />,
-    value: '0',
-    label: 'extra devices needed',
-    description: 'Uses existing smartphones & computers',
+    icon: DollarSign,
+    value: '$0',
+    label: 'additional hardware',
+    description:
+      'Operates using existing smartphones, tablets, and computers.',
   },
   {
-    icon: <Zap className="w-8 h-8" />,
-    value: '10x',
-    label: 'faster communication',
-    description: 'With AI sentence prediction',
+    icon: Zap,
+    value: 'Up to 10×',
+    label: 'communication efficiency',
+    description:
+      'Observed improvement using predictive language and phrase completion.',
   },
   {
-    icon: <DollarSign className="w-8 h-8" />,
-    value: '∞',
-    label: 'global reach',
-    description: 'Web-based, no geographical limits',
+    icon: Globe,
+    value: 'Global',
+    label: 'deployment readiness',
+    description:
+      'Web-based architecture enables use across regions and income levels.',
   },
 ]
 
-export default function SocialImpact() {
+export default function Impact() {
   return (
-    <section className="py-20">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              The <span className="text-gradient">Social Impact</span>
-            </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Accessibility should scale like software, not hardware
-            </p>
-          </motion.div>
+    <section className="py-24 bg-white text-[#0F172A]">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12">
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-            {metrics.map((metric, index) => (
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="max-w-3xl mb-20"
+        >
+          <h2 className="text-3xl md:text-4xl font-semibold leading-tight mb-6">
+            Impact at scale
+          </h2>
+          <p className="text-lg text-slate-600">
+            GAZE is designed to scale accessibility through software, enabling
+            cost-effective deployment across healthcare systems, institutions,
+            and communities.
+          </p>
+        </motion.div>
+
+        {/* Metrics Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
+          {metrics.map((metric, index) => {
+            const Icon = metric.icon
+            return (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="text-center"
+                transition={{ delay: index * 0.08 }}
+                className="border border-slate-200 rounded-xl p-8 bg-[#F7F9FC]"
               >
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-teal-100 flex items-center justify-center mx-auto mb-4">
-                  <div className="text-blue-600">{metric.icon}</div>
+                <div className="mb-6 w-10 h-10 rounded-md bg-slate-900 text-white flex items-center justify-center">
+                  <Icon className="w-5 h-5" />
                 </div>
-                <div className="text-4xl font-bold mb-2">{metric.value}</div>
-                <div className="font-semibold text-gray-900 mb-1">{metric.label}</div>
-                <div className="text-sm text-gray-600">{metric.description}</div>
-              </motion.div>
-            ))}
-          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="relative"
-          >
-            <div className="bg-gradient-to-r from-blue-50 to-teal-50 rounded-3xl p-8 md:p-12 border border-blue-100">
-              <div className="max-w-3xl mx-auto text-center">
-                <div className="text-5xl text-blue-600 mb-6">"</div>
-                <blockquote className="text-2xl md:text-3xl font-semibold mb-8 text-gray-900">
-                  We replaced a $10,000 hardware device with a free web app. 
-                  Accessibility should be measured in lives impacted, not dollars spent.
-                </blockquote>
-                <div className="flex items-center justify-center space-x-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-teal-400"></div>
-                  <div className="text-left">
-                    <div className="font-semibold">Compassionate Capitalism</div>
-                    <div className="text-gray-600">Our guiding principle</div>
-                  </div>
+                <div className="text-3xl font-semibold mb-2">
+                  {metric.value}
                 </div>
-              </div>
-            </div>
-          </motion.div>
+
+                <div className="text-sm font-medium text-slate-700 mb-2">
+                  {metric.label}
+                </div>
+
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  {metric.description}
+                </p>
+              </motion.div>
+            )
+          })}
         </div>
+
+        {/* Positioning Statement */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+          className="mt-24 max-w-5xl"
+        >
+          <p className="text-lg text-slate-600 leading-relaxed">
+            GAZE makes it possible to deploy communication access as infrastructure rather than as a luxury product in both high-resource and low-resource environments by substituting proprietary hardware with a software-first approach.
+          </p>
+        </motion.div>
+
       </div>
     </section>
   )
