@@ -109,7 +109,7 @@ export default function DemoShell() {
       />
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center justify-center pt-32 pb-40">
+      <main className="pt-24 flex-1 flex flex-col items-center justify-center pt-32 pb-40">
         <div className="container mx-auto px-4">
           {/* Demo title */}
           <div className="text-center mb-12">
