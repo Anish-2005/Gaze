@@ -7,66 +7,74 @@ export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
 
   const navItems = [
-    { label: 'How it Works', href: '#how-it-works' },
+    { label: 'System Overview', href: '#overview' },
     { label: 'Use Cases', href: '#use-cases' },
-    { label: 'Pricing', href: '#pricing' },
-    { label: 'For Institutions', href: '#institutions' },
+    { label: 'Accessibility', href: '#accessibility' },
+    { label: 'Institutions', href: '#institutions' },
   ]
 
   return (
-    <nav className="fixed top-0 w-full bg-white/90 backdrop-blur-sm z-50 border-b border-gray-100">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-teal-400 rounded-lg" />
-              <span className="text-xl font-bold text-gray-900">GAZE</span>
+    <nav className="fixed top-0 w-full z-50 bg-[#F7F9FC]/95 backdrop-blur-sm border-b border-slate-200">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        <div className="flex h-16 items-center justify-between">
+
+          {/* Brand */}
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-md bg-slate-900 flex items-center justify-center text-white font-semibold text-sm">
+              G
             </div>
+            <span className="text-lg font-semibold tracking-tight text-slate-900">
+              GAZE
+            </span>
           </div>
 
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-8">
-              {navItems.map((item) => (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  {item.label}
-                </a>
-              ))}
-              <button className="ml-4 bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
-                Try Demo
-              </button>
-            </div>
-          </div>
+          {/* Desktop Nav */}
+          <div className="hidden md:flex items-center gap-10">
+            {navItems.map(item => (
+              <a
+                key={item.label}
+                href={item.href}
+                className="text-sm font-medium text-slate-700 hover:text-slate-900 transition"
+              >
+                {item.label}
+              </a>
+            ))}
 
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600"
-            >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            <button className="ml-6 px-6 py-2.5 rounded-md bg-slate-900 text-white text-sm font-medium hover:bg-slate-800 transition">
+              Live Demonstration
             </button>
           </div>
+
+          {/* Mobile Toggle */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden text-slate-700"
+            aria-label="Toggle navigation"
+          >
+            {isOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
         </div>
 
+        {/* Mobile Menu */}
         {isOpen && (
-          <div className="md:hidden border-t border-gray-100">
-            <div className="px-2 pt-2 pb-3 space-y-1">
-              {navItems.map((item) => (
+          <div className="md:hidden border-t border-slate-200 bg-[#F7F9FC]">
+            <div className="py-4 space-y-2">
+              {navItems.map(item => (
                 <a
                   key={item.label}
                   href={item.href}
-                  className="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium"
+                  className="block px-2 py-2 text-sm font-medium text-slate-700 hover:text-slate-900"
                   onClick={() => setIsOpen(false)}
                 >
                   {item.label}
                 </a>
               ))}
-              <button className="w-full mt-4 bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
-                Try Demo
-              </button>
+
+              <div className="pt-4">
+                <button className="w-full px-4 py-3 rounded-md bg-slate-900 text-white text-sm font-medium hover:bg-slate-800 transition">
+                  Live Demonstration
+                </button>
+              </div>
             </div>
           </div>
         )}

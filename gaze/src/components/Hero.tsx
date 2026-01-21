@@ -1,128 +1,101 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Eye, Smartphone, Check } from 'lucide-react'
-import { useState } from 'react'
 
 export default function Hero() {
-  const [eyePosition, setEyePosition] = useState({ x: 0, y: 0 })
+    return (
+        <section className="relative bg-[#F7F9FC] text-[#0F172A]">
+            <div className="max-w-7xl mx-auto px-6 lg:px-12 py-28">
 
-  const features = [
-    'Works with any webcam',
-    'No hardware required',
-    '30-second setup',
-    'Free forever option',
-  ]
+                {/* Impact Badge */}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.4 }}
+                    className="inline-flex items-center px-4 py-2 rounded-full border border-slate-300 text-sm font-medium text-slate-700 mb-10"
+                >
+                    Global Accessibility • Assistive Technology
+                </motion.div>
 
-  return (
-    <section className="pt-24 pb-16 md:pt-32 md:pb-24 relative overflow-hidden">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-blue-50 text-blue-700 text-sm font-medium mb-6">
-              <Smartphone size={16} className="mr-2" />
-              Works with any smartphone camera
-            </div>
-            
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
-              <span className="block">Control your digital</span>
-              <span className="block text-gradient">world with just your eyes</span>
-            </h1>
-            
-            <p className="text-lg text-gray-600 mb-8 max-w-2xl">
-              GAZE is an AI-powered accessibility platform that turns eye movement into seamless computer control — 
-              replacing $10,000+ hardware with software.
-            </p>
+                <div className="grid lg:grid-cols-2 gap-16 items-start">
 
-            <div className="space-y-4 mb-8">
-              {features.map((feature, index) => (
-                <div key={index} className="flex items-center">
-                  <Check className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
-                  <span className="text-gray-700">{feature}</span>
+                    {/* LEFT — MESSAGE */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        <h1 className="text-5xl xl:text-6xl font-semibold leading-tight tracking-tight mb-6">
+                            GAZE
+                        </h1>
+
+                        <h2 className="text-2xl xl:text-3xl font-medium text-slate-700 mb-6">
+                            Assistive Communication Infrastructure
+                        </h2>
+
+                        <p className="text-lg text-slate-600 max-w-xl mb-10">
+                            Millions of people lose the ability to speak due to paralysis,
+                            neurological disease, or critical care intervention.
+                            <br /><br />
+                            GAZE replaces expensive, inaccessible eye-tracking hardware
+                            with a software system that runs on any standard camera.
+                        </p>
+
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <button className="px-8 py-4 rounded-md bg-slate-900 text-white font-medium text-lg hover:bg-slate-800 transition">
+                                Live Demonstration
+                            </button>
+
+                            <button className="px-8 py-4 rounded-md border border-slate-400 text-slate-800 font-medium text-lg hover:bg-slate-100 transition">
+                                Hospitals & Public Institutions
+                            </button>
+                        </div>
+                    </motion.div>
+
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.2, duration: 0.5 }}
+                        className="h-full"
+                    >
+                        <div className="bg-white border border-slate-200 rounded-xl p-8 shadow-sm h-full flex flex-col">
+
+                            {/* Top */}
+                            <div>
+                                <div className="text-sm text-slate-500 mb-6">
+                                    System Overview
+                                </div>
+
+                                <ul className="space-y-4 text-slate-700 text-base">
+                                    <li>• Works with existing smartphones, tablets, laptops</li>
+                                    <li>• No proprietary hardware required</li>
+                                    <li>• Browser-based deployment</li>
+                                    <li>• Supports ICU, rehabilitation, and home care</li>
+                                    <li>• Designed for multilingual and low-resource settings</li>
+                                </ul>
+                            </div>
+
+                            {/* Bottom — Metrics always sit at the base */}
+                            <div className="mt-10 grid grid-cols-3 gap-6 border-t border-slate-200 pt-6 text-center">
+                                <div>
+                                    <div className="text-2xl font-semibold text-slate-900">$0</div>
+                                    <div className="text-sm text-slate-500">Hardware Cost</div>
+                                </div>
+                                <div>
+                                    <div className="text-2xl font-semibold text-slate-900">99%</div>
+                                    <div className="text-sm text-slate-500">Cost Reduction</div>
+                                </div>
+                                <div>
+                                    <div className="text-2xl font-semibold text-slate-900">Global</div>
+                                    <div className="text-sm text-slate-500">Scalability</div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </motion.div>
+
                 </div>
-              ))}
             </div>
-
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button className="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl">
-                Try the Demo
-              </button>
-              <button className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-50 transition-colors">
-                For Institutions
-              </button>
-            </div>
-
-            <p className="mt-6 text-sm text-gray-500">
-              * No installation required. Works directly in your browser.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="relative"
-          >
-            <div className="relative aspect-square max-w-lg mx-auto">
-              {/* Eye Animation Container */}
-              <div 
-                className="absolute inset-0 rounded-3xl bg-gradient-to-br from-blue-50 to-teal-50 border border-blue-100 p-8"
-                onMouseMove={(e) => {
-                  const rect = e.currentTarget.getBoundingClientRect()
-                  const x = ((e.clientX - rect.left) / rect.width) * 100
-                  const y = ((e.clientY - rect.top) / rect.height) * 100
-                  setEyePosition({ x, y })
-                }}
-              >
-                {/* Eye Graphic */}
-                <div className="relative w-64 h-64 mx-auto mt-16">
-                  <div className="absolute inset-0 rounded-full bg-white border-4 border-blue-200"></div>
-                  <div className="absolute inset-8 rounded-full bg-blue-100"></div>
-                  <div 
-                    className="absolute w-16 h-16 rounded-full bg-gradient-to-br from-blue-600 to-teal-500"
-                    style={{
-                      left: `${eyePosition.x}%`,
-                      top: `${eyePosition.y}%`,
-                      transform: 'translate(-50%, -50%)',
-                      transition: 'all 0.1s ease-out',
-                    }}
-                  ></div>
-                </div>
-
-                {/* Cursor Trail */}
-                <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2">
-                  <div className="flex items-center space-x-4">
-                    <Eye className="w-6 h-6 text-blue-600 animate-pulse" />
-                    <div className="h-1 w-32 bg-gradient-to-r from-blue-600 to-teal-500 rounded-full"></div>
-                    <div className="w-8 h-8 border-2 border-blue-600 rounded-lg transform rotate-45 animate-pulse"></div>
-                  </div>
-                </div>
-
-                {/* Typing Animation */}
-                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-64">
-                  <div className="bg-white rounded-lg p-4 shadow-lg border border-gray-200">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                      <div className="text-sm font-mono text-gray-700">
-                        Hello... I can speak
-                      </div>
-                      <div className="w-2 h-4 bg-blue-600 animate-bounce"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-
-      {/* Background Elements */}
-      <div className="absolute top-0 left-0 w-64 h-64 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-      <div className="absolute top-0 right-0 w-64 h-64 bg-teal-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-    </section>
-  )
+        </section>
+    )
 }
