@@ -15,7 +15,7 @@ export default function Navigation() {
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-[#F7F9FC]/95 backdrop-blur-sm border-b border-slate-200">
-      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
 
           {/* Brand */}

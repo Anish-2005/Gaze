@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 export default function Hero() {
     return (
         <section className="relative bg-[#F7F9FC] text-[#0F172A]">
-            <div className="max-w-7xl mx-auto px-6 lg:px-12 py-28">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-28">
 
                 {/* Impact Badge */}
                 <motion.div
