@@ -1,84 +1,85 @@
-import { 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Heart,
-  Shield,
+import {
+  Mail,
+  MapPin,
+  ShieldCheck,
+  FileText,
   Globe,
-  FileText
 } from 'lucide-react'
 
 const footerLinks = {
-  'About GAZE': [
-    { label: 'Our Mission', href: '#' },
-    { label: 'Team', href: '#' },
-    { label: 'Accessibility Statement', href: '#' },
-    { label: 'Press & Media', href: '#' },
-  ],
-  'For Users': [
-    { label: 'Tutorials', href: '#' },
+  Platform: [
+    { label: 'System Overview', href: '#' },
+    { label: 'Accessibility Standards', href: '#' },
     { label: 'Documentation', href: '#' },
-    { label: 'Support Center', href: '#' },
-    { label: 'Voice Cloning Guide', href: '#' },
+    { label: 'Open Architecture', href: '#' },
   ],
-  'For Organizations': [
-    { label: 'Hospital Licensing', href: '#' },
+  Institutions: [
+    { label: 'Hospitals & ICUs', href: '#' },
+    { label: 'Public Sector Deployment', href: '#' },
     { label: 'NGO Partnerships', href: '#' },
-    { label: 'Insurance Reimbursement', href: '#' },
-    { label: 'SDK Licensing (EdTech/Gaming)', href: '#' },
+    { label: 'Insurance & Reimbursement', href: '#' },
+  ],
+  Governance: [
+    { label: 'Privacy Policy', href: '#' },
+    { label: 'Ethical Guidelines', href: '#' },
+    { label: 'Data Protection', href: '#' },
+    { label: 'Regulatory Compliance', href: '#' },
   ],
 }
 
-const trustBadges = [
-  { icon: <Shield className="w-5 h-5" />, text: 'Privacy-first design' },
-  { icon: <FileText className="w-5 h-5" />, text: 'GDPR & HIPAA compliant' },
-  { icon: <Globe className="w-5 h-5" />, text: 'Open-source components' },
-  { icon: <Heart className="w-5 h-5" />, text: 'Data stays on your device' },
+const trustSignals = [
+  { icon: ShieldCheck, text: 'Privacy-first, on-device processing' },
+  { icon: FileText, text: 'Designed for healthcare compliance' },
+  { icon: Globe, text: 'Globally deployable, web-based system' },
 ]
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-300">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
-          {/* Brand Section */}
+    <footer className="bg-[#0B1220] text-slate-300">
+      <div className="max-w-8xl mx-auto px-6 lg:px-12 py-16">
+
+        {/* Top */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-16">
+
+          {/* Brand */}
           <div className="lg:col-span-2">
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-teal-400 rounded-lg"></div>
-              <div>
-                <div className="text-2xl font-bold text-white">GAZE</div>
-                <div className="text-sm text-blue-300">The Eye-Tracking Communicator</div>
+            <div className="mb-6">
+              <div className="text-2xl font-semibold text-white tracking-tight">
+                GAZE
+              </div>
+              <div className="text-sm text-slate-400 mt-1">
+                Assistive Communication Infrastructure
               </div>
             </div>
-            <p className="mb-6 max-w-md">
-              Giving a voice to the paralyzed using only a smartphone selfie camera.
-              Compassionate capitalism in action.
+
+            <p className="max-w-md text-slate-400 leading-relaxed mb-6">
+              GAZE is a software-based assistive communication system designed
+              to restore basic human interaction for individuals who are unable
+              to speak or use traditional input devices.
             </p>
-            
-            <div className="space-y-3">
-              <div className="flex items-center space-x-3">
-                <Mail className="w-5 h-5" />
-                <span>contact@gaze.com</span>
+
+            <div className="space-y-3 text-sm">
+              <div className="flex items-center gap-3">
+                <Mail className="w-4 h-4" />
+                <span>contact@gaze.global</span>
               </div>
-              <div className="flex items-center space-x-3">
-                <Phone className="w-5 h-5" />
-                <span>+1 (555) 123-4567</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <MapPin className="w-5 h-5" />
-                <span>San Francisco, CA</span>
+              <div className="flex items-center gap-3">
+                <MapPin className="w-4 h-4" />
+                <span>Global • Distributed deployment</span>
               </div>
             </div>
           </div>
 
-          {/* Links Sections */}
-          {Object.entries(footerLinks).map(([category, links]) => (
-            <div key={category}>
-              <h3 className="text-white font-semibold mb-4">{category}</h3>
-              <ul className="space-y-3">
-                {links.map((link) => (
+          {/* Links */}
+          {Object.entries(footerLinks).map(([section, links]) => (
+            <div key={section}>
+              <h4 className="text-sm font-semibold text-white mb-4">
+                {section}
+              </h4>
+              <ul className="space-y-3 text-sm">
+                {links.map(link => (
                   <li key={link.label}>
-                    <a 
+                    <a
                       href={link.href}
                       className="hover:text-white transition-colors"
                     >
@@ -91,37 +92,46 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Trust Badges */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          {trustBadges.map((badge, index) => (
-            <div key={index} className="flex items-center space-x-2">
-              <div className="text-blue-400">{badge.icon}</div>
-              <span className="text-sm">{badge.text}</span>
-            </div>
-          ))}
+        {/* Trust Signals */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
+          {trustSignals.map((item, index) => {
+            const Icon = item.icon
+            return (
+              <div
+                key={index}
+                className="flex items-center gap-3 text-sm text-slate-400"
+              >
+                <Icon className="w-4 h-4 text-slate-300" />
+                <span>{item.text}</span>
+              </div>
+            )
+          })}
         </div>
 
         {/* Divider */}
-        <div className="border-t border-gray-800 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="mb-4 md:mb-0">
-              <p className="text-sm">
-                © {new Date().getFullYear()} GAZE. Compassionate Capitalism.
-                <br />
-                All rights reserved.
-              </p>
-            </div>
-            
-            <div className="text-sm">
-              <div className="flex space-x-6">
-                <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-                <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
-                <a href="#" className="hover:text-white transition-colors">Cookie Policy</a>
-                <a href="#" className="hover:text-white transition-colors">Ethical Guidelines</a>
-              </div>
-            </div>
+        <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-start md:items-center text-sm text-slate-400">
+          <div className="mb-4 md:mb-0">
+            © {new Date().getFullYear()} GAZE.
+            <br className="md:hidden" />
+            Assistive communication as public infrastructure.
+          </div>
+
+          <div className="flex flex-wrap gap-6">
+            <a href="#" className="hover:text-white transition-colors">
+              Privacy
+            </a>
+            <a href="#" className="hover:text-white transition-colors">
+              Terms
+            </a>
+            <a href="#" className="hover:text-white transition-colors">
+              Accessibility
+            </a>
+            <a href="#" className="hover:text-white transition-colors">
+              Compliance
+            </a>
           </div>
         </div>
+
       </div>
     </footer>
   )

@@ -27,7 +27,7 @@ const steps = [
 export default function HowItWorks() {
   return (
     <section id="how-it-works" className="py-24 bg-[#F7F9FC] text-[#0F172A]">
-      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+      <div className="max-w-full mx-auto px-6 lg:px-12">
 
         {/* Section Header */}
         <motion.div
