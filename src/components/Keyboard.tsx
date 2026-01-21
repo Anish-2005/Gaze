@@ -22,9 +22,9 @@ export default function Keyboard({ gazeX, gazeY, onLetter, dwellTime }: Keyboard
     const screenX = gazeX * window.innerWidth;
     const screenY = gazeY * window.innerHeight;
 
-    // Assume keyboard is centered, calculate key under gaze
-    const keyboardWidth = 600;
-    const keyboardHeight = 300;
+    // Responsive keyboard dimensions
+    const keyboardWidth = Math.min(600, window.innerWidth - 40); // Max 600px, min padding
+    const keyboardHeight = Math.min(300, window.innerHeight * 0.4); // Max 300px or 40% of screen height
     const keyboardX = (window.innerWidth - keyboardWidth) / 2;
     const keyboardY = (window.innerHeight - keyboardHeight) / 2;
 
@@ -70,18 +70,19 @@ export default function Keyboard({ gazeX, gazeY, onLetter, dwellTime }: Keyboard
   }, [gazeX, gazeY, hoveredKey, dwellStart, dwellTime, onLetter]);
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center pointer-events-none">
-      <div className="grid gap-2 p-4 bg-white border rounded-lg shadow-lg" style={{ width: '600px', height: '300px' }}>
+    <div className="fixed inset-0 flex items-center justify-center pointer-events-none p-4">
+      <div className="w-full max-w-lg bg-white border rounded-lg shadow-lg p-4" style={{ aspectRatio: '2/1' }}>
         {keys.map((row, rowIndex) => (
-          <div key={rowIndex} className="flex gap-2">
+          <div key={rowIndex} className="flex gap-1 mb-1 flex-1">
             {row.map((key) => (
               <button
                 key={key}
-                className={`flex-1 h-12 border rounded ${
+                className={`flex-1 border rounded text-sm font-medium ${
                   hoveredKey === key ? 'bg-blue-200 border-blue-500' : 'bg-gray-100'
                 }`}
+                style={{ minHeight: '2.5rem' }}
               >
-                {key === ' ' ? 'Space' : key === '⌫' ? 'Back' : key}
+                {key === ' ' ? 'Space' : key === '⌫' ? '⌫' : key}
               </button>
             ))}
           </div>

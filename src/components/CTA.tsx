@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { MessageCircle, Handshake } from 'lucide-react'
+import Link from 'next/link'
 
 export default function Engagement() {
   return (
@@ -28,10 +29,12 @@ export default function Engagement() {
 
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-6 mb-24">
-            <button className="flex items-center gap-3 px-8 py-4 rounded-md bg-white text-slate-900 font-medium text-lg hover:bg-slate-100 transition">
-              <MessageCircle className="w-5 h-5" />
-              <span>Access individual use</span>
-            </button>
+            <Link href="/demo">
+              <button className="flex items-center gap-3 px-8 py-4 rounded-md bg-white text-slate-900 font-medium text-lg hover:bg-slate-100 transition">
+                <MessageCircle className="w-5 h-5" />
+                <span>Access individual use</span>
+              </button>
+            </Link>
 
             <button className="flex items-center gap-3 px-8 py-4 rounded-md border border-slate-400 text-slate-200 font-medium text-lg hover:bg-white/5 transition">
               <Handshake className="w-5 h-5" />

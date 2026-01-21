@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Menu, X } from 'lucide-react'
+import Link from 'next/link'
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
@@ -40,9 +41,11 @@ export default function Navigation() {
               </a>
             ))}
 
-            <button className="ml-6 px-6 py-2.5 rounded-md bg-slate-900 text-white text-sm font-medium hover:bg-slate-800 transition">
-              Live Demonstration
-            </button>
+            <Link href="/demo">
+              <button className="ml-6 px-6 py-2.5 rounded-md bg-slate-900 text-white text-sm font-medium hover:bg-slate-800 transition">
+                Live Demonstration
+              </button>
+            </Link>
           </div>
 
           {/* Mobile Toggle */}
@@ -71,9 +74,11 @@ export default function Navigation() {
               ))}
 
               <div className="pt-4">
-                <button className="w-full px-4 py-3 rounded-md bg-slate-900 text-white text-sm font-medium hover:bg-slate-800 transition">
-                  Live Demonstration
-                </button>
+                <Link href="/demo">
+                  <button className="w-full px-4 py-3 rounded-md bg-slate-900 text-white text-sm font-medium hover:bg-slate-800 transition">
+                    Live Demonstration
+                  </button>
+                </Link>
               </div>
             </div>
           </div>

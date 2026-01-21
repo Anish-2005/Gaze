@@ -64,15 +64,15 @@ export default function Solution() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.08 }}
-                className="ml-10 flex gap-8 items-start border-b border-slate-200 pb-10 last:border-none"
+                className="flex flex-col sm:flex-row gap-4 sm:gap-8 items-start sm:ml-10 ml-0 border-b border-slate-200 pb-10 last:border-none"
               >
                 {/* Icon */}
-                <div className="flex-shrink-0 w-12 h-12 rounded-md bg-slate-900 text-white flex items-center justify-center">
+                <div className="flex-shrink-0 w-12 h-12 rounded-md bg-slate-900 text-white flex items-center justify-center mx-auto sm:mx-0">
                   <Icon className="w-5 h-5" />
                 </div>
 
                 {/* Content */}
-                <div className="max-w-3xl">
+                <div className="max-w-3xl text-center sm:text-left">
                   <h3 className="text-lg font-semibold mb-2">
                     {index + 1}. {step.title}
                   </h3>

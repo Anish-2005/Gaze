@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import Link from 'next/link'
 
 export default function Hero() {
     return (
@@ -25,11 +26,11 @@ export default function Hero() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <h1 className="text-5xl xl:text-6xl font-semibold leading-tight tracking-tight mb-6">
+                        <h1 className="text-4xl md:text-5xl xl:text-6xl font-semibold leading-tight tracking-tight mb-6">
                             GAZE
                         </h1>
 
-                        <h2 className="text-2xl xl:text-3xl font-medium text-slate-700 mb-6">
+                        <h2 className="text-xl md:text-2xl xl:text-3xl font-medium text-slate-700 mb-6">
                             Assistive Communication Infrastructure
                         </h2>
 
@@ -42,9 +43,11 @@ export default function Hero() {
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-4">
-                            <button className="px-8 py-4 rounded-md bg-slate-900 text-white font-medium text-lg hover:bg-slate-800 transition">
-                                Live Demonstration
-                            </button>
+                            <Link href="/demo">
+                                <button className="px-8 py-4 rounded-md bg-slate-900 text-white font-medium text-lg hover:bg-slate-800 transition">
+                                    Live Demonstration
+                                </button>
+                            </Link>
 
                             <button className="px-8 py-4 rounded-md border border-slate-400 text-slate-800 font-medium text-lg hover:bg-slate-100 transition">
                                 Hospitals & Public Institutions

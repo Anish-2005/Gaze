@@ -1,0 +1,36 @@
+@keyframes dwellPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+@keyframes calibrationComplete {
+  0% { transform: scale(0.8); opacity: 0; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.dwellRing {
+  animation: dwellPulse 1s ease-in-out infinite;
+}
+
+.calibrationComplete {
+  animation: calibrationComplete 0.5s ease-out forwards;
+}
+
+/* Medical interface scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
