@@ -42,7 +42,7 @@ export default function Navigation() {
             ))}
 
             <Link href="/demo">
-              <button className="ml-6 px-6 py-2.5 rounded-md bg-slate-900 text-white text-sm font-medium hover:bg-slate-800 transition">
+              <button className="ml-6 px-4 sm:px-6 py-2 sm:py-2.5 rounded-md bg-slate-900 text-white text-sm font-medium hover:bg-slate-800 transition">
                 Live Demonstration
               </button>
             </Link>

@@ -17,7 +17,7 @@ export default function Engagement() {
           className="max-w-4xl"
         >
           {/* Heading */}
-          <h2 className="text-3xl md:text-4xl font-semibold leading-tight text-white mb-6">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold leading-tight text-white mb-6">
             Engage with the GAZE platform
           </h2>
 
@@ -30,13 +30,13 @@ export default function Engagement() {
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-6 mb-24">
             <Link href="/demo">
-              <button className="flex items-center gap-3 px-8 py-4 rounded-md bg-white text-slate-900 font-medium text-lg hover:bg-slate-100 transition">
+              <button className="flex items-center justify-center gap-3 px-6 sm:px-8 py-3 sm:py-4 rounded-md bg-white text-slate-900 font-medium text-base sm:text-lg hover:bg-slate-100 transition">
                 <MessageCircle className="w-5 h-5" />
                 <span>Access individual use</span>
               </button>
             </Link>
 
-            <button className="flex items-center gap-3 px-8 py-4 rounded-md border border-slate-400 text-slate-200 font-medium text-lg hover:bg-white/5 transition">
+            <button className="flex items-center justify-center gap-3 px-6 sm:px-8 py-3 sm:py-4 rounded-md border border-slate-400 text-slate-200 font-medium text-base sm:text-lg hover:bg-white/5 transition">
               <Handshake className="w-5 h-5" />
               <span>Discuss institutional deployment</span>
             </button>

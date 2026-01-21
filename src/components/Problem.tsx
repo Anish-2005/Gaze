@@ -37,7 +37,7 @@ export default function Problem() {
           transition={{ duration: 0.5 }}
           className="max-w-3xl mb-20"
         >
-          <h2 className="text-3xl md:text-4xl font-semibold leading-tight mb-6">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold leading-tight mb-6">
             Communication loss is a systemic problem.
           </h2>
 

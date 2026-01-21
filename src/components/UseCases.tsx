@@ -43,7 +43,7 @@ export default function UseCases() {
           transition={{ duration: 0.5 }}
           className="max-w-3xl mb-20"
         >
-          <h2 className="text-3xl md:text-4xl font-semibold leading-tight mb-6">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold leading-tight mb-6">
             Deployment contexts
           </h2>
           <p className="text-lg text-slate-600">
