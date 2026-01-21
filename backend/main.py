@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), 'gaze_tracking_lib'))
+
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 import cv2
@@ -6,6 +10,7 @@ import base64
 import asyncio
 from typing import Dict, List
 import logging
+from gaze_tracking import GazeTracking
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -22,86 +27,48 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Global variables for face detection
-face_cascade = None
-eye_cascade = None
+# Global variables for gaze tracking
+gaze_tracker = None
 
 @app.on_event("startup")
 async def startup_event():
-    """Initialize face detection models on startup"""
-    global face_cascade, eye_cascade
+    """Initialize gaze tracking on startup"""
+    global gaze_tracker
 
     try:
-        # Load OpenCV's pre-trained face and eye detection models
-        face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-        eye_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xml')
-
-        if face_cascade.empty():
-            logger.error("Failed to load face cascade classifier")
-        else:
-            logger.info("Face detection model loaded successfully")
-
-        if eye_cascade.empty():
-            logger.warning("Failed to load eye cascade classifier")
-        else:
-            logger.info("Eye detection model loaded successfully")
-
+        gaze_tracker = GazeTracking()
+        logger.info("Gaze tracking initialized successfully")
     except Exception as e:
-        logger.error(f"Failed to initialize models: {e}")
+        logger.error(f"Failed to initialize gaze tracking: {e}")
 
-class FaceDetector:
+class GazeTracker:
     def __init__(self):
-        self.face_cascade = face_cascade
-        self.eye_cascade = eye_cascade
+        self.gaze = gaze_tracker
 
-    def detect_faces(self, frame: np.ndarray) -> List[Dict]:
-        """Detect faces in the given frame"""
-        if self.face_cascade is None or self.face_cascade.empty():
-            return []
+    def track_gaze(self, frame: np.ndarray) -> Dict:
+        """Track gaze in the given frame"""
+        if self.gaze is None:
+            return {"error": "Gaze tracker not initialized"}
 
-        # Convert to grayscale for detection
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        try:
+            self.gaze.refresh(frame)
 
-        # Detect faces
-        faces = self.face_cascade.detectMultiScale(
-            gray,
-            scaleFactor=1.1,
-            minNeighbors=5,
-            minSize=(30, 30)
-        )
+            gaze_data = {
+                "horizontal_ratio": self.gaze.horizontal_ratio(),
+                "vertical_ratio": self.gaze.vertical_ratio(),
+                "is_left": self.gaze.is_left(),
+                "is_right": self.gaze.is_right(),
+                "is_center": self.gaze.is_center(),
+                "is_blinking": self.gaze.is_blinking(),
+                "pupil_left_coords": self.gaze.pupil_left_coords(),
+                "pupil_right_coords": self.gaze.pupil_right_coords(),
+            }
 
-        face_data = []
-        for (x, y, w, h) in faces:
-            # Calculate relative coordinates (0-1)
-            frame_h, frame_w = frame.shape[:2]
-            relative_x = x / frame_w
-            relative_y = y / frame_h
-            relative_w = w / frame_w
-            relative_h = h / frame_h
+            return gaze_data
 
-            # Detect eyes within the face region
-            face_roi = gray[y:y+h, x:x+w]
-            eyes = []
-            if self.eye_cascade is not None and not self.eye_cascade.empty():
-                detected_eyes = self.eye_cascade.detectMultiScale(face_roi, scaleFactor=1.1, minNeighbors=3)
-                for (ex, ey, ew, eh) in detected_eyes[:2]:  # Take max 2 eyes
-                    eyes.append({
-                        'x': (x + ex) / frame_w,
-                        'y': (y + ey) / frame_h,
-                        'width': ew / frame_w,
-                        'height': eh / frame_h
-                    })
-
-            face_data.append({
-                'x': relative_x,
-                'y': relative_y,
-                'width': relative_w,
-                'height': relative_h,
-                'confidence': 0.8,  # OpenCV doesn't provide confidence scores
-                'eyes': eyes
-            })
-
-        return face_data
+        except Exception as e:
+            logger.error(f"Error in gaze tracking: {e}")
+            return {"error": str(e)}
 
 # WebSocket connection manager
 class ConnectionManager:
@@ -123,11 +90,11 @@ class ConnectionManager:
             await self.active_connections[client_id].send_json(message)
 
 manager = ConnectionManager()
-face_detector = FaceDetector()
+gaze_tracker_instance = GazeTracker()
 
-@app.websocket("/ws/face-detection/{client_id}")
-async def face_detection_websocket(websocket: WebSocket, client_id: str):
-    """WebSocket endpoint for real-time face detection"""
+@app.websocket("/ws/gaze-tracking/{client_id}")
+async def gaze_tracking_websocket(websocket: WebSocket, client_id: str):
+    """WebSocket endpoint for real-time gaze tracking"""
     await manager.connect(websocket, client_id)
 
     try:
@@ -156,13 +123,13 @@ async def face_detection_websocket(websocket: WebSocket, client_id: str):
                     if frame is None:
                         continue
 
-                    # Detect faces
-                    faces = face_detector.detect_faces(frame)
+                    # Track gaze
+                    gaze_data = gaze_tracker_instance.track_gaze(frame)
 
-                    # Send detection results back to client
+                    # Send gaze tracking results back to client
                     await manager.send_personal_message({
-                        "type": "detection_result",
-                        "faces": faces,
+                        "type": "gaze_result",
+                        "gaze": gaze_data,
                         "timestamp": data.get("timestamp")
                     }, client_id)
 
@@ -184,11 +151,8 @@ async def root():
     """Health check endpoint"""
     return {
         "status": "running",
-        "message": "Gaze Tracking Backend with OpenCV Face Detection",
-        "models_loaded": {
-            "face_cascade": face_cascade is not None and not face_cascade.empty(),
-            "eye_cascade": eye_cascade is not None and not eye_cascade.empty()
-        }
+        "message": "Gaze Tracking Backend with GazeTracking Library",
+        "gaze_tracker_loaded": gaze_tracker is not None
     }
 
 @app.get("/health")
@@ -196,11 +160,7 @@ async def health_check():
     """Detailed health check"""
     return {
         "status": "healthy",
-        "opencv_version": cv2.__version__,
-        "models_status": {
-            "face_detection": "loaded" if (face_cascade and not face_cascade.empty()) else "failed",
-            "eye_detection": "loaded" if (eye_cascade and not eye_cascade.empty()) else "failed"
-        },
+        "gaze_tracking_status": "loaded" if gaze_tracker else "failed",
         "active_connections": len(manager.active_connections)
     }
 
