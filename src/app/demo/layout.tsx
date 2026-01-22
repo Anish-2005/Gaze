@@ -2,7 +2,7 @@
 
 import { useJudgeMode } from '@/lib/useJudgeMode'
 import './demo.module.css'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function DemoLayout({
   children,
@@ -10,6 +10,7 @@ export default function DemoLayout({
   children: React.ReactNode
 }) {
   const { judgeMode, enterJudgeMode } = useJudgeMode()
+  const [isFullscreen, setIsFullscreen] = useState(false)
 
   // Auto-enter judge mode if ?judge=true is in URL
   useEffect(() => {
@@ -18,6 +19,19 @@ export default function DemoLayout({
       enterJudgeMode()
     }
   }, [enterJudgeMode])
+
+  // Track fullscreen status
+  useEffect(() => {
+    const checkFullscreen = () => {
+      setIsFullscreen(!!document.fullscreenElement)
+    }
+
+    document.addEventListener('fullscreenchange', checkFullscreen)
+    // Also check on mount
+    checkFullscreen()
+
+    return () => document.removeEventListener('fullscreenchange', checkFullscreen)
+  }, [])
 
   // Handle keyboard shortcuts for demo
   useEffect(() => {
@@ -186,7 +200,7 @@ export default function DemoLayout({
         </div>
 
         {/* Fullscreen Indicator */}
-        {document.fullscreenElement && (
+        {isFullscreen && (
           <div className="fixed top-4 right-4 z-30">
             <div className="px-3 py-1.5 bg-black/70 text-white text-xs rounded-full backdrop-blur-sm">
               Fullscreen Mode

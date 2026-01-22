@@ -23,7 +23,7 @@ export default function InstitutionalCTA({ onScheduleCall }: InstitutionalCTAPro
 
           <p className="text-lg md:text-xl text-slate-300 mb-8 md:mb-12 max-w-3xl mx-auto leading-relaxed px-4">
             Partner with GAZE to deploy assistive communication infrastructure
-            where it's needed most—without capital expenditure or complex IT projects.
+            where it&apos;s needed most—without capital expenditure or complex IT projects.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-8 md:mb-12">

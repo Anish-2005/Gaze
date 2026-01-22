@@ -19,7 +19,6 @@ export default function DemoShell() {
     addPhrase,
     clearMessage,
     speak,
-    stopSpeaking,
     toggleCalibration,
     toggleTracking,
     resetDemo,
@@ -31,7 +30,6 @@ export default function DemoShell() {
     dwellProgress,
     isDwelling,
     setHoveredKey,
-    resetDwell,
   } = useDwellDetection(addChar)
 
   // Gaze simulation (for demo purposes)

@@ -37,7 +37,7 @@ export default function ClosingStatement() {
             </p>
 
             <p>
-              This governance framework isn't just a compliance document—it's our operational
+              This governance framework isn&apos;t just a compliance document—it&apos;s our operational
               DNA. It guides how we build, deploy, and maintain communication systems for
               people who depend on them for their most basic human connections.
             </p>

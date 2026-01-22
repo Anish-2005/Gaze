@@ -216,7 +216,7 @@ export default function PitchPage() {
                   <div>
                     <p className="text-red-800 font-medium mb-2">The Hard Reality:</p>
                     <p className="text-red-700">
-                      Communication becomes a luxury when technology exists but isn't accessible.
+                      Communication becomes a luxury when technology exists but isn&apos;t accessible.
                     </p>
                   </div>
                 </div>
@@ -372,7 +372,7 @@ export default function PitchPage() {
             <div className="mt-12 max-w-3xl">
               <div className="p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-200">
                 <p className="text-gray-700">
-                  "That allows accessibility to scale like infrastructure, not like medical equipment."
+                  &ldquo;That allows accessibility to scale like infrastructure, not like medical equipment.&rdquo;
                 </p>
               </div>
             </div>

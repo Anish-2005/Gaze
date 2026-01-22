@@ -5,7 +5,7 @@ import { useJudgeMode } from '@/lib/useJudgeMode'
 import { motion, AnimatePresence } from 'framer-motion'
 
 export default function JudgeModeIndicator() {
-  const { judgeMode, showIndicator, exitJudgeMode, setShowIndicator } = useJudgeMode()
+  const { judgeMode, showIndicator, setShowIndicator } = useJudgeMode()
 
   if (!judgeMode) return null
 

@@ -6,10 +6,7 @@ import Link from 'next/link'
 
 export default function CTA() {
   return (
-    <section
-      id="cta"
-      className="bg-[#0B1220] text-slate-200 py-20 sm:py-24 lg:py-28"
-    >
+    <section id="cta" className="bg-[#0B1220] text-slate-200 py-20 sm:py-24 lg:py-28">
       <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-16">
 
         <motion.div
@@ -19,10 +16,7 @@ export default function CTA() {
           transition={{ duration: 0.5 }}
           className="max-w-4xl text-center sm:text-left"
         >
-          {/* Heading */}
-          <h2
-            className="font-semibold leading-tight text-white mb-5 text-[clamp(1.6rem,5vw,2.25rem)] lg:text-[clamp(2rem,3vw,2.5rem)]"
-          >
+          <h2 className="font-semibold leading-tight text-white mb-5 text-[clamp(1.6rem,5vw,2.25rem)] lg:text-[clamp(2rem,3vw,2.5rem)]">
             Engage with the GAZE platform
           </h2>
 
@@ -35,17 +29,13 @@ export default function CTA() {
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-16 sm:mb-20 justify-center sm:justify-start">
             <Link href="/demo" className="w-full sm:w-auto">
-              <button
-                className="w-full flex items-center justify-center gap-3 px-6 sm:px-8 py-3.5 sm:py-4 rounded-md bg-white text-slate-900 font-medium text-base sm:text-lg hover:bg-slate-100 transition"
-              >
+              <button className="w-full flex items-center justify-center gap-3 px-6 sm:px-8 py-3.5 sm:py-4 rounded-md bg-white text-slate-900 font-medium text-base sm:text-lg hover:bg-slate-100 transition">
                 <MessageCircle className="w-5 h-5" />
                 <span>Access individual use</span>
               </button>
             </Link>
 
-            <button
-              className="w-full sm:w-auto flex items-center justify-center gap-3 px-6 sm:px-8 py-3.5 sm:py-4 rounded-md border border-slate-400 text-slate-200 font-medium text-base sm:text-lg hover:bg-white/5 transition"
-            >
+            <button className="w-full sm:w-auto flex items-center justify-center gap-3 px-6 sm:px-8 py-3.5 sm:py-4 rounded-md border border-slate-400 text-slate-200 font-medium text-base sm:text-lg hover:bg-white/5 transition">
               <Handshake className="w-5 h-5" />
               <span>Discuss institutional deployment</span>
             </button>

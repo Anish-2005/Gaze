@@ -1,6 +1,6 @@
 'use client'
 
-import { Download, Copy, ChevronLeft, ChevronRight, Grid, Play, CheckCircle } from 'lucide-react'
+import { Download, Copy, ChevronLeft, ChevronRight, Grid, CheckCircle } from 'lucide-react'
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 

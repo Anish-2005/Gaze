@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react'
 import Key from './Key'
-import { cn } from '@/lib/utils'
 
 interface GazeKeyboardProps {
   onSelect: (key: string) => void

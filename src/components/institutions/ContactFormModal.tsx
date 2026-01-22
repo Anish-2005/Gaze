@@ -85,7 +85,7 @@ export default function ContactFormModal({ isOpen, onClose }: ContactFormModalPr
           </form>
 
           <p className="mt-4 text-xs md:text-sm text-gray-500 text-center">
-            We'll respond within 24 hours to schedule a 45-minute discovery call.
+            We&apos;ll respond within 24 hours to schedule a 45-minute discovery call.
           </p>
         </div>
       </motion.div>
