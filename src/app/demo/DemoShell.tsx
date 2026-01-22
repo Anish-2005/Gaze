@@ -109,6 +109,38 @@ export default function DemoShell() {
     }
   }, [toggleSimulation, resetDemo])
 
+
+  function ActionButton({
+  label,
+  onClick,
+  active,
+  color,
+}: {
+  label: string
+  onClick: () => void
+  active: boolean
+  color: 'emerald' | 'red' | 'amber' | 'blue'
+}) {
+  const colors = {
+    emerald: 'border-emerald-500 text-emerald-700',
+    red: 'border-red-500 text-red-700',
+    amber: 'border-amber-500 text-amber-700',
+    blue: 'border-blue-500 text-blue-700',
+  }
+
+  return (
+    <button
+      onClick={onClick}
+      className={`
+        h-12 rounded-lg border text-sm font-medium transition
+        ${active ? colors[color] + ' bg-slate-50' : 'border-slate-300 text-slate-700'}
+      `}
+    >
+      {label}
+    </button>
+  )
+}
+
   // Handle speak/clear events
   useEffect(() => {
     const handleSpeak = () => speak()
@@ -148,242 +180,95 @@ export default function DemoShell() {
         onReset={resetDemo}
       />
 
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center justify-center pt-24 md:pt-32 pb-32 md:pb-40">
-        <div className="container mx-auto px-4">
-          {/* Demo title */}
-          <div className="text-center mb-8 md:mb-12 px-4">
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-              GAZE Communication Interface
-            </h1>
-            <p className="text-sm md:text-base text-gray-600 max-w-md mx-auto">
-              Medical-grade eye-tracking communication for patients with paralysis
-            </p>
-            
-            {/* Demo mode indicator */}
-            <div className="mt-4 inline-flex items-center space-x-2 bg-blue-50 text-blue-700 px-3 md:px-4 py-2 rounded-full">
-              <div className={`w-2 h-2 rounded-full ${isSimulating ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`} />
-              <span className="text-xs md:text-sm font-medium">
-                {isSimulating ? 'Gaze simulation active' : 'Mouse mode'}
-              </span>
-            </div>
+   {/* Main Content */}
+<main className="flex-1 flex flex-col items-center pt-24 pb-32">
+  <div className="max-w-8xl w-full px-4 sm:px-6">
+
+    {/* Header */}
+    <div className="text-center mb-10">
+      <h1 className="text-2xl sm:text-3xl font-semibold text-slate-900 mb-2">
+        GAZE Communication Interface
+      </h1>
+      <p className="text-sm sm:text-base text-slate-600 max-w-lg mx-auto">
+        Eye-controlled communication for patients with limited motor function
+      </p>
+
+      <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 text-xs">
+        <span
+          className={`w-2 h-2 rounded-full ${
+            isSimulating ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'
+          }`}
+        />
+        {isSimulating ? 'Gaze simulation active' : 'Pointer mode'}
+      </div>
+    </div>
+
+    {/* Keyboard */}
+    <div className="flex justify-center mb-10">
+      <GazeKeyboard
+        onSelect={addChar}
+        hoveredKey={hoveredKey}
+        dwellProgress={dwellProgress}
+        setHoveredKey={setHoveredKey}
+      />
+    </div>
+
+    {/* Action Dock */}
+    <div className="w-full max-w-xl mx-auto">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-white border border-slate-200 rounded-xl p-3">
+
+        <ActionButton
+          label="Speak"
+          active={hoveredKey === 'SPEAK'}
+          onClick={speak}
+          color="emerald"
+        />
+
+        <ActionButton
+          label="Clear"
+          active={hoveredKey === 'CLEAR'}
+          onClick={clearMessage}
+          color="red"
+        />
+
+        <ActionButton
+          label="Reset"
+          active={hoveredKey === 'RESET'}
+          onClick={resetDemo}
+          color="amber"
+        />
+
+        <ActionButton
+          label="Calibrate"
+          active={hoveredKey === 'CALIBRATE'}
+          onClick={toggleCalibration}
+          color="blue"
+        />
+      </div>
+    </div>
+
+    {/* Dwell Feedback (single source of truth) */}
+    {isDwelling && (
+      <div className="fixed bottom-6 right-1/2 translate-x-1/2 sm:right-6 sm:translate-x-0 z-40">
+        <div className="bg-white border border-slate-200 rounded-lg px-4 py-3 shadow-md">
+          <div className="text-xs text-slate-500 text-center mb-1">
+            Dwell selection
           </div>
-
-          {/* Gaze Keyboard and Shortcuts */}
-          <div className="flex flex-col items-center gap-6 md:gap-8">
-            <div className="flex justify-center">
-              <GazeKeyboard
-                onSelect={addChar}
-                hoveredKey={hoveredKey}
-                dwellProgress={dwellProgress}
-                setHoveredKey={setHoveredKey}
-              />
-            </div>
-
-            {/* Keyboard Shortcuts - Mobile: below keyboard, Desktop: beside */}
-            <div className="w-full max-w-md md:hidden lg:block lg:w-64 lg:absolute lg:right-8 lg:top-1/2 lg:transform lg:-translate-y-1/2">
-              <div className="bg-gray-800/90 backdrop-blur-sm rounded-2xl p-3 md:p-4 shadow-2xl border border-gray-700/50">
-                <div className="text-xs font-medium text-gray-300 mb-2 text-center">Quick Actions</div>
-                <div className="grid grid-cols-2 gap-2 md:flex md:flex-col md:space-y-2">
-                  {/* Speak Button */}
-                  <div className="relative">
-                    <button
-                      onClick={() => speak()}
-                      onMouseEnter={() => setHoveredKey('SPEAK')}
-                      onMouseLeave={() => setHoveredKey(null)}
-                      className={`w-full h-10 md:h-12 rounded-lg border-2 transition-all duration-200 font-bold text-xs shadow-lg active:shadow-md active:scale-95 relative overflow-hidden ${
-                        hoveredKey === 'SPEAK'
-                          ? 'border-green-400 bg-gradient-to-b from-green-100 to-green-200 text-green-900 shadow-green-200/50 scale-105'
-                          : 'border-gray-600 bg-gradient-to-b from-gray-100 to-gray-300 text-gray-800 hover:from-gray-200 hover:to-gray-400'
-                      }`}
-                    >
-                      <div className="flex items-center justify-center space-x-1 relative z-10">
-                        <span>SPEAK</span>
-                        <kbd className="hidden md:inline px-1 py-0.5 bg-gray-700 text-gray-200 rounded text-xs">SPACE</kbd>
-                      </div>
-                      {/* Key top surface gradient */}
-                      <div className="absolute inset-0 rounded-lg bg-gradient-to-b from-white/20 to-transparent pointer-events-none" />
-                      {/* Key bottom shadow */}
-                      <div className="absolute -bottom-1 left-1 right-1 h-1 bg-black/20 rounded-b-lg blur-sm pointer-events-none" />
-                    </button>
-
-                    {/* Dwell progress ring */}
-                    {hoveredKey === 'SPEAK' && isDwelling && (
-                      <div className="absolute inset-0 pointer-events-none">
-                        <svg className="w-full h-full transform -rotate-90">
-                          <circle
-                            cx="50%"
-                            cy="50%"
-                            r="45%"
-                            stroke="currentColor"
-                            strokeWidth="3"
-                            fill="none"
-                            strokeLinecap="round"
-                            className="text-green-500"
-                            strokeDasharray={`${2 * Math.PI * 45}`}
-                            strokeDashoffset={`${2 * Math.PI * 45 * (1 - dwellProgress / 100)}`}
-                          />
-                        </svg>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Clear Button */}
-                  <div className="relative">
-                    <button
-                      onClick={() => clearMessage()}
-                      onMouseEnter={() => setHoveredKey('CLEAR')}
-                      onMouseLeave={() => setHoveredKey(null)}
-                      className={`w-full h-10 md:h-12 rounded-lg border-2 transition-all duration-200 font-bold text-xs shadow-lg active:shadow-md active:scale-95 relative overflow-hidden ${
-                        hoveredKey === 'CLEAR'
-                          ? 'border-red-400 bg-gradient-to-b from-red-100 to-red-200 text-red-900 shadow-red-200/50 scale-105'
-                          : 'border-gray-600 bg-gradient-to-b from-gray-100 to-gray-300 text-gray-800 hover:from-gray-200 hover:to-gray-400'
-                      }`}
-                    >
-                      <div className="flex items-center justify-center space-x-1 relative z-10">
-                        <span>CLEAR</span>
-                        <kbd className="hidden md:inline px-1 py-0.5 bg-gray-700 text-gray-200 rounded text-xs">ESC</kbd>
-                      </div>
-                      {/* Key top surface gradient */}
-                      <div className="absolute inset-0 rounded-lg bg-gradient-to-b from-white/20 to-transparent pointer-events-none" />
-                      {/* Key bottom shadow */}
-                      <div className="absolute -bottom-1 left-1 right-1 h-1 bg-black/20 rounded-b-lg blur-sm pointer-events-none" />
-                    </button>
-
-                    {/* Dwell progress ring */}
-                    {hoveredKey === 'CLEAR' && isDwelling && (
-                      <div className="absolute inset-0 pointer-events-none">
-                        <svg className="w-full h-full transform -rotate-90">
-                          <circle
-                            cx="50%"
-                            cy="50%"
-                            r="45%"
-                            stroke="currentColor"
-                            strokeWidth="3"
-                            fill="none"
-                            strokeLinecap="round"
-                            className="text-red-500"
-                            strokeDasharray={`${2 * Math.PI * 45}`}
-                            strokeDashoffset={`${2 * Math.PI * 45 * (1 - dwellProgress / 100)}`}
-                          />
-                        </svg>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Reset Button */}
-                  <div className="relative">
-                    <button
-                      onClick={() => resetDemo()}
-                      onMouseEnter={() => setHoveredKey('RESET')}
-                      onMouseLeave={() => setHoveredKey(null)}
-                      className={`w-full h-10 md:h-12 rounded-lg border-2 transition-all duration-200 font-bold text-xs shadow-lg active:shadow-md active:scale-95 relative overflow-hidden ${
-                        hoveredKey === 'RESET'
-                          ? 'border-orange-400 bg-gradient-to-b from-orange-100 to-orange-200 text-orange-900 shadow-orange-200/50 scale-105'
-                          : 'border-gray-600 bg-gradient-to-b from-gray-100 to-gray-300 text-gray-800 hover:from-gray-200 hover:to-gray-400'
-                      }`}
-                    >
-                      <div className="flex items-center justify-center space-x-1 relative z-10">
-                        <span>RESET</span>
-                        <kbd className="hidden md:inline px-1 py-0.5 bg-gray-700 text-gray-200 rounded text-xs">Ctrl+R</kbd>
-                      </div>
-                      {/* Key top surface gradient */}
-                      <div className="absolute inset-0 rounded-lg bg-gradient-to-b from-white/20 to-transparent pointer-events-none" />
-                      {/* Key bottom shadow */}
-                      <div className="absolute -bottom-1 left-1 right-1 h-1 bg-black/20 rounded-b-lg blur-sm pointer-events-none" />
-                    </button>
-
-                    {/* Dwell progress ring */}
-                    {hoveredKey === 'RESET' && isDwelling && (
-                      <div className="absolute inset-0 pointer-events-none">
-                        <svg className="w-full h-full transform -rotate-90">
-                          <circle
-                            cx="50%"
-                            cy="50%"
-                            r="45%"
-                            stroke="currentColor"
-                            strokeWidth="3"
-                            fill="none"
-                            strokeLinecap="round"
-                            className="text-orange-500"
-                            strokeDasharray={`${2 * Math.PI * 45}`}
-                            strokeDashoffset={`${2 * Math.PI * 45 * (1 - dwellProgress / 100)}`}
-                          />
-                        </svg>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Calibrate Button */}
-                  <div className="relative">
-                    <button
-                      onClick={() => toggleCalibration()}
-                      onMouseEnter={() => setHoveredKey('CALIBRATE')}
-                      onMouseLeave={() => setHoveredKey(null)}
-                      className={`w-full h-10 md:h-12 rounded-lg border-2 transition-all duration-200 font-bold text-xs shadow-lg active:shadow-md active:scale-95 relative overflow-hidden ${
-                        hoveredKey === 'CALIBRATE'
-                          ? 'border-blue-400 bg-gradient-to-b from-blue-100 to-blue-200 text-blue-900 shadow-blue-200/50 scale-105'
-                          : 'border-gray-600 bg-gradient-to-b from-gray-100 to-gray-300 text-gray-800 hover:from-gray-200 hover:to-gray-400'
-                      }`}
-                    >
-                      <div className="flex items-center justify-center space-x-1 relative z-10">
-                        <span>CALIBRATE</span>
-                        <kbd className="hidden md:inline px-1 py-0.5 bg-gray-700 text-gray-200 rounded text-xs">Ctrl+C</kbd>
-                      </div>
-                      {/* Key top surface gradient */}
-                      <div className="absolute inset-0 rounded-lg bg-gradient-to-b from-white/20 to-transparent pointer-events-none" />
-                      {/* Key bottom shadow */}
-                      <div className="absolute -bottom-1 left-1 right-1 h-1 bg-black/20 rounded-b-lg blur-sm pointer-events-none" />
-                    </button>
-
-                    {/* Dwell progress ring */}
-                    {hoveredKey === 'CALIBRATE' && isDwelling && (
-                      <div className="absolute inset-0 pointer-events-none">
-                        <svg className="w-full h-full transform -rotate-90">
-                          <circle
-                            cx="50%"
-                            cy="50%"
-                            r="45%"
-                            stroke="currentColor"
-                            strokeWidth="3"
-                            fill="none"
-                            strokeLinecap="round"
-                            className="text-blue-500"
-                            strokeDasharray={`${2 * Math.PI * 45}`}
-                            strokeDashoffset={`${2 * Math.PI * 45 * (1 - dwellProgress / 100)}`}
-                          />
-                        </svg>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="text-2xl font-semibold text-slate-900 text-center">
+            {Math.round(dwellProgress)}%
           </div>
-
-          {/* Dwell status */}
-          {isDwelling && (
-            <div className="fixed top-1/2 right-4 md:right-8 transform -translate-y-1/2 z-30">
-              <div className="bg-white rounded-xl p-3 md:p-4 shadow-lg border border-gray-200 max-w-xs">
-                <div className="text-center">
-                  <div className="text-xs md:text-sm font-medium text-gray-600 mb-2">
-                    Dwell Selection
-                  </div>
-                  <div className="text-2xl md:text-3xl font-bold text-blue-600">
-                    {Math.round(dwellProgress)}%
-                  </div>
-                  <div className="w-24 md:w-32 h-2 bg-gray-200 rounded-full mt-2 overflow-hidden">
-                    <div 
-                      className="h-full bg-gradient-to-r from-blue-500 to-teal-500 transition-all duration-100"
-                      style={{ width: `${dwellProgress}%` }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+          <div className="mt-2 w-32 h-1.5 bg-slate-200 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-slate-900 transition-all"
+              style={{ width: `${dwellProgress}%` }}
+            />
+          </div>
         </div>
-      </main>
+      </div>
+    )}
+  </div>
+</main>
+
 
       {/* Quick Phrases */}
       <QuickPhrases
