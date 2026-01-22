@@ -272,7 +272,6 @@ export default function DemoShell() {
 
       {/* Quick Phrases */}
       <QuickPhrases
-        selectedPhrase={state.selectedQuickPhrase}
         onSelect={addPhrase}
         hoveredKey={hoveredKey}
         setHoveredKey={setHoveredKey}

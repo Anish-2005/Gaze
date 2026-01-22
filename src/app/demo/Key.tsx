@@ -22,90 +22,67 @@ export default function Key({
 }: KeyProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
+  /* ---------- SAFE AUDIO (SELECTION ONLY) ---------- */
   useEffect(() => {
     if (typeof Audio !== 'undefined') {
       audioRef.current = new Audio('/click.mp3')
+      audioRef.current.volume = 0.25
     }
   }, [])
 
-  useEffect(() => {
-    if (isHovered && audioRef.current) {
+  const handleSelect = () => {
+    if (audioRef.current) {
       audioRef.current.currentTime = 0
       audioRef.current.play().catch(() => {})
     }
-  }, [isHovered])
+
+    if ('vibrate' in navigator) {
+      navigator.vibrate(8)
+    }
+
+    onClick?.()
+  }
 
   return (
     <div
       data-gaze-key={letter}
-      className={cn(
-        "relative flex items-center justify-center",
-        "h-12 w-12 md:h-16 md:w-16 rounded-lg border-2 transition-all duration-200",
-        "select-none cursor-default font-bold text-lg md:text-xl",
-        "shadow-lg active:shadow-md active:scale-95",
-        isHovered
-          ? "border-blue-400 bg-gradient-to-b from-blue-100 to-blue-200 text-blue-900 shadow-blue-200/50 scale-105"
-          : "border-gray-600 bg-gradient-to-b from-gray-100 to-gray-300 text-gray-800 hover:from-gray-200 hover:to-gray-400"
-      )}
+      className="relative"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      onClick={onClick}
+      onClick={handleSelect}
       onTouchStart={(e) => {
-        // Prevent default to avoid scrolling on mobile
         e.preventDefault()
-        // Add haptic feedback if available
-        if ('vibrate' in navigator) {
-          navigator.vibrate(10)
-        }
         onMouseEnter?.()
       }}
       onTouchEnd={(e) => {
         e.preventDefault()
         onMouseLeave?.()
-        // Add a small delay for mobile tap-and-hold
-        setTimeout(() => onClick?.(), 50)
+        setTimeout(handleSelect, 40)
       }}
     >
-      {/* Key letter with 3D effect */}
-      <span className="relative z-10 drop-shadow-sm">
+      {/* KEY BODY */}
+      <div
+        className={cn(
+          'flex items-center justify-center',
+          'h-12 w-12 sm:h-14 sm:w-14',
+          'rounded-lg border font-semibold text-lg',
+          'select-none cursor-default transition-all duration-150',
+          isHovered
+            ? 'bg-slate-100 border-slate-900 text-slate-900'
+            : 'bg-white border-slate-300 text-slate-800 hover:bg-slate-50'
+        )}
+      >
         {letter}
-      </span>
+      </div>
 
-      {/* Key top surface gradient */}
-      <div className="absolute inset-0 rounded-lg bg-gradient-to-b from-white/20 to-transparent pointer-events-none" />
-
-      {/* Key bottom shadow */}
-      <div className="absolute -bottom-1 left-1 right-1 h-1 bg-black/20 rounded-b-lg blur-sm pointer-events-none" />
-
-      {/* Dwell progress ring */}
+      {/* DWELL PROGRESS (CLEAN + MEDICAL SAFE) */}
       {isHovered && dwellProgress > 0 && (
-        <>
-          {/* Outer glowing ring */}
+        <div className="absolute inset-x-1 -bottom-1 h-1 rounded-full bg-slate-200 overflow-hidden">
           <div
-            className="absolute inset-0 border-3 border-blue-400 rounded-lg animate-pulse pointer-events-none"
-            style={{
-              opacity: 0.6 + (dwellProgress / 100) * 0.4,
-            }}
+            className="h-full bg-slate-900 transition-all duration-100"
+            style={{ width: `${dwellProgress}%` }}
           />
-
-          {/* Progress ring */}
-          <div className="absolute inset-0 pointer-events-none">
-            <svg className="w-full h-full transform -rotate-90">
-              <circle
-                cx="50%"
-                cy="50%"
-                r="45%"
-                stroke="currentColor"
-                strokeWidth="3"
-                fill="none"
-                strokeLinecap="round"
-                className="text-blue-500"
-                strokeDasharray={`${2 * Math.PI * 45}`}
-                strokeDashoffset={`${2 * Math.PI * 45 * (1 - dwellProgress / 100)}`}
-              />
-            </svg>
-          </div>
-        </>
+        </div>
       )}
     </div>
   )

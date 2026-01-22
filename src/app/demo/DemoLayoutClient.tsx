@@ -148,7 +148,7 @@ export default function DemoLayoutClient({
       <div className={`h-full ${judgeMode ? 'pt-8' : ''}`}>
         {/* Elegant Navigation Header */}
         {!judgeMode && (
-          <div className="absolute top-4 left-4 right-4 z-30">
+          <div className="absolute top-90 left-4 right-4 z-[10000]">
             <div className="flex items-center justify-between">
               <a
                 href="/pitch"

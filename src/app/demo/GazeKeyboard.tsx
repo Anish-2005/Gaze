@@ -18,121 +18,87 @@ const KEYBOARD_LAYOUT = [
   ['V', 'K', 'X', 'J', 'Q'],
 ]
 
-// Frequency weights for visual feedback
-const LETTER_FREQUENCY: Record<string, number> = {
-  'E': 12.7, 'T': 9.1, 'A': 8.2, 'O': 7.5, 'I': 7.0,
-  'N': 6.7, 'R': 6.0, 'S': 6.3, 'H': 6.1, 'L': 4.0,
-  'D': 4.3, 'C': 2.8, 'U': 2.8, 'M': 2.4, 'F': 2.2,
-  'P': 1.9, 'G': 2.0, 'W': 2.4, 'Y': 2.0, 'B': 1.5,
-  'V': 1.0, 'K': 0.8, 'X': 0.2, 'J': 0.2, 'Q': 0.1,
-}
-
 export default function GazeKeyboard({
   onSelect,
   hoveredKey,
   dwellProgress,
   setHoveredKey,
 }: GazeKeyboardProps) {
-  // Handle gaze hover events
+
+  /* ---------- GAZE EVENTS ---------- */
   useEffect(() => {
     const handleGazeHover = (event: CustomEvent) => {
       setHoveredKey(event.detail.key)
     }
 
     window.addEventListener('gazehover', handleGazeHover as EventListener)
-    
-    return () => {
+    return () =>
       window.removeEventListener('gazehover', handleGazeHover as EventListener)
-    }
   }, [setHoveredKey])
 
-  // Handle keyboard navigation (for judges)
+  /* ---------- KEYBOARD (JUDGE MODE) ---------- */
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const key = event.key.toUpperCase()
-      if (LETTER_FREQUENCY[key]) {
+      if (key.length === 1 && /[A-Z]/.test(key)) {
         setHoveredKey(key)
         setTimeout(() => {
           onSelect(key)
           setHoveredKey(null)
-        }, 100)
+        }, 120)
       }
-      
-      // Space to speak
+
       if (event.key === ' ') {
         event.preventDefault()
-        const speakEvent = new CustomEvent('speak')
-        window.dispatchEvent(speakEvent)
+        window.dispatchEvent(new CustomEvent('speak'))
       }
-      
-      // Escape to clear
+
       if (event.key === 'Escape') {
-        const clearEvent = new CustomEvent('clear')
-        window.dispatchEvent(clearEvent)
+        window.dispatchEvent(new CustomEvent('clear'))
       }
     }
 
     window.addEventListener('keydown', handleKeyDown)
-    
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-    }
+    return () => window.removeEventListener('keydown', handleKeyDown)
   }, [onSelect, setHoveredKey])
 
   return (
-    <div className="relative w-full max-w-2xl mx-auto">
-      {/* Keyboard Container */}
-      <div className="bg-gray-800/90 backdrop-blur-sm rounded-2xl p-4 md:p-6 shadow-2xl border border-gray-700/50">
-        {/* Keyboard Layout */}
-        <div className="space-y-2 md:space-y-3">
+    <div className="w-full max-w-xl mx-auto">
+
+      {/* Keyboard shell */}
+      <div className="bg-white border border-slate-200 rounded-2xl p-3 sm:p-4 shadow-md">
+
+        {/* Rows */}
+        <div className="space-y-2 sm:space-y-3">
           {KEYBOARD_LAYOUT.map((row, rowIndex) => (
             <div
               key={rowIndex}
-              className="flex justify-center gap-1 md:gap-2"
+              className="flex justify-center gap-2 sm:gap-3"
             >
-              {row.map(letter => {
-                const frequency = LETTER_FREQUENCY[letter]
-                const isHovered = hoveredKey === letter
-
-                return (
-                  <div key={letter} className="flex flex-col items-center">
-                    <Key
-                      letter={letter}
-                      isHovered={isHovered}
-                      dwellProgress={isHovered ? dwellProgress : 0}
-                      onMouseEnter={() => setHoveredKey(letter)}
-                      onMouseLeave={() => setHoveredKey(null)}
-                      onClick={() => onSelect(letter)}
-                    />
-
-                    {/* Frequency indicator (smaller on mobile) */}
-                    <div className="mt-1 md:mt-2">
-                      <div className="text-xs text-gray-400 font-mono">
-                        {frequency.toFixed(1)}%
-                      </div>
-                    </div>
-                  </div>
-                )
-              })}
+              {row.map(letter => (
+                <Key
+                  key={letter}
+                  letter={letter}
+                  isHovered={hoveredKey === letter}
+                  dwellProgress={hoveredKey === letter ? dwellProgress : 0}
+                  onMouseEnter={() => setHoveredKey(letter)}
+                  onMouseLeave={() => setHoveredKey(null)}
+                  onClick={() => onSelect(letter)}
+                />
+              ))}
             </div>
           ))}
         </div>
 
-        {/* Mobile instruction */}
-        <div className="mt-3 md:hidden text-center">
-          <div className="text-xs text-gray-400 bg-gray-700/50 px-3 py-2 rounded-lg mx-4">
-            Tap and hold a key to select • Focus on letters to type
-          </div>
+        {/* Mobile hint */}
+        <div className="mt-3 sm:hidden text-center text-xs text-slate-500">
+          Focus on a letter to select • Tap to test
         </div>
       </div>
 
-      {/* Desktop instruction */}
-      <div className="hidden md:block absolute -bottom-16 left-1/2 transform -translate-x-1/2 text-center">
-        <div className="text-sm text-gray-600 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full border border-gray-200 shadow-sm">
-          <span className="font-medium">Focus on a letter for 1.5 seconds to select</span>
-          <span className="mx-2">•</span>
-          <span className="text-blue-600">Press SPACE to speak</span>
-        </div>
+      {/* Desktop hint */}
+      <div className="hidden sm:block mt-4 text-center text-sm text-slate-600">
+        Focus on a letter for a moment to type • Press <span className="font-medium">Space</span> to speak
       </div>
     </div>
   )
