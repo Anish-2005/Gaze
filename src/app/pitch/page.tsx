@@ -306,22 +306,53 @@ export default function PitchPage() {
                         transition={{ duration: 0.6 }}
                         className="scroll-mt-28"
                     >
-                        <div className="bg-white rounded-2xl border border-slate-300 shadow-sm overflow-hidden">
+                        <div className="bg-white rounded-lg border border-slate-200 shadow-md overflow-hidden">
 
                             {/* Header */}
-                            <div className="bg-slate-900 text-white px-6 py-3 md:px-8 md:py-6">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-9 h-9 rounded-full bg-white text-slate-900 flex items-center justify-center text-sm font-bold">
-                                        1
+                            <div className="relative bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white px-8 py-8 overflow-hidden">
+                                {/* Subtle pattern overlay */}
+                                <div className="absolute inset-0 opacity-5">
+                                    <div className="absolute inset-0" style={{
+                                        backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0)`,
+                                        backgroundSize: '20px 20px'
+                                    }}></div>
+                                </div>
+
+                                {/* Accent line */}
+                                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500"></div>
+
+                                <div className="relative flex items-center justify-between">
+                                    <div className="flex items-center gap-6">
+                                        <div className="relative">
+                                            <div className="w-14 h-14 rounded-full bg-white text-slate-900 flex items-center justify-center text-lg font-bold shadow-lg">
+                                                1
+                                            </div>
+                                            <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 opacity-20"></div>
+                                        </div>
+                                        <div>
+                                            <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-1">
+                                                The Problem
+                                            </h2>
+                                            <p className="text-slate-300 text-sm md:text-base font-medium">
+                                                Understanding the communication crisis
+                                            </p>
+                                        </div>
                                     </div>
-                                    <h2 className="text-lg sm:text-xl md:text-2xl font-semibold tracking-tight">
-                                        The Problem
-                                    </h2>
+
+                                    {/* Decorative element */}
+                                    <div className="hidden md:flex items-center gap-2">
+                                        <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                                            <div className="w-3 h-3 rounded-full bg-blue-400"></div>
+                                        </div>
+                                        <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                                            <div className="w-3 h-3 rounded-full bg-purple-400"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
                             {/* Content */}
-                            <div className="px-6 py-6 md:px-8 md:py-10">
+                            <div className="px-8 py-8">
                                 <div className="max-w-4xl mx-auto">
 
                                     {/* Headline */}
@@ -374,22 +405,53 @@ export default function PitchPage() {
                         transition={{ duration: 0.6 }}
                         className="scroll-mt-28"
                     >
-                        <div className="bg-white rounded-2xl border border-slate-300 shadow-sm overflow-hidden">
+                        <div className="bg-white rounded-lg border border-slate-200 shadow-md overflow-hidden">
 
                             {/* Header */}
-                            <div className="bg-slate-900 text-white px-6 py-5 md:px-8 md:py-6">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-9 h-9 rounded-full bg-white text-slate-900 flex items-center justify-center text-sm font-bold">
-                                        2
+                            <div className="relative bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white px-8 py-8 overflow-hidden">
+                                {/* Subtle pattern overlay */}
+                                <div className="absolute inset-0 opacity-5">
+                                    <div className="absolute inset-0" style={{
+                                        backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0)`,
+                                        backgroundSize: '20px 20px'
+                                    }}></div>
+                                </div>
+
+                                {/* Accent line */}
+                                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-500"></div>
+
+                                <div className="relative flex items-center justify-between">
+                                    <div className="flex items-center gap-6">
+                                        <div className="relative">
+                                            <div className="w-14 h-14 rounded-full bg-white text-slate-900 flex items-center justify-center text-lg font-bold shadow-lg">
+                                                2
+                                            </div>
+                                            <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-emerald-400 to-teal-400 opacity-20"></div>
+                                        </div>
+                                        <div>
+                                            <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-1">
+                                                Our Solution
+                                            </h2>
+                                            <p className="text-slate-300 text-sm md:text-base font-medium">
+                                                Software-first accessibility innovation
+                                            </p>
+                                        </div>
                                     </div>
-                                    <h2 className="text-lg sm:text-xl md:text-2xl font-semibold tracking-tight">
-                                        The Solution
-                                    </h2>
+
+                                    {/* Decorative element */}
+                                    <div className="hidden md:flex items-center gap-2">
+                                        <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                                            <div className="w-3 h-3 rounded-full bg-emerald-400"></div>
+                                        </div>
+                                        <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                                            <div className="w-3 h-3 rounded-full bg-teal-400"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
                             {/* Content */}
-                            <div className="px-6 py-6 md:px-8 md:py-10">
+                            <div className="px-8 py-8">
                                 <div className="max-w-4xl mx-auto">
 
                                     {/* Headline */}
@@ -446,235 +508,372 @@ export default function PitchPage() {
 
                     {/* Section 3: Live Proof */}
                     {/* Section 3: Live Proof */}
-<motion.section
-  id="live-proof"
-  initial={{ opacity: 0, y: 20 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  viewport={{ once: true, margin: "-120px" }}
-  transition={{ duration: 0.6 }}
-  className="scroll-mt-28"
->
-  <div className="bg-white rounded-2xl border border-slate-300 shadow-sm overflow-hidden">
+                    <motion.section
+                        id="live-proof"
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-120px" }}
+                        transition={{ duration: 0.6 }}
+                        className="scroll-mt-28"
+                    >
+                        <div className="bg-white rounded-lg border border-slate-200 shadow-md overflow-hidden">
 
-    <div className="bg-slate-900 text-white px-6 py-5 md:px-8 md:py-6">
-      <div className="flex items-center gap-4">
-        <div className="w-9 h-9 rounded-full bg-white text-slate-900 flex items-center justify-center text-sm font-bold">3</div>
-        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold">
-          Live Proof
-        </h2>
-      </div>
-    </div>
+                            {/* Header */}
+                            <div className="relative bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white px-8 py-8 overflow-hidden">
+                                {/* Subtle pattern overlay */}
+                                <div className="absolute inset-0 opacity-5">
+                                    <div className="absolute inset-0" style={{
+                                        backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0)`,
+                                        backgroundSize: '20px 20px'
+                                    }}></div>
+                                </div>
 
-    <div className="px-6 py-6 md:px-8 md:py-10">
-      <div className="max-w-4xl mx-auto text-center">
+                                {/* Accent line */}
+                                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500"></div>
 
-        <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-4">
-          This is not a concept.
-        </h3>
+                                <div className="relative flex items-center justify-between">
+                                    <div className="flex items-center gap-6">
+                                        <div className="relative">
+                                            <div className="w-14 h-14 rounded-full bg-white text-slate-900 flex items-center justify-center text-lg font-bold shadow-lg">
+                                                3
+                                            </div>
+                                            <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-amber-400 to-orange-400 opacity-20"></div>
+                                        </div>
+                                        <div>
+                                            <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-1">
+                                                Live Proof
+                                            </h2>
+                                            <p className="text-slate-300 text-sm md:text-base font-medium">
+                                                Working MVP ready for testing
+                                            </p>
+                                        </div>
+                                    </div>
 
-        <p className="max-w-3xl mx-auto text-base sm:text-lg md:text-xl text-slate-600 leading-relaxed mb-6">
-          GAZE is fully functional today. The system runs entirely in the browser,
-          performs eye-tracking on-device, and does not transmit or store biometric data.
-        </p>
+                                    {/* Decorative element */}
+                                    <div className="hidden md:flex items-center gap-2">
+                                        <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                                            <div className="w-3 h-3 rounded-full bg-amber-400"></div>
+                                        </div>
+                                        <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                                            <div className="w-3 h-3 rounded-full bg-orange-400"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-        <Link
-          href="/demo"
-          className="inline-flex items-center justify-center px-8 py-4 md:px-12 md:py-6 rounded-xl bg-slate-900 text-white text-base md:text-lg font-semibold hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
-        >
-          <Eye className="w-5 h-5 md:w-6 md:h-6 mr-3" />
-          Launch Live Demo
-        </Link>
+                            <div className="px-8 py-8">
+                                <div className="max-w-4xl mx-auto text-center">
 
-        <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm sm:text-base text-slate-600">
-          <div>Browser-based deployment</div>
-          <div>On-device processing</div>
-          <div>Clinical-grade interface</div>
-        </div>
+                                    <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-4">
+                                        Working MVP ready for testing.
+                                    </h3>
 
-      </div>
-    </div>
-  </div>
-</motion.section>
+                                    <p className="max-w-3xl mx-auto text-base sm:text-lg md:text-xl text-slate-600 leading-relaxed mb-4">
+                                        GAZE has a functional prototype that demonstrates core eye-tracking capabilities.
+                                        The MVP runs in-browser, processes gaze data locally, and validates the technical approach
+                                        for assistive communication.
+                                    </p>
+
+                                    <Link
+                                        href="/demo"
+                                        className="inline-flex items-center justify-center px-8 py-4 md:px-12 md:py-6 rounded-xl bg-slate-900 text-white text-base md:text-lg font-semibold hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
+                                    >
+                                        <Eye className="w-5 h-5 md:w-6 md:h-6 mr-3" />
+                                        Try MVP Demo
+                                    </Link>
+
+                                    <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm sm:text-base text-slate-600">
+                                        <div>Functional prototype</div>
+                                        <div>Core eye-tracking validated</div>
+                                        <div>Ready for user testing</div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </motion.section>
 
 
                     {/* Section 4: Impact & Scale */}
-                  {/* Section 4: Impact & Scale */}
-<motion.section
-  id="impact"
-  initial={{ opacity: 0, y: 20 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  viewport={{ once: true, margin: "-120px" }}
-  transition={{ duration: 0.6 }}
-  className="scroll-mt-28"
->
-  <div className="bg-white rounded-2xl border border-slate-300 shadow-sm overflow-hidden">
+                    {/* Section 4: Impact & Scale */}
+                    <motion.section
+                        id="impact"
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-120px" }}
+                        transition={{ duration: 0.6 }}
+                        className="scroll-mt-28"
+                    >
+                        <div className="bg-white rounded-lg border border-slate-200 shadow-md overflow-hidden">
 
-    <div className="bg-slate-900 text-white px-6 py-5 md:px-8 md:py-6">
-      <div className="flex items-center gap-4">
-        <div className="w-9 h-9 rounded-full bg-white text-slate-900 flex items-center justify-center text-sm font-bold">4</div>
-        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold">
-          Impact at Scale
-        </h2>
-      </div>
-    </div>
+                            {/* Header */}
+                            <div className="relative bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white px-8 py-8 overflow-hidden">
+                                {/* Subtle pattern overlay */}
+                                <div className="absolute inset-0 opacity-5">
+                                    <div className="absolute inset-0" style={{
+                                        backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0)`,
+                                        backgroundSize: '20px 20px'
+                                    }}></div>
+                                </div>
 
-    <div className="px-6 py-6 md:px-8 md:py-10">
-      <div className="max-w-4xl mx-auto text-center">
+                                {/* Accent line */}
+                                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-rose-500 via-pink-500 to-rose-500"></div>
 
-        <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-6">
-          Accessibility as infrastructure.
-        </h3>
+                                <div className="relative flex items-center justify-between">
+                                    <div className="flex items-center gap-6">
+                                        <div className="relative">
+                                            <div className="w-14 h-14 rounded-full bg-white text-slate-900 flex items-center justify-center text-lg font-bold shadow-lg">
+                                                4
+                                            </div>
+                                            <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-rose-400 to-pink-400 opacity-20"></div>
+                                        </div>
+                                        <div>
+                                            <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-1">
+                                                Impact at Scale
+                                            </h2>
+                                            <p className="text-slate-300 text-sm md:text-base font-medium">
+                                                Global accessibility transformation
+                                            </p>
+                                        </div>
+                                    </div>
 
-        <div className="grid md:grid-cols-3 gap-6 mb-6">
-          {METRICS.map((metric, index) => (
-            <div key={index}>
-              <div className={`mx-auto w-24 h-24 rounded-2xl ${metric.color} text-white text-3xl font-bold flex items-center justify-center mb-4`}>
-                {metric.value}
-              </div>
-              <div className="text-xl font-semibold text-slate-900 mb-2">
-                {metric.label}
-              </div>
-              <p className="text-slate-600 text-sm sm:text-base">
-                {metric.description}
-              </p>
-            </div>
-          ))}
-        </div>
+                                    {/* Decorative element */}
+                                    <div className="hidden md:flex items-center gap-2">
+                                        <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                                            <div className="w-3 h-3 rounded-full bg-rose-400"></div>
+                                        </div>
+                                        <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                                            <div className="w-3 h-3 rounded-full bg-pink-400"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-        <blockquote className="bg-slate-50 border border-slate-200 rounded-xl p-6 text-slate-700 text-lg italic">
-          “GAZE allows assistive communication to scale like software —
-          not like medical hardware.”
-        </blockquote>
+                            <div className="px-8 py-8">
+                                <div className="max-w-4xl mx-auto text-center">
 
-      </div>
-    </div>
-  </div>
-</motion.section>
+                                    <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-4">
+                                        Accessibility as infrastructure.
+                                    </h3>
+
+                                    <div className="grid md:grid-cols-3 gap-4 mb-4">
+                                        {METRICS.map((metric, index) => (
+                                            <div key={index}>
+                                                <div className={`mx-auto w-24 h-24 rounded-2xl ${metric.color} text-white text-3xl font-bold flex items-center justify-center mb-4`}>
+                                                    {metric.value}
+                                                </div>
+                                                <div className="text-xl font-semibold text-slate-900 mb-2">
+                                                    {metric.label}
+                                                </div>
+                                                <p className="text-slate-600 text-sm sm:text-base">
+                                                    {metric.description}
+                                                </p>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <blockquote className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-slate-700 text-lg italic">
+                                        “GAZE allows assistive communication to scale like software —
+                                        not like medical hardware.”
+                                    </blockquote>
+
+                                </div>
+                            </div>
+                        </div>
+                    </motion.section>
 
 
                     {/* Section 5: Why Now */}
-                   {/* Section 5: Why Now */}
-<motion.section
-  id="why-now"
-  initial={{ opacity: 0, y: 20 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  viewport={{ once: true, margin: "-120px" }}
-  transition={{ duration: 0.6 }}
-  className="scroll-mt-28"
->
-  <div className="bg-white rounded-2xl border border-slate-300 shadow-sm overflow-hidden">
+                    {/* Section 5: Why Now */}
+                    <motion.section
+                        id="why-now"
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-120px" }}
+                        transition={{ duration: 0.6 }}
+                        className="scroll-mt-28"
+                    >
+                        <div className="bg-white rounded-lg border border-slate-200 shadow-md overflow-hidden">
 
-    <div className="bg-slate-900 text-white px-6 py-5 md:px-8 md:py-6">
-      <div className="flex items-center gap-4">
-        <div className="w-9 h-9 rounded-full bg-white text-slate-900 flex items-center justify-center text-sm font-bold">5</div>
-        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold">
-          Why Now
-        </h2>
-      </div>
-    </div>
+                            {/* Header */}
+                            <div className="relative bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white px-8 py-8 overflow-hidden">
+                                {/* Subtle pattern overlay */}
+                                <div className="absolute inset-0 opacity-5">
+                                    <div className="absolute inset-0" style={{
+                                        backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0)`,
+                                        backgroundSize: '20px 20px'
+                                    }}></div>
+                                </div>
 
-    <div className="px-6 py-6 md:px-8 md:py-10">
-      <div className="max-w-4xl mx-auto">
+                                {/* Accent line */}
+                                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 via-teal-500 to-cyan-500"></div>
 
-        <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-6 text-center">
-          The conditions finally align.
-        </h3>
+                                <div className="relative flex items-center justify-between">
+                                    <div className="flex items-center gap-6">
+                                        <div className="relative">
+                                            <div className="w-14 h-14 rounded-full bg-white text-slate-900 flex items-center justify-center text-lg font-bold shadow-lg">
+                                                5
+                                            </div>
+                                            <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-cyan-400 to-teal-400 opacity-20"></div>
+                                        </div>
+                                        <div>
+                                            <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-1">
+                                                Why Now
+                                            </h2>
+                                            <p className="text-slate-300 text-sm md:text-base font-medium">
+                                                Perfect timing for accessibility innovation
+                                            </p>
+                                        </div>
+                                    </div>
 
-        <div className="space-y-6">
-          {WHY_NOW_ITEMS.map((item, index) => (
-            <div
-              key={index}
-              className="flex gap-6 bg-slate-50 border border-slate-200 rounded-xl p-6"
-            >
-              <div className="w-12 h-12 rounded-lg bg-white border border-slate-200 text-slate-600 flex items-center justify-center flex-shrink-0">
-                <item.icon className="w-6 h-6" />
-              </div>
-              <div>
-                <p className="text-lg font-semibold text-slate-900 mb-1">
-                  {item.title}
-                </p>
-                <p className="text-slate-600 text-base">
-                  {item.detail}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+                                    {/* Decorative element */}
+                                    <div className="hidden md:flex items-center gap-2">
+                                        <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                                            <div className="w-3 h-3 rounded-full bg-cyan-400"></div>
+                                        </div>
+                                        <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                                            <div className="w-3 h-3 rounded-full bg-teal-400"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-      </div>
-    </div>
-  </div>
-</motion.section>
+                            <div className="px-8 py-8">
+                                <div className="max-w-4xl mx-auto">
+
+                                    <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-4 text-center">
+                                        The conditions finally align.
+                                    </h3>
+
+                                    <div className="space-y-4">
+                                        {WHY_NOW_ITEMS.map((item, index) => (
+                                            <div
+                                                key={index}
+                                                className="flex gap-4 bg-slate-50 border border-slate-200 rounded-xl p-4"
+                                            >
+                                                <div className="w-12 h-12 rounded-lg bg-white border border-slate-200 text-slate-600 flex items-center justify-center flex-shrink-0">
+                                                    <item.icon className="w-6 h-6" />
+                                                </div>
+                                                <div>
+                                                    <p className="text-lg font-semibold text-slate-900 mb-1">
+                                                        {item.title}
+                                                    </p>
+                                                    <p className="text-slate-600 text-base">
+                                                        {item.detail}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </motion.section>
 
                     {/* Section 6: Decision Frame */}
-                   {/* Section 6: Decision */}
-<motion.section
-  id="decision"
-  initial={{ opacity: 0, y: 20 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  viewport={{ once: true, margin: "-120px" }}
-  transition={{ duration: 0.6 }}
-  className="scroll-mt-28"
->
-  <div className="bg-white rounded-2xl border border-slate-300 shadow-sm overflow-hidden">
+                    {/* Section 6: Decision */}
+                    <motion.section
+                        id="decision"
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-120px" }}
+                        transition={{ duration: 0.6 }}
+                        className="scroll-mt-28"
+                    >
+                        <div className="bg-white rounded-lg border border-slate-200 shadow-md overflow-hidden">
 
-    <div className="bg-slate-900 text-white px-6 py-5 md:px-8 md:py-6">
-      <div className="flex items-center gap-4">
-        <div className="w-9 h-9 rounded-full bg-white text-slate-900 flex items-center justify-center text-sm font-bold">6</div>
-        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold">
-          The Decision
-        </h2>
-      </div>
-    </div>
+                            {/* Header */}
+                            <div className="relative bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white px-8 py-8 overflow-hidden">
+                                {/* Subtle pattern overlay */}
+                                <div className="absolute inset-0 opacity-5">
+                                    <div className="absolute inset-0" style={{
+                                        backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0)`,
+                                        backgroundSize: '20px 20px'
+                                    }}></div>
+                                </div>
 
-    <div className="px-6 py-6 md:px-8 md:py-10">
-      <div className="max-w-4xl mx-auto text-center">
+                                {/* Accent line */}
+                                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-violet-500 via-purple-500 to-violet-500"></div>
 
-        <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-6">
-          Communication without compromise.
-        </h3>
+                                <div className="relative flex items-center justify-between">
+                                    <div className="flex items-center gap-6">
+                                        <div className="relative">
+                                            <div className="w-14 h-14 rounded-full bg-white text-slate-900 flex items-center justify-center text-lg font-bold shadow-lg">
+                                                6
+                                            </div>
+                                            <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-violet-400 to-purple-400 opacity-20"></div>
+                                        </div>
+                                        <div>
+                                            <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-1">
+                                                The Decision
+                                            </h2>
+                                            <p className="text-slate-300 text-sm md:text-base font-medium">
+                                                Choose accessibility at scale
+                                            </p>
+                                        </div>
+                                    </div>
 
-        <p className="max-w-3xl mx-auto text-base sm:text-lg md:text-xl text-slate-600 mb-8">
-          GAZE restores a fundamental human capability using scalable software —
-          without sacrificing privacy, dignity, or safety.
-        </p>
+                                    {/* Decorative element */}
+                                    <div className="hidden md:flex items-center gap-2">
+                                        <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                                            <div className="w-3 h-3 rounded-full bg-violet-400"></div>
+                                        </div>
+                                        <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                                            <div className="w-3 h-3 rounded-full bg-purple-400"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
-          {ETHICAL_PRINCIPLES.map((item, index) => (
-            <div key={index} className="bg-slate-50 border border-slate-200 rounded-xl p-6">
-              <div className="w-12 h-12 mx-auto mb-4 rounded-lg bg-white border border-slate-200 text-slate-600 flex items-center justify-center">
-                <item.icon className="w-6 h-6" />
-              </div>
-              <div className="font-semibold text-slate-900 mb-2">
-                {item.principle}
-              </div>
-              <p className="text-slate-600 text-sm sm:text-base">
-                {item.description}
-              </p>
-            </div>
-          ))}
-        </div>
+                            <div className="px-6 py-4 md:px-8 md:py-6">
+                                <div className="max-w-4xl mx-auto text-center">
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link
-            href="/demo"
-            className="px-8 py-4 rounded-xl bg-slate-900 text-white font-semibold hover:bg-slate-800 transition"
-          >
-            Experience the Demo
-          </Link>
+                                    <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-4">
+                                        Communication without compromise.
+                                    </h3>
 
-          <Link
-            href="/institutions"
-            className="px-8 py-4 rounded-xl border-2 border-slate-900 text-slate-900 font-semibold hover:bg-slate-50 transition"
-          >
-            Institutional Deployment →
-          </Link>
-        </div>
+                                    <p className="max-w-3xl mx-auto text-base sm:text-lg md:text-xl text-slate-600 mb-6">
+                                        GAZE restores a fundamental human capability using scalable software —
+                                        without sacrificing privacy, dignity, or safety.
+                                    </p>
 
-      </div>
-    </div>
-  </div>
-</motion.section>
+                                    <div className="grid md:grid-cols-3 gap-4 mb-6">
+                                        {ETHICAL_PRINCIPLES.map((item, index) => (
+                                            <div key={index} className="bg-slate-50 border border-slate-200 rounded-xl p-4">
+                                                <div className="w-12 h-12 mx-auto mb-4 rounded-lg bg-white border border-slate-200 text-slate-600 flex items-center justify-center">
+                                                    <item.icon className="w-6 h-6" />
+                                                </div>
+                                                <div className="font-semibold text-slate-900 mb-2">
+                                                    {item.principle}
+                                                </div>
+                                                <p className="text-slate-600 text-sm sm:text-base">
+                                                    {item.description}
+                                                </p>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                                        <Link
+                                            href="/demo"
+                                            className="px-8 py-4 rounded-xl bg-slate-900 text-white font-semibold hover:bg-slate-800 transition"
+                                        >
+                                            Experience the Demo
+                                        </Link>
+
+                                        <Link
+                                            href="/institutions"
+                                            className="px-8 py-4 rounded-xl border-2 border-slate-900 text-slate-900 font-semibold hover:bg-slate-50 transition"
+                                        >
+                                            Institutional Deployment →
+                                        </Link>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </motion.section>
 
                 </div>
             </div>
