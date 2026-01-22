@@ -1,10 +1,8 @@
-import DemoShell from './DemoShell'
+'use client'
 
-export const metadata = {
-  title: 'GAZE Demo - Medical Eye-Tracking Interface',
-  description: 'Medical-grade eye-tracking communication for patients with paralysis',
-  robots: 'noindex, nofollow',
-}
+import dynamic from 'next/dynamic'
+
+const DemoShell = dynamic(() => import('./DemoShell'), { ssr: false })
 
 export default function DemoPage() {
   return <DemoShell />

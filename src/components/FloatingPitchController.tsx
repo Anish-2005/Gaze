@@ -44,11 +44,19 @@ export default function FloatingPitchController({
         setPosition(JSON.parse(savedPosition))
       } catch (e) {
         // Use default position if parsing fails
-        setPosition({ x: 20, y: window.innerHeight - 80 })
+        if (typeof window !== 'undefined') {
+          setPosition({ x: 20, y: window.innerHeight - 80 })
+        } else {
+          setPosition({ x: 20, y: 600 }) // Default fallback height
+        }
       }
     } else {
       // Default to bottom left corner
-      setPosition({ x: 20, y: window.innerHeight - 80 })
+      if (typeof window !== 'undefined') {
+        setPosition({ x: 20, y: window.innerHeight - 80 })
+      } else {
+        setPosition({ x: 20, y: 600 }) // Default fallback height
+      }
     }
   }, [])
 
