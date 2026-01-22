@@ -146,34 +146,38 @@ export default function DemoLayoutClient({
 
       {/* Main Demo Content */}
       <div className={`h-full ${judgeMode ? 'pt-8' : ''}`}>
+        {/* Elegant Navigation Header */}
+        {!judgeMode && (
+          <div className="absolute top-4 left-4 right-4 z-30">
+            <div className="flex items-center justify-between">
+              <a
+                href="/pitch"
+                className="inline-flex items-center space-x-2 px-3 py-2 bg-white/90 backdrop-blur-sm rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:bg-white hover:shadow-lg transition-all"
+              >
+                <span>←</span>
+                <span>Back to Pitch</span>
+              </a>
+
+              <button
+                onClick={() => {
+                  if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(console.log)
+                  }
+                }}
+                className="inline-flex items-center space-x-2 px-3 py-2 bg-blue-600/90 backdrop-blur-sm text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-all shadow-lg"
+                title="Enter fullscreen mode for optimal demo experience"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                </svg>
+                <span>Fullscreen</span>
+              </button>
+            </div>
+          </div>
+        )}
+
         {children}
       </div>
-
-      {/* Demo Navigation (Only in non-Judge mode) */}
-      {!judgeMode && (
-        <div className="fixed bottom-4 right-4 z-40">
-          <div className="flex items-center space-x-3">
-            <a
-              href="/pitch"
-              className="px-4 py-2 bg-white/90 backdrop-blur-sm rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:bg-white hover:shadow-lg transition-all"
-            >
-              ← Back to Pitch
-            </a>
-
-            <button
-              onClick={() => {
-                if (!document.fullscreenElement) {
-                  document.documentElement.requestFullscreen().catch(console.log)
-                }
-              }}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
-              title="Enter fullscreen mode for optimal demo experience"
-            >
-              Fullscreen
-            </button>
-          </div>
-        </div>
-      )}
 
 
 
