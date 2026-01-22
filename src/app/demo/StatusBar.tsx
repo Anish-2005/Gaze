@@ -1,6 +1,13 @@
 'use client'
 
-import { Activity, Eye, Camera, CheckCircle, XCircle, Settings } from 'lucide-react'
+import {
+  Activity,
+  Eye,
+  Camera,
+  CheckCircle,
+  XCircle,
+  Settings,
+} from 'lucide-react'
 
 interface StatusBarProps {
   cameraActive: boolean
@@ -18,71 +25,118 @@ export default function StatusBar({
   onToggleTracking,
 }: StatusBarProps) {
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 bg-gray-900 text-gray-100 border-b border-gray-800">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-10">
-          {/* Left: Status indicators */}
-          <div className="flex items-center space-x-6 text-sm">
-            <div className="flex items-center space-x-2">
-              <div className="relative">
-                <Camera className={`w-4 h-4 ${cameraActive ? 'text-green-400' : 'text-red-400'}`} />
-                {cameraActive && (
-                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                )}
-              </div>
-              <span className="font-medium">Camera</span>
-              <span className={`font-mono ${cameraActive ? 'text-green-400' : 'text-red-400'}`}>
-                {cameraActive ? 'ACTIVE' : 'OFFLINE'}
-              </span>
-            </div>
+    <div className="fixed top-0 left-0 right-0 z-50 bg-[#0B1220] text-slate-100 border-b border-slate-800">
+      <div className="max-w-8xl mx-auto px-3 sm:px-6">
+        <div className="flex items-center justify-between h-12">
 
-            <div className="flex items-center space-x-2">
-              <Eye className={`w-4 h-4 ${trackingLocked ? 'text-green-400' : 'text-amber-400'}`} />
-              <span className="font-medium">Tracking</span>
-              <span className={`font-mono ${trackingLocked ? 'text-green-400' : 'text-amber-400'}`}>
-                {trackingLocked ? 'LOCKED' : 'SEARCHING'}
-              </span>
-            </div>
+          {/* LEFT — SYSTEM STATUS */}
+          <div className="flex items-center gap-4 sm:gap-6 text-xs sm:text-sm">
 
-            <div className="flex items-center space-x-2">
-              {calibrationComplete ? (
-                <>
-                  <CheckCircle className="w-4 h-4 text-green-400" />
-                  <span className="font-medium">Calibration</span>
-                  <span className="font-mono text-green-400">COMPLETE</span>
-                </>
-              ) : (
-                <>
-                  <XCircle className="w-4 h-4 text-amber-400" />
-                  <span className="font-medium">Calibration</span>
-                  <span className="font-mono text-amber-400">REQUIRED</span>
-                </>
-              )}
+            {/* Camera */}
+            <StatusItem
+              icon={Camera}
+              label="Camera"
+              state={cameraActive ? 'ACTIVE' : 'OFFLINE'}
+              stateColor={cameraActive ? 'text-emerald-400' : 'text-red-400'}
+              pulse={cameraActive}
+            />
+
+            {/* Tracking */}
+            <StatusItem
+              icon={Eye}
+              label="Tracking"
+              state={trackingLocked ? 'LOCKED' : 'SEARCHING'}
+              stateColor={trackingLocked ? 'text-emerald-400' : 'text-amber-400'}
+            />
+
+            {/* Calibration — hide label on very small screens */}
+            <div className="hidden sm:flex">
+              <StatusItem
+                icon={calibrationComplete ? CheckCircle : XCircle}
+                label="Calibration"
+                state={calibrationComplete ? 'COMPLETE' : 'REQUIRED'}
+                stateColor={calibrationComplete ? 'text-emerald-400' : 'text-amber-400'}
+              />
             </div>
           </div>
 
-          {/* Right: Controls (only visible to judges/caregivers) */}
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={onToggleCalibration}
-              className="flex items-center space-x-2 px-3 py-1 rounded-md bg-gray-800 hover:bg-gray-700 text-xs transition-colors"
-              title="Toggle calibration status"
-            >
-              <Settings className="w-3 h-3" />
-              <span>Calibrate</span>
-            </button>
-            
-            <button
-              onClick={onToggleTracking}
-              className="flex items-center space-x-2 px-3 py-1 rounded-md bg-gray-800 hover:bg-gray-700 text-xs transition-colors"
-              title="Toggle eye tracking"
-            >
-              <Activity className="w-3 h-3" />
-              <span>Tracking</span>
-            </button>
+          {/* RIGHT — CONTROLS */}
+          <div className="flex items-center gap-2 sm:gap-4">
+
+            {/* Calibration button */}
+            {onToggleCalibration && (
+              <ControlButton
+                icon={Settings}
+                label="Calibrate"
+                onClick={onToggleCalibration}
+              />
+            )}
+
+            {/* Tracking button */}
+            {onToggleTracking && (
+              <ControlButton
+                icon={Activity}
+                label="Tracking"
+                onClick={onToggleTracking}
+              />
+            )}
           </div>
         </div>
       </div>
     </div>
+  )
+}
+
+/* ---------- SUBCOMPONENTS ---------- */
+
+function StatusItem({
+  icon: Icon,
+  label,
+  state,
+  stateColor,
+  pulse = false,
+}: {
+  icon: any
+  label: string
+  state: string
+  stateColor: string
+  pulse?: boolean
+}) {
+  return (
+    <div className="flex items-center gap-2 whitespace-nowrap">
+      <div className="relative">
+        <Icon className={`w-4 h-4 ${stateColor}`} />
+        {pulse && (
+          <span className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+        )}
+      </div>
+      <span className="hidden sm:inline font-medium text-slate-300">
+        {label}
+      </span>
+      <span className={`font-mono text-xs sm:text-sm ${stateColor}`}>
+        {state}
+      </span>
+    </div>
+  )
+}
+
+function ControlButton({
+  icon: Icon,
+  label,
+  onClick,
+}: {
+  icon: any
+  label: string
+  onClick: () => void
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-slate-800 hover:bg-slate-700 transition text-xs sm:text-sm"
+      title={label}
+    >
+      <Icon className="w-4 h-4" />
+      <span className="hidden sm:inline">{label}</span>
+    </button>
   )
 }

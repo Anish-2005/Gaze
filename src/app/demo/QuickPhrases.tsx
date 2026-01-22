@@ -43,7 +43,7 @@ export default function QuickPhrases({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-1 md:gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-2 md:gap-2">
           {QUICK_PHRASES.map((phrase) => {
             const isHovered = hoveredKey === phrase.keyId
 
@@ -54,14 +54,14 @@ export default function QuickPhrases({
                   onMouseEnter={() => setHoveredKey(phrase.keyId)}
                   onMouseLeave={() => setHoveredKey(null)}
                   className={cn(
-                    "w-full h-12 md:h-14 rounded-lg border-2 transition-all duration-200 font-bold text-xs shadow-lg active:shadow-md active:scale-95 relative overflow-hidden",
+                    "w-full h-10 sm:h-12 md:h-14 rounded-lg border-2 transition-all duration-200 font-bold text-xs shadow-lg active:shadow-md active:scale-95 relative overflow-hidden",
                     isHovered
                       ? `${phrase.color} ${phrase.hoverColor} scale-105 border-opacity-100`
                       : "border-gray-600 bg-gradient-to-b from-gray-100 to-gray-300 text-gray-800 hover:from-gray-200 hover:to-gray-400"
                   )}
                 >
                   <div className="flex flex-col items-center justify-center space-y-0.5 relative z-10">
-                    <span className="text-base">{phrase.icon}</span>
+                    <span className="text-sm sm:text-base">{phrase.icon}</span>
                     <span className="text-center leading-tight px-0.5 text-xs">{phrase.text}</span>
                   </div>
                   {/* Key top surface gradient */}

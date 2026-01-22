@@ -53,13 +53,17 @@ export default function Key({
       onTouchStart={(e) => {
         // Prevent default to avoid scrolling on mobile
         e.preventDefault()
+        // Add haptic feedback if available
+        if ('vibrate' in navigator) {
+          navigator.vibrate(10)
+        }
         onMouseEnter?.()
       }}
       onTouchEnd={(e) => {
         e.preventDefault()
         onMouseLeave?.()
         // Add a small delay for mobile tap-and-hold
-        setTimeout(() => onClick?.(), 100)
+        setTimeout(() => onClick?.(), 50)
       }}
     >
       {/* Key letter with 3D effect */}

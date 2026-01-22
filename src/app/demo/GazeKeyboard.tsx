@@ -119,9 +119,9 @@ export default function GazeKeyboard({
         </div>
 
         {/* Mobile instruction */}
-        <div className="mt-4 md:hidden text-center">
-          <div className="text-xs text-gray-400 bg-gray-700/50 px-3 py-2 rounded-lg">
-            Tap and hold a key to select
+        <div className="mt-3 md:hidden text-center">
+          <div className="text-xs text-gray-400 bg-gray-700/50 px-3 py-2 rounded-lg mx-4">
+            Tap and hold a key to select • Focus on letters to type
           </div>
         </div>
       </div>

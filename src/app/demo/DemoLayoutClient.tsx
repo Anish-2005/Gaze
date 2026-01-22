@@ -105,13 +105,17 @@ export default function DemoLayoutClient({
                   <span className="font-mono">DEMO ACTIVE</span>
                 </div>
                 <span className="text-gray-400">|</span>
-                <div className="hidden md:flex items-center space-x-2">
+                <div className="hidden sm:flex items-center space-x-2">
                   <kbd className="px-2 py-1 bg-gray-800 rounded text-xs">SPACE</kbd>
                   <span className="text-gray-400">to speak</span>
                 </div>
-                <div className="hidden md:flex items-center space-x-2">
+                <div className="hidden sm:flex items-center space-x-2">
                   <kbd className="px-2 py-1 bg-gray-800 rounded text-xs">ESC</kbd>
                   <span className="text-gray-400">to clear</span>
+                </div>
+                {/* Mobile shortcuts hint */}
+                <div className="sm:hidden flex items-center space-x-2">
+                  <span className="text-gray-400 text-xs">Use buttons below</span>
                 </div>
               </div>
 
