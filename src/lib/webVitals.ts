@@ -1,5 +1,9 @@
 import { useEffect } from 'react'
 
+interface WindowWithAnalytics extends Window {
+  gtag?: (command: string, targetId: string, config?: Record<string, unknown>) => void
+}
+
 interface WebVitalsMetric {
   name: string
   value: number
@@ -60,7 +64,7 @@ export function useWebVitals() {
 function sendToAnalytics(metricName: string, metric: WebVitalsMetric) {
   // Google Analytics 4
   if (typeof window !== 'undefined' && (window as WindowWithAnalytics).gtag) {
-    (window as WindowWithAnalytics).gtag('event', metricName, {
+    ;(window as WindowWithAnalytics).gtag!('event', metricName, {
       value: Math.round(metric.value * 1000) / 1000,
       event_category: 'Web Vitals',
       event_label: metric.name,

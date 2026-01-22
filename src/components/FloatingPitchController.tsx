@@ -27,7 +27,20 @@ export default function FloatingPitchController({
 }: FloatingPitchControllerProps) {
   const [showScript, setShowScript] = useState(false)
   const [isCollapsed, setIsCollapsed] = useState(true)
-  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const [position, setPosition] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedPosition = localStorage.getItem('floatingControllerPosition')
+      if (savedPosition) {
+        try {
+          return JSON.parse(savedPosition)
+        } catch {
+          return { x: 20, y: window.innerHeight - 80 }
+        }
+      }
+      return { x: 20, y: window.innerHeight - 80 }
+    }
+    return { x: 20, y: 600 } // Default fallback height
+  })
   const [isDragging, setIsDragging] = useState(false)
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 })
 
@@ -42,30 +55,6 @@ export default function FloatingPitchController({
 
     return () => window.removeEventListener('resize', updateWindowSize)
   }, [setWindowSize])
-
-  // Load saved position from localStorage
-  useEffect(() => {
-    const savedPosition = localStorage.getItem('floatingControllerPosition')
-    if (savedPosition) {
-      try {
-        setPosition(JSON.parse(savedPosition))
-      } catch {
-        // Use default position if parsing fails
-        if (typeof window !== 'undefined') {
-          setPosition({ x: 20, y: window.innerHeight - 80 })
-        } else {
-          setPosition({ x: 20, y: 600 }) // Default fallback height
-        }
-      }
-    } else {
-      // Default to bottom left corner
-      if (typeof window !== 'undefined') {
-        setPosition({ x: 20, y: window.innerHeight - 80 })
-      } else {
-        setPosition({ x: 20, y: 600 }) // Default fallback height
-      }
-    }
-  }, [])
 
   // Save position to localStorage when it changes
   useEffect(() => {

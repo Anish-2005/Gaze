@@ -44,7 +44,7 @@ export function usePerformanceMonitoring() {
 
       // Send to analytics if available
       if (typeof window !== 'undefined' && (window as WindowWithAnalytics).gtag) {
-        (window as WindowWithAnalytics).gtag('event', 'page_load_time', {
+        ;(window as WindowWithAnalytics).gtag!('event', 'page_load_time', {
           page_path: pathname,
           page_load_time: loadTime,
           custom_map: { metric1: 'page_load_time' }

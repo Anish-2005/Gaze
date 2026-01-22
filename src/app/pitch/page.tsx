@@ -52,6 +52,7 @@ function LazyComponent({
   componentName,
   ...props
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Component: React.ComponentType<any> | React.LazyExoticComponent<React.ComponentType<any>>
   componentName: string
   [key: string]: unknown
@@ -59,6 +60,7 @@ function LazyComponent({
   return (
     <ErrorBoundary fallback={<ComponentErrorFallback componentName={componentName} />}>
       <Suspense fallback={<ComponentLoader />}>
+        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
         <Component {...(props as any)} />
       </Suspense>
     </ErrorBoundary>

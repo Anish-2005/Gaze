@@ -200,7 +200,7 @@ export const useAPICacheStore = create<APICacheState>()(
       cache: new Map(),
 
       // Actions
-      get: (key) => {
+      get: <T>(key: string): T | null => {
         const item = get().cache.get(key)
         if (!item) return null
 
@@ -210,7 +210,7 @@ export const useAPICacheStore = create<APICacheState>()(
           return null
         }
 
-        return item.data
+        return item.data as T
       },
 
       set: (key, data, ttl = 5 * 60 * 1000) => { // 5 minutes default TTL
