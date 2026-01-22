@@ -52,14 +52,14 @@ function LazyComponent({
   componentName,
   ...props
 }: {
-  Component: React.ComponentType<Record<string, unknown>>
+  Component: React.ComponentType<any> | React.LazyExoticComponent<React.ComponentType<any>>
   componentName: string
   [key: string]: unknown
 }) {
   return (
     <ErrorBoundary fallback={<ComponentErrorFallback componentName={componentName} />}>
       <Suspense fallback={<ComponentLoader />}>
-        <Component {...props} />
+        <Component {...(props as any)} />
       </Suspense>
     </ErrorBoundary>
   )

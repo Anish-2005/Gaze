@@ -63,6 +63,7 @@ export function usePerformanceMonitoring() {
           total: Math.round(memInfo.totalJSHeapSize / 1048576 * 100) / 100 + ' MB',
           limit: Math.round(memInfo.jsHeapSizeLimit / 1048576 * 100) / 100 + ' MB'
         })
+      }
     }
   }, [])
 
@@ -134,6 +135,7 @@ export class PerformanceOptimizer {
   }
 
   // Debounced function for performance
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   debounce<T extends (...args: any[]) => any>(
     func: T,
     wait: number,
@@ -157,6 +159,7 @@ export class PerformanceOptimizer {
   }
 
   // Throttled function for performance
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   throttle<T extends (...args: any[]) => any>(
     func: T,
     limit: number

@@ -31,8 +31,6 @@ export default function FloatingPitchController({
   const [isDragging, setIsDragging] = useState(false)
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 })
 
-  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 })
-
   // Set window size after mount
   useEffect(() => {
     const updateWindowSize = () => {
