@@ -9,12 +9,12 @@ export function usePerformanceMonitoring() {
   useEffect(() => {
     // Core Web Vitals tracking
     if (typeof window !== 'undefined' && 'web-vitals' in window) {
-      import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
-        getCLS(console.log)
-        getFID(console.log)
-        getFCP(console.log)
-        getLCP(console.log)
-        getTTFB(console.log)
+      import('web-vitals').then((webVitals) => {
+        webVitals.onCLS(console.log)
+        webVitals.onFID(console.log)
+        webVitals.onFCP(console.log)
+        webVitals.onLCP(console.log)
+        webVitals.onTTFB(console.log)
       })
     }
   }, [])
@@ -71,6 +71,7 @@ export function usePerformanceMonitoring() {
     // Check after page load
     if (document.readyState === 'complete') {
       checkBundleSize()
+      return undefined
     } else {
       window.addEventListener('load', checkBundleSize)
       return () => window.removeEventListener('load', checkBundleSize)

@@ -4,33 +4,33 @@ import { useEffect } from 'react'
 export function useWebVitals() {
   useEffect(() => {
     // Dynamically import web-vitals to avoid SSR issues
-    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+    import('web-vitals').then(({ onCLS, onFID, onFCP, onLCP, onTTFB }) => {
       // Cumulative Layout Shift
-      getCLS((metric) => {
+      onCLS((metric: any) => {
         console.log('CLS:', metric)
         sendToAnalytics('CLS', metric)
       })
 
       // First Input Delay
-      getFID((metric) => {
+      onFID((metric) => {
         console.log('FID:', metric)
         sendToAnalytics('FID', metric)
       })
 
       // First Contentful Paint
-      getFCP((metric) => {
+      onFCP((metric) => {
         console.log('FCP:', metric)
         sendToAnalytics('FCP', metric)
       })
 
       // Largest Contentful Paint
-      getLCP((metric) => {
+      onLCP((metric) => {
         console.log('LCP:', metric)
         sendToAnalytics('LCP', metric)
       })
 
       // Time to First Byte
-      getTTFB((metric) => {
+      onTTFB((metric) => {
         console.log('TTFB:', metric)
         sendToAnalytics('TTFB', metric)
       })
@@ -53,8 +53,8 @@ function sendToAnalytics(metricName: string, metric: any) {
   }
 
   // Custom analytics endpoint
-  if (process.env.NEXT_PUBLIC_ANALYTICS_URL) {
-    fetch(process.env.NEXT_PUBLIC_ANALYTICS_URL, {
+  if (process.env['NEXT_PUBLIC_ANALYTICS_URL']) {
+    fetch(process.env['NEXT_PUBLIC_ANALYTICS_URL'], {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

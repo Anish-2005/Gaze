@@ -1,4 +1,4 @@
-import { Smartphone, Tablet, Laptop, Shield, Globe, Zap, AlertTriangle, Cpu, Heart, Users, Star, Lock, Crown } from 'lucide-react'
+import { Smartphone, Shield, Globe, Zap, Cpu, Heart, Users, Star, Lock, Crown } from 'lucide-react'
 
 export interface ScriptSegment {
     time: string

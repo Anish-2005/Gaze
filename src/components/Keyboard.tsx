@@ -65,6 +65,12 @@ export default function Keyboard({ gazeX, gazeY, onLetter, dwellTime }: Keyboard
     }
 
     const key = row[keyIndex];
+    if (!key) {
+      setHoveredKey(null);
+      setDwellStart(null);
+      return;
+    }
+
     if (hoveredKey !== key) {
       setHoveredKey(key);
       setDwellStart(Date.now());

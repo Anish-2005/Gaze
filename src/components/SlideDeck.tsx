@@ -255,55 +255,57 @@ export default function SlideDeck() {
             exit={{ opacity: 0, x: -20 }}
             className="aspect-[16/9] rounded-2xl overflow-hidden shadow-2xl"
           >
-            <div className={`h-full bg-gradient-to-br ${currentSlideData.backgroundColor} ${currentSlideData.textColor} p-12 flex flex-col justify-between`}>
-              {/* Slide number */}
-              <div className="text-sm opacity-70">
-                Slide {currentSlide + 1} of {SLIDES.length}
-              </div>
-              
-              {/* Slide content */}
-              <div className="flex-1 flex flex-col justify-center">
-                <h2 className="text-5xl lg:text-6xl font-bold mb-8 leading-tight">
-                  {currentSlideData.title}
-                </h2>
+            {currentSlideData && (
+              <div className={`h-full bg-gradient-to-br ${currentSlideData.backgroundColor} ${currentSlideData.textColor} p-12 flex flex-col justify-between`}>
+                {/* Slide number */}
+                <div className="text-sm opacity-70">
+                  Slide {currentSlide + 1} of {SLIDES.length}
+                </div>
                 
-                {currentSlideData.subtitle && (
-                  <p className="text-2xl lg:text-3xl opacity-90 mb-12">
-                    {currentSlideData.subtitle}
-                  </p>
-                )}
+                {/* Slide content */}
+                <div className="flex-1 flex flex-col justify-center">
+                  <h2 className="text-5xl lg:text-6xl font-bold mb-8 leading-tight">
+                    {currentSlideData.title}
+                  </h2>
+                  
+                  {currentSlideData.subtitle && (
+                    <p className="text-2xl lg:text-3xl opacity-90 mb-12">
+                      {currentSlideData.subtitle}
+                    </p>
+                  )}
+                  
+                  {Array.isArray(currentSlideData.content) && currentSlideData.content.length > 0 && (
+                    <div className="space-y-4">
+                      {currentSlideData.content.map((item, index) => (
+                        <div key={index} className="flex items-center text-xl lg:text-2xl">
+                          {typeof item === 'string' ? (
+                            <>
+                              <div className="w-3 h-3 rounded-full bg-current opacity-80 mr-4"></div>
+                              <span className="opacity-90">{item}</span>
+                            </>
+                          ) : (
+                            <div className="flex items-baseline">
+                              <span className="text-3xl font-bold mr-4">{item.value}</span>
+                              <span className="text-xl opacity-90">{item.label}</span>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
                 
-                {Array.isArray(currentSlideData.content) && currentSlideData.content.length > 0 && (
-                  <div className="space-y-4">
-                    {currentSlideData.content.map((item, index) => (
-                      <div key={index} className="flex items-center text-xl lg:text-2xl">
-                        {typeof item === 'string' ? (
-                          <>
-                            <div className="w-3 h-3 rounded-full bg-current opacity-80 mr-4"></div>
-                            <span className="opacity-90">{item}</span>
-                          </>
-                        ) : (
-                          <div className="flex items-baseline">
-                            <span className="text-3xl font-bold mr-4">{item.value}</span>
-                            <span className="text-xl opacity-90">{item.label}</span>
-                          </div>
-                        )}
-                      </div>
-                    ))}
+                {/* Slide footer */}
+                <div className="flex items-center justify-between pt-8 border-t border-white/20">
+                  <div className="text-sm opacity-70">
+                    GAZE • Assistive Communication Infrastructure
                   </div>
-                )}
-              </div>
-              
-              {/* Slide footer */}
-              <div className="flex items-center justify-between pt-8 border-t border-white/20">
-                <div className="text-sm opacity-70">
-                  GAZE • Assistive Communication Infrastructure
-                </div>
-                <div className="text-sm opacity-70">
-                  Press ← → to navigate
+                  <div className="text-sm opacity-70">
+                    Press ← → to navigate
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

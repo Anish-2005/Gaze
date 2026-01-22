@@ -75,7 +75,6 @@
 
     // Import/export
     "forceConsistentCasingInFileNames": true,
-    "importsNotUsedAsValues": "error",
 
     // Additional checks
     "noFallthroughCasesInSwitch": true
