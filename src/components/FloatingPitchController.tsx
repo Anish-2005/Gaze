@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Play, Pause, Volume2 } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { motion, AnimatePresence, PanInfo } from 'framer-motion'
+import { Play, Pause, Volume2, X, GripVertical } from 'lucide-react'
 
 interface FloatingPitchControllerProps {
   isPlaying: boolean
@@ -26,10 +26,131 @@ export default function FloatingPitchController({
   onPlayPause,
 }: FloatingPitchControllerProps) {
   const [showScript, setShowScript] = useState(false)
+  const [isCollapsed, setIsCollapsed] = useState(true)
+  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const [isDragging, setIsDragging] = useState(false)
+  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 })
 
+  // Set window size after mount
+  useEffect(() => {
+    setWindowSize({ width: window.innerWidth, height: window.innerHeight })
+  }, [])
+
+  // Load saved position from localStorage
+  useEffect(() => {
+    const savedPosition = localStorage.getItem('floatingControllerPosition')
+    if (savedPosition) {
+      try {
+        setPosition(JSON.parse(savedPosition))
+      } catch (e) {
+        // Use default position if parsing fails
+        setPosition({ x: 20, y: window.innerHeight - 80 })
+      }
+    } else {
+      // Default to bottom left corner
+      setPosition({ x: 20, y: window.innerHeight - 80 })
+    }
+  }, [])
+
+  // Save position to localStorage when it changes
+  useEffect(() => {
+    localStorage.setItem('floatingControllerPosition', JSON.stringify(position))
+  }, [position])
+
+  const handleDragEnd = (event: any, info: PanInfo) => {
+    setPosition(prev => ({
+      x: prev.x + info.offset.x,
+      y: prev.y + info.offset.y
+    }))
+    setIsDragging(false)
+  }
+
+  const handleDragStart = () => {
+    setIsDragging(true)
+  }
+
+  // Minimal floating button when collapsed
+  if (isCollapsed) {
+    return (
+      <motion.div
+        drag
+        dragMomentum={false}
+        dragConstraints={windowSize.width > 0 ? { left: -windowSize.width + 60, right: windowSize.width - 60, top: -windowSize.height + 60, bottom: windowSize.height - 60 } : {}}
+        dragElastic={0}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        initial={position}
+        animate={position}
+        className="fixed z-50 cursor-move"
+        style={{ touchAction: 'none' }}
+      >
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="relative"
+        >
+          {/* Main floating button */}
+          <button
+            onClick={onPlayPause}
+            className={`w-12 h-12 rounded-full shadow-2xl border-2 transition-all duration-200 flex items-center justify-center ${
+              isPlaying
+                ? 'bg-red-500 hover:bg-red-600 border-red-400 text-white shadow-red-500/25'
+                : 'bg-slate-900 hover:bg-slate-800 border-slate-700 text-white shadow-slate-900/25'
+            }`}
+            aria-label={isPlaying ? "Pause narration" : "Play narration"}
+          >
+            {isPlaying ? (
+              <Pause className="w-5 h-5" />
+            ) : (
+              <Play className="w-5 h-5 ml-0.5" />
+            )}
+          </button>
+
+          {/* Expand button */}
+          <button
+            onClick={() => setIsCollapsed(false)}
+            className="absolute -top-1 -right-1 w-6 h-6 bg-slate-700 hover:bg-slate-600 text-white rounded-full flex items-center justify-center shadow-lg transition-colors"
+            aria-label="Expand controls"
+          >
+            <GripVertical className="w-3 h-3" />
+          </button>
+
+          {/* Speaking indicator */}
+          <AnimatePresence>
+            {isSpeaking && (
+              <motion.div
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0, opacity: 0 }}
+                className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full flex items-center justify-center"
+              >
+                <div className="w-1.5 h-1.5 bg-green-300 rounded-full animate-pulse"></div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      </motion.div>
+    )
+  }
+
+  // Expanded controller
   return (
-    <div className="fixed top-4 right-4 z-50 w-full max-w-xs md:max-w-sm">
-      <div className="bg-white rounded-xl shadow-2xl border border-slate-300 overflow-hidden">
+    <motion.div
+      drag
+      dragMomentum={false}
+      dragConstraints={windowSize.width > 0 ? { left: -windowSize.width + 320, right: windowSize.width - 320, top: -windowSize.height + 200, bottom: windowSize.height - 200 } : {}}
+      dragElastic={0}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      initial={position}
+      animate={position}
+      className={`fixed z-50 w-full max-w-xs md:max-w-sm ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+      style={{ touchAction: 'none' }}
+    >
+      <motion.div
+        layout
+        className="bg-white rounded-xl shadow-2xl border border-slate-300 overflow-hidden"
+      >
         {/* Header */}
         <div className="bg-slate-900 text-white p-4">
           <div className="flex items-center justify-between">
@@ -43,13 +164,22 @@ export default function FloatingPitchController({
                 </div>
               )}
             </div>
-            <button
-              onClick={() => setShowScript(!showScript)}
-              className="text-white/80 hover:text-white transition-colors"
-              aria-label={showScript ? "Hide script" : "Show script"}
-            >
-              {showScript ? '▲' : '▼'}
-            </button>
+            <div className="flex items-center space-x-1">
+              <button
+                onClick={() => setShowScript(!showScript)}
+                className="text-white/80 hover:text-white transition-colors"
+                aria-label={showScript ? "Hide script" : "Show script"}
+              >
+                {showScript ? '▲' : '▼'}
+              </button>
+              <button
+                onClick={() => setIsCollapsed(true)}
+                className="text-white/80 hover:text-white transition-colors ml-1"
+                aria-label="Collapse to button"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
           </div>
 
           {/* Controls */}
@@ -154,7 +284,7 @@ export default function FloatingPitchController({
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   )
 }
