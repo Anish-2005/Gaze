@@ -18,14 +18,14 @@ export default function GovernanceHero() {
           transition={{ duration: 0.6 }}
           className="max-w-5xl"
         >
-          <div className="inline-flex items-center px-4 py-2 rounded-full bg-blue-50 text-blue-700 text-sm font-medium mb-6">
+          <div className="inline-flex items-center px-4 py-2 rounded-full border border-slate-300 text-slate-700 text-sm font-medium mb-6">
             <Shield className="w-4 h-4 mr-2" />
             Governance Framework
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight mb-6">
             <span className="block">Ethics, privacy, and</span>
-            <span className="block text-gradient mt-2">accessible by design</span>
+            <span className="block mt-2">accessible by design</span>
           </h1>
 
           <p className="text-xl text-gray-600 mb-10 max-w-3xl leading-relaxed">
@@ -43,10 +43,10 @@ export default function GovernanceHero() {
               { icon: <Gavel className="w-5 h-5" />, label: 'Regulatory Alignment' },
             ].map((item, index) => (
               <div key={index} className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                  <div className="text-blue-600">{item.icon}</div>
+                <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center">
+                  <div className="text-slate-600">{item.icon}</div>
                 </div>
-                <span className="text-sm font-medium text-gray-700">{item.label}</span>
+                <span className="text-sm font-medium text-slate-700">{item.label}</span>
               </div>
             ))}
           </div>

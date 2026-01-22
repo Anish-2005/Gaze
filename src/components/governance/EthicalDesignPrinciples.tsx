@@ -33,7 +33,7 @@ export default function EthicalDesignPrinciples() {
                   'No forced responses',
                   'Communication autonomy preserved',
                 ],
-                color: 'from-blue-500 to-blue-600',
+                color: 'bg-slate-100',
               },
               {
                 icon: <Target className="w-8 h-8" />,
@@ -44,7 +44,7 @@ export default function EthicalDesignPrinciples() {
                   'Tracking status always visible',
                   'One-touch pause functionality',
                 ],
-                color: 'from-teal-500 to-teal-600',
+                color: 'bg-slate-100',
               },
               {
                 icon: <XCircle className="w-8 h-8" />,
@@ -55,7 +55,7 @@ export default function EthicalDesignPrinciples() {
                   'No behavioral profiling',
                   'Transparent model limitations',
                 ],
-                color: 'from-purple-500 to-purple-600',
+                color: 'bg-slate-100',
               },
             ].map((principle, index) => (
               <motion.div
@@ -66,17 +66,17 @@ export default function EthicalDesignPrinciples() {
                 transition={{ delay: index * 0.1 }}
                 className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow"
               >
-                <div className={`bg-gradient-to-br ${principle.color} p-6`}>
-                  <div className="text-white">{principle.icon}</div>
+                <div className={`${principle.color} p-6`}>
+                  <div className="text-slate-600">{principle.icon}</div>
                 </div>
                 <div className="p-6">
                   <h3 className="text-xl font-bold mb-3">{principle.title}</h3>
-                  <p className="text-gray-600 mb-6">{principle.description}</p>
+                  <p className="text-slate-600 mb-6">{principle.description}</p>
                   <ul className="space-y-3">
                     {principle.principles.map((item, i) => (
                       <li key={i} className="flex items-center">
-                        <CheckCircle className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
-                        <span className="text-sm text-gray-600">{item}</span>
+                        <CheckCircle className="w-5 h-5 text-slate-500 mr-3 flex-shrink-0" />
+                        <span className="text-sm text-slate-600">{item}</span>
                       </li>
                     ))}
                   </ul>
@@ -104,14 +104,14 @@ export default function EthicalDesignPrinciples() {
                 icon: <Settings className="w-5 h-5" />,
               },
             ].map((item, index) => (
-              <div key={index} className="bg-blue-50 rounded-xl p-6 border border-blue-200">
+              <div key={index} className="bg-slate-50 rounded-xl p-6 border border-slate-200">
                 <div className="flex items-start">
-                  <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-4 flex-shrink-0">
-                    <div className="text-blue-600">{item.icon}</div>
+                  <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center mr-4 flex-shrink-0">
+                    <div className="text-slate-600">{item.icon}</div>
                   </div>
                   <div>
                     <h4 className="font-bold mb-2">{item.title}</h4>
-                    <p className="text-gray-600 text-sm">{item.description}</p>
+                    <p className="text-slate-600 text-sm">{item.description}</p>
                   </div>
                 </div>
               </div>

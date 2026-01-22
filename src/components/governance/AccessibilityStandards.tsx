@@ -14,9 +14,9 @@ export default function AccessibilityStandards() {
         >
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-semibold mb-6">
-              Accessibility <span className="text-gradient">standards</span>
+              Accessibility standards
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <p className="text-lg text-slate-600 max-w-3xl mx-auto">
               Designed to WCAG 2.1 AA standards with additional considerations for severe motor impairments
             </p>
           </div>
@@ -98,17 +98,17 @@ export default function AccessibilityStandards() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="mt-12 p-8 bg-gradient-to-r from-blue-50 to-teal-50 rounded-2xl border border-blue-200"
+            className="mt-12 p-8 bg-slate-50 rounded-2xl border border-slate-200"
           >
             <div className="flex items-center justify-between">
               <div>
                 <h4 className="font-bold mb-2">WCAG 2.1 AA Compliance</h4>
-                <p className="text-gray-600">
+                <p className="text-slate-600">
                   All interfaces are tested against WCAG 2.1 AA standards. We maintain an
                   accessibility statement and welcome feedback from users with disabilities.
                 </p>
               </div>
-              <div className="px-4 py-2 bg-white border border-blue-200 rounded-lg font-medium">
+              <div className="px-4 py-2 bg-white border border-slate-200 rounded-lg font-medium">
                 WCAG 2.1 AA
               </div>
             </div>

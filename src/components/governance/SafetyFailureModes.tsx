@@ -14,14 +14,14 @@ export default function SafetyFailureModes() {
           className="max-w-5xl mx-auto"
         >
           <div className="text-center mb-16">
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-amber-50 text-amber-700 text-sm font-medium mb-4">
+            <div className="inline-flex items-center px-4 py-2 rounded-full border border-slate-300 text-slate-700 text-sm font-medium mb-4">
               <AlertTriangle className="w-4 h-4 mr-2" />
               Safety Engineering
             </div>
             <h2 className="text-3xl md:text-4xl font-semibold mb-6">
-              <span className="text-gradient">Safety & failure modes</span>
+              Safety & failure modes
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <p className="text-lg text-slate-600 max-w-3xl mx-auto">
               Designed for reliability with clear failure states and caregiver overrides
             </p>
           </div>
@@ -69,12 +69,12 @@ export default function SafetyFailureModes() {
               >
                 <div className="text-3xl mb-4">{item.icon}</div>
                 <h3 className="text-xl font-bold mb-4">{item.title}</h3>
-                <p className="text-gray-600 mb-6">{item.description}</p>
+                <p className="text-slate-600 mb-6">{item.description}</p>
                 <div className="space-y-3">
-                  <div className="text-sm font-medium text-gray-500">Failure Scenarios:</div>
+                  <div className="text-sm font-medium text-slate-500">Failure Scenarios:</div>
                   {item.scenarios.map((scenario, i) => (
-                    <div key={i} className="flex items-center text-sm text-gray-600">
-                      <AlertTriangle className="w-4 h-4 text-amber-500 mr-2 flex-shrink-0" />
+                    <div key={i} className="flex items-center text-sm text-slate-600">
+                      <AlertTriangle className="w-4 h-4 text-slate-500 mr-2 flex-shrink-0" />
                       {scenario}
                     </div>
                   ))}
@@ -88,13 +88,13 @@ export default function SafetyFailureModes() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="mt-12 p-8 bg-gradient-to-r from-red-50 to-orange-50 rounded-2xl border border-red-200"
+            className="mt-12 p-8 bg-slate-50 rounded-2xl border border-slate-200"
           >
             <div className="flex items-start">
-              <AlertTriangle className="w-8 h-8 text-red-600 mr-4 flex-shrink-0 mt-1" />
+              <AlertTriangle className="w-8 h-8 text-slate-600 mr-4 flex-shrink-0 mt-1" />
               <div>
                 <h4 className="font-bold mb-2">Emergency Communication Protocol</h4>
-                <p className="text-gray-600 mb-4">
+                <p className="text-slate-600 mb-4">
                   In critical situations, caregivers can activate emergency mode which:
                 </p>
                 <ul className="grid md:grid-cols-2 gap-3">
@@ -105,7 +105,7 @@ export default function SafetyFailureModes() {
                     'Logs emergency activation for review',
                   ].map((item, i) => (
                     <li key={i} className="flex items-center text-sm">
-                      <CheckCircle className="w-4 h-4 text-red-500 mr-2 flex-shrink-0" />
+                      <CheckCircle className="w-4 h-4 text-slate-500 mr-2 flex-shrink-0" />
                       {item}
                     </li>
                   ))}
