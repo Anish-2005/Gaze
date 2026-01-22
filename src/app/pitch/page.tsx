@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Play, Volume2, Pause, Eye, Smartphone, Tablet, Laptop, Shield, Globe, Zap, AlertTriangle, Cpu, Heart, Users, Star, Lock, Crown } from 'lucide-react'
 import { useState, useRef, useEffect, useCallback } from 'react'
 import FloatingPitchController from '@/components/FloatingPitchController'
+import PitchDeckHeader from '@/components/PitchDeckHeader'
 
 interface ScriptSegment {
   time: string
@@ -290,23 +291,11 @@ export default function PitchPage() {
       />
 
       {/* Pitch Deck Header */}
-      <div className="bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-slate-900">GAZE Pitch Deck</h1>
-              <p className="text-slate-600 text-sm md:text-base">Investor Presentation • January 2026</p>
-            </div>
-            <div className="bg-slate-900 text-white px-4 py-3 rounded-lg">
-              <div className="text-sm md:text-base font-semibold">Seeking $2.5M Seed</div>
-              <div className="text-xs md:text-sm text-slate-300">Pre-revenue • Proprietary IP</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <PitchDeckHeader />
+
 
       {/* Pitch Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 md:pt-12 pb-16">
+      <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 md:pt-12 pb-16">
         <div className="space-y-12 md:space-y-16">
           {/* Section 1: Problem */}
           <motion.section
