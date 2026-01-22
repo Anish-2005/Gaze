@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { MessageCircle, Handshake } from 'lucide-react'
 import Link from 'next/link'
 
-export default function Engagement() {
+export default function CTA() {
   return (
     <section
       id="cta"
