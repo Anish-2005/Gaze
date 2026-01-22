@@ -8,6 +8,7 @@ export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
 
   const navItems = [
+    { label: 'Home', href: '/' },
     { label: 'Institutions', href: '/institutions' },
     { label: 'Governance', href: '/governance' }
     // { label: 'About', href: '/about' }, // Future addition
@@ -20,14 +21,14 @@ export default function Navigation() {
         <div className="flex h-16 items-center justify-between">
 
           {/* Brand */}
-          <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-md bg-slate-900 flex items-center justify-center text-white font-semibold text-sm">
               G
             </div>
             <span className="text-lg font-semibold tracking-tight text-slate-900">
               GAZE
             </span>
-          </div>
+          </Link>
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-10">

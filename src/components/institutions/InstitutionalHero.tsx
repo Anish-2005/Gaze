@@ -9,7 +9,7 @@ interface InstitutionalHeroProps {
 
 export default function InstitutionalHero({ onScheduleCall }: InstitutionalHeroProps) {
   return (
-    <section className="py-12 md:py-24 bg-[#F7F9FC] text-[#0F172A]">
+    <section className="pt-24 md:pt-32 pb-12 md:pb-24 bg-[#F7F9FC] text-[#0F172A]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
