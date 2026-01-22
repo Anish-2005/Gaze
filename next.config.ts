@@ -1,10 +1,8 @@
 import type { NextConfig } from "next";
-import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
   // Performance optimizations
   reactCompiler: true,
-  swcMinify: true,
 
   // Bundle optimization
   experimental: {
@@ -136,10 +134,7 @@ const nextConfig: NextConfig = {
     tsconfigPath: './tsconfig.json',
   },
 
-  // ESLint configuration
-  eslint: {
-    ignoreDuringBuilds: false,
-  },
+  
 };
 
 export default nextConfig;
