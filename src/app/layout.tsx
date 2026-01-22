@@ -6,22 +6,14 @@ import Navigation from '@/components/Navigation'
 import JudgeModeIndicator from '@/components/JudgeModeIndicator'
 import KeyboardShortcuts from '@/components/KeyboardShortcuts'
 import { useJudgeMode } from '@/lib/useJudgeMode'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+
+import dynamic from 'next/dynamic'
 
 const inter = Inter({ subsets: ['latin'] })
 
 // Client-side only component to avoid hydration mismatch
-function PrintUrl() {
-  const [url] = useState(() => typeof window !== 'undefined' ? window.location.href : '')
-  
-  if (!url) return null
-  
-  return (
-    <p className="text-sm text-gray-500 mt-4">
-      Printed from: {url} • {new Date().toLocaleDateString()}
-    </p>
-  )
-}
+const PrintUrl = dynamic(() => import('@/components/PrintUrl'), { ssr: false })
 
 export default function RootLayout({
   children,
