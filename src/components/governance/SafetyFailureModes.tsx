@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { AlertTriangle, CheckCircle } from 'lucide-react'
+import { AlertTriangle, CheckCircle, ShieldCheck } from 'lucide-react'
 
 export default function SafetyFailureModes() {
   return (
@@ -11,7 +11,7 @@ export default function SafetyFailureModes() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="max-w-5xl mx-auto"
+          className="max-w-7xl mx-auto"
         >
           <div className="text-center mb-16">
             <div className="inline-flex items-center px-4 py-2 rounded-full border border-slate-300 text-slate-700 text-sm font-medium mb-4">
@@ -46,7 +46,7 @@ export default function SafetyFailureModes() {
                   'User fatigue',
                   'Technical issues',
                 ],
-                icon: '👨‍⚕️',
+                icon: <ShieldCheck className="w-6 h-6" />,
               },
               {
                 title: 'Graceful Degradation',
@@ -67,7 +67,7 @@ export default function SafetyFailureModes() {
                 transition={{ delay: index * 0.1 }}
                 className="bg-white rounded-2xl border border-gray-200 p-8 hover:shadow-lg transition-shadow"
               >
-                <div className="text-3xl mb-4">{item.icon}</div>
+                <div className="text-slate-600 mb-4">{item.icon}</div>
                 <h3 className="text-xl font-bold mb-4">{item.title}</h3>
                 <p className="text-slate-600 mb-6">{item.description}</p>
                 <div className="space-y-3">

@@ -11,7 +11,7 @@ export default function ClosingStatement() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto"
+          className="max-w-7xl mx-auto"
         >
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/10 text-white text-sm font-medium mb-6">
             <Heart className="w-4 h-4 mr-2" />

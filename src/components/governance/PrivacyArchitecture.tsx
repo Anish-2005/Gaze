@@ -11,7 +11,7 @@ export default function PrivacyArchitecture() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="max-w-5xl mx-auto"
+          className="max-w-7xl mx-auto"
         >
           <div className="text-center mb-16">
             <div className="inline-flex items-center px-4 py-2 rounded-full border border-slate-300 text-slate-700 text-sm font-medium mb-4">

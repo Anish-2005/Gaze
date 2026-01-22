@@ -1,55 +1,63 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Shield, Lock, Cpu, Users, Gavel } from 'lucide-react'
+import { ShieldCheck, Lock, Cpu, Users, Gavel } from 'lucide-react'
 
 export default function GovernanceHero() {
   return (
-    <section className="relative py-28 bg-[#F7F9FC] text-[#0F172A]">
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" />
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-teal-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000" />
-      </div>
+    <section className="py-32 bg-white text-[#0F172A]">
+      <div className="max-w-8xl mx-auto px-8 lg:px-16">
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="max-w-5xl"
+          transition={{ duration: 0.5 }}
+          className="max-w-4xl"
         >
-          <div className="inline-flex items-center px-4 py-2 rounded-full border border-slate-300 text-slate-700 text-sm font-medium mb-6">
-            <Shield className="w-4 h-4 mr-2" />
-            Governance Framework
+          {/* Context label */}
+          <div className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 mb-6">
+            <ShieldCheck className="w-4 h-4" />
+            Governance & Ethics Framework
           </div>
 
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight mb-6">
-            <span className="block">Ethics, privacy, and</span>
-            <span className="block mt-2">accessible by design</span>
+          {/* Title */}
+          <h1 className="text-4xl md:text-5xl font-semibold tracking-tight mb-8">
+            Ethics, privacy, and accessibility
           </h1>
 
-          <p className="text-xl text-gray-600 mb-10 max-w-3xl leading-relaxed">
-            GAZE is engineered as assistive communication infrastructure with ethical principles
-            embedded at every layer. This framework ensures we restore communication capabilities
-            without compromising user dignity, privacy, or autonomy.
+          {/* Description */}
+          <p className="text-lg text-slate-600 leading-relaxed mb-14">
+            GAZE is designed as assistive communication infrastructure.
+            This governance framework defines how the system protects user
+            dignity, preserves privacy, and ensures accessibility across
+            clinical, institutional, and public-sector deployments.
           </p>
 
-          {/* Trust Indicators */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">
+          {/* Trust Pillars */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl">
             {[
-              { icon: <Lock className="w-5 h-5" />, label: 'Zero Biometric Storage' },
-              { icon: <Cpu className="w-5 h-5" />, label: 'On-Device Processing' },
-              { icon: <Users className="w-5 h-5" />, label: 'User-Led Design' },
-              { icon: <Gavel className="w-5 h-5" />, label: 'Regulatory Alignment' },
-            ].map((item, index) => (
-              <div key={index} className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center">
-                  <div className="text-slate-600">{item.icon}</div>
+              { icon: Lock, label: 'No biometric data storage' },
+              { icon: Cpu, label: 'On-device processing by default' },
+              { icon: Users, label: 'User and caregiver control' },
+              { icon: Gavel, label: 'Designed for regulatory alignment' },
+            ].map((item, index) => {
+              const Icon = item.icon
+              return (
+                <div
+                  key={index}
+                  className="flex items-center gap-4 border border-slate-200 rounded-lg px-5 py-4"
+                >
+                  <div className="w-9 h-9 rounded-md bg-slate-900 text-white flex items-center justify-center">
+                    <Icon className="w-4 h-4" />
+                  </div>
+                  <span className="text-sm font-medium text-slate-700">
+                    {item.label}
+                  </span>
                 </div>
-                <span className="text-sm font-medium text-slate-700">{item.label}</span>
-              </div>
-            ))}
+              )
+            })}
           </div>
+
         </motion.div>
       </div>
     </section>

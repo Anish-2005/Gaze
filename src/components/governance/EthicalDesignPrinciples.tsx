@@ -11,7 +11,7 @@ export default function EthicalDesignPrinciples() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="max-w-5xl mx-auto"
+          className="max-w-7xl mx-auto"
         >
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-semibold mb-6">

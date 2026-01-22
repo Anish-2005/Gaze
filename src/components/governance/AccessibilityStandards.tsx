@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { Eye, Timer, Target, RotateCcw, Volume2, Keyboard, Globe, FileText } from 'lucide-react'
 
 export default function AccessibilityStandards() {
   return (
@@ -10,7 +11,7 @@ export default function AccessibilityStandards() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="max-w-5xl mx-auto"
+          className="max-w-7xl mx-auto"
         >
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-semibold mb-6">
@@ -29,29 +30,31 @@ export default function AccessibilityStandards() {
                 {
                   title: 'High Contrast Interface',
                   description: 'Minimum 4.5:1 contrast ratio with adjustable themes for varying visual capabilities',
-                  icon: '👁️',
+                  icon: <Eye className="w-5 h-5" />,
                 },
                 {
                   title: 'Adjustable Dwell Timing',
                   description: 'User-configurable dwell times from 0.5 to 3 seconds to match motor capabilities',
-                  icon: '⏱️',
+                  icon: <Timer className="w-5 h-5" />,
                 },
                 {
                   title: 'Predictable Focus States',
                   description: 'Clear, consistent visual indicators for gaze focus and selection states',
-                  icon: '🎯',
+                  icon: <Target className="w-5 h-5" />,
                 },
                 {
                   title: 'Reduced Motion Options',
-                  description: 'Ability to minimize or eliminate animations that could cause discomfort or distraction',
-                  icon: '🌀',
+                  description: 'Animation controls and reduced motion settings for vestibular disorder accommodation',
+                  icon: <RotateCcw className="w-5 h-5" />,
                 },
               ].map((standard, index) => (
                 <div key={index} className="flex items-start">
-                  <span className="text-2xl mr-4">{standard.icon}</span>
+                  <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center mr-4 flex-shrink-0">
+                    <div className="text-slate-600">{standard.icon}</div>
+                  </div>
                   <div>
                     <h4 className="font-medium mb-1">{standard.title}</h4>
-                    <p className="text-sm text-gray-600">{standard.description}</p>
+                    <p className="text-sm text-slate-600">{standard.description}</p>
                   </div>
                 </div>
               ))}
@@ -64,29 +67,31 @@ export default function AccessibilityStandards() {
                 {
                   title: 'Screen Reader Compatibility',
                   description: 'Full support for NVDA, JAWS, VoiceOver, and TalkBack with semantic HTML structure',
-                  icon: '🔊',
+                  icon: <Volume2 className="w-5 h-5" />,
                 },
                 {
                   title: 'Keyboard Navigation',
                   description: 'Complete keyboard-only operation for users who can only use a single switch',
-                  icon: '⌨️',
+                  icon: <Keyboard className="w-5 h-5" />,
                 },
                 {
                   title: 'Multilingual Support',
                   description: 'Interface and predictive text in 20+ languages with RTL language support',
-                  icon: '🌍',
+                  icon: <Globe className="w-5 h-5" />,
                 },
                 {
                   title: 'Low-Literacy Modes',
                   description: 'Symbol-based communication and phrase prediction for users with literacy challenges',
-                  icon: '📝',
+                  icon: <FileText className="w-5 h-5" />,
                 },
               ].map((standard, index) => (
                 <div key={index} className="flex items-start">
-                  <span className="text-2xl mr-4">{standard.icon}</span>
+                  <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center mr-4 flex-shrink-0">
+                    <div className="text-slate-600">{standard.icon}</div>
+                  </div>
                   <div>
                     <h4 className="font-medium mb-1">{standard.title}</h4>
-                    <p className="text-sm text-gray-600">{standard.description}</p>
+                    <p className="text-sm text-slate-600">{standard.description}</p>
                   </div>
                 </div>
               ))}
