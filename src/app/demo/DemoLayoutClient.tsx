@@ -93,7 +93,7 @@ export default function DemoLayoutClient({
   }, [judgeMode])
 
   return (
-    <div className={`h-full bg-gray-50 ${judgeMode ? 'pt-0' : ''}`}>
+    <div className={`h-full bg-gray-50 my-24 ${judgeMode ? 'pt-0' : ''}`}>
       {/* Demo Status Bar (Visible in Judge Mode) */}
       {judgeMode && (
         <div className="fixed top-0 left-0 right-0 z-50 bg-gray-900 text-gray-100 border-b border-gray-800">
@@ -171,32 +171,7 @@ export default function DemoLayoutClient({
         </div>
       )}
 
-      {/* Keyboard Shortcuts Help */}
-      <div className="fixed bottom-4 left-4 z-40">
-        <div className="hidden md:block">
-          <div className="text-xs text-gray-500 bg-white/80 backdrop-blur-sm px-3 py-2 rounded-lg border border-gray-200">
-            <div className="font-medium mb-1">Demo Shortcuts:</div>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-1">
-              <div className="flex items-center">
-                <kbd className="mr-2 px-1.5 py-0.5 bg-gray-100 rounded text-xs">Space</kbd>
-                <span>Speak</span>
-              </div>
-              <div className="flex items-center">
-                <kbd className="mr-2 px-1.5 py-0.5 bg-gray-100 rounded text-xs">Esc</kbd>
-                <span>Clear</span>
-              </div>
-              <div className="flex items-center">
-                <kbd className="mr-2 px-1.5 py-0.5 bg-gray-100 rounded text-xs">Ctrl+R</kbd>
-                <span>Reset</span>
-              </div>
-              <div className="flex items-center">
-                <kbd className="mr-2 px-1.5 py-0.5 bg-gray-100 rounded text-xs">Ctrl+C</kbd>
-                <span>Calibrate</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+
 
       {/* Fullscreen Indicator */}
       {isFullscreen && (

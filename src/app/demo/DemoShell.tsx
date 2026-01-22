@@ -127,14 +127,41 @@ export default function DemoShell() {
             </div>
           </div>
 
-          {/* Gaze Keyboard */}
-          <div className="flex justify-center">
-            <GazeKeyboard
-              onSelect={addChar}
-              hoveredKey={hoveredKey}
-              dwellProgress={dwellProgress}
-              setHoveredKey={setHoveredKey}
-            />
+          {/* Gaze Keyboard and Shortcuts */}
+          <div className="flex flex-col lg:flex-row items-center justify-center gap-8">
+            <div className="flex justify-center">
+              <GazeKeyboard
+                onSelect={addChar}
+                hoveredKey={hoveredKey}
+                dwellProgress={dwellProgress}
+                setHoveredKey={setHoveredKey}
+              />
+            </div>
+
+            {/* Keyboard Shortcuts Help */}
+            <div className="hidden md:block lg:w-64">
+              <div className="text-xs text-gray-500 bg-white/80 backdrop-blur-sm px-4 py-3 rounded-lg border border-gray-200">
+                <div className="font-medium mb-2">Demo Shortcuts:</div>
+                <div className="grid grid-cols-1 gap-y-2">
+                  <div className="flex items-center">
+                    <kbd className="mr-3 px-2 py-1 bg-gray-100 rounded text-xs">Space</kbd>
+                    <span>Speak</span>
+                  </div>
+                  <div className="flex items-center">
+                    <kbd className="mr-3 px-2 py-1 bg-gray-100 rounded text-xs">Esc</kbd>
+                    <span>Clear</span>
+                  </div>
+                  <div className="flex items-center">
+                    <kbd className="mr-3 px-2 py-1 bg-gray-100 rounded text-xs">Ctrl+R</kbd>
+                    <span>Reset</span>
+                  </div>
+                  <div className="flex items-center">
+                    <kbd className="mr-3 px-2 py-1 bg-gray-100 rounded text-xs">Ctrl+C</kbd>
+                    <span>Calibrate</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Dwell status */}

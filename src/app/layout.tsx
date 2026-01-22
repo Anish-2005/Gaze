@@ -7,6 +7,7 @@ import JudgeModeIndicator from '@/components/JudgeModeIndicator'
 import KeyboardShortcuts from '@/components/KeyboardShortcuts'
 import { useJudgeMode } from '@/lib/useJudgeMode'
 import { useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 
 import dynamic from 'next/dynamic'
 
@@ -21,6 +22,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   const { judgeMode } = useJudgeMode()
+  const pathname = usePathname()
 
   // Handle global keyboard shortcuts
   useEffect(() => {
@@ -143,8 +145,8 @@ export default function RootLayout({
       </head>
       
       <body className={`${inter.className} bg-white text-gray-900 antialiased min-h-screen flex flex-col`}>
-        {/* Navigation - hidden in judge mode */}
-        {!judgeMode && <Navigation />}
+        {/* Navigation - hidden in judge mode and on demo page */}
+        {!judgeMode && pathname !== '/demo' && <Navigation />}
         
         {/* Judge Mode Indicator */}
         <JudgeModeIndicator />
@@ -157,8 +159,8 @@ export default function RootLayout({
           {children}
         </main>
         
-        {/* Footer - hidden in judge mode */}
-        {!judgeMode && (
+        {/* Footer - hidden in judge mode and on demo page */}
+        {!judgeMode && pathname !== '/demo' && (
           <footer className="no-print">
             <div className="border-t border-gray-200 mt-16">
               <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
