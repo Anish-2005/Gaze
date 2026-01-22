@@ -62,7 +62,7 @@ export default function FloatingPitchController({
   }, [position])
 
   const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-    setPosition(prev => ({
+    setPosition((prev: { x: number; y: number }) => ({
       x: prev.x + info.offset.x,
       y: prev.y + info.offset.y
     }))
