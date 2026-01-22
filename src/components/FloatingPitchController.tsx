@@ -57,7 +57,7 @@ export default function FloatingPitchController({
     localStorage.setItem('floatingControllerPosition', JSON.stringify(position))
   }, [position])
 
-  const handleDragEnd = (event: any, info: PanInfo) => {
+  const handleDragEnd = (_event: any, info: PanInfo) => {
     setPosition(prev => ({
       x: prev.x + info.offset.x,
       y: prev.y + info.offset.y

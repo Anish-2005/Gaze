@@ -85,8 +85,8 @@ export default function CalibrationOverlay({
       <div
         className="absolute transition-all duration-300 ease-out"
         style={{
-          left: `${CALIBRATION_POINTS[currentPoint].x}%`,
-          top: `${CALIBRATION_POINTS[currentPoint].y}%`,
+          left: `${CALIBRATION_POINTS[currentPoint]?.x ?? 50}%`,
+          top: `${CALIBRATION_POINTS[currentPoint]?.y ?? 50}%`,
           transform: 'translate(-50%, -50%)',
         }}
       >

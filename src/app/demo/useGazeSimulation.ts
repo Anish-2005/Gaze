@@ -76,10 +76,10 @@ export function useGazeSimulation() {
         (gazePoint.y / 100) * window.innerHeight
       )
 
-      if (element && element.dataset.gazeKey) {
+      if (element && element.dataset['gazeKey']) {
         // Dispatch custom event for key hover
         const event = new CustomEvent('gazehover', {
-          detail: { key: element.dataset.gazeKey },
+          detail: { key: element.dataset['gazeKey'] },
           bubbles: true,
         })
         element.dispatchEvent(event)

@@ -49,6 +49,12 @@ export default function Keyboard({ gazeX, gazeY, onLetter, dwellTime }: Keyboard
     }
 
     const row = keys[rowIndex];
+    if (!row) {
+      setHoveredKey(null);
+      setDwellStart(null);
+      return;
+    }
+
     const keyWidth = keyboardWidth / row.length;
     const keyIndex = Math.floor(localX / keyWidth);
 
