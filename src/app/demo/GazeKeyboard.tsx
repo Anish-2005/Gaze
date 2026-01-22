@@ -80,45 +80,55 @@ export default function GazeKeyboard({
   }, [onSelect, setHoveredKey])
 
   return (
-    <div className="relative">
+    <div className="relative w-full max-w-2xl mx-auto">
       {/* Keyboard Container */}
-      <div className="grid grid-rows-5 gap-4 p-6 bg-gray-50/50 rounded-2xl backdrop-blur-sm border border-gray-200 shadow-lg">
-        {KEYBOARD_LAYOUT.map((row, rowIndex) => (
-          <div 
-            key={rowIndex} 
-            className="grid grid-cols-5 gap-4"
-          >
-            {row.map(letter => {
-              const frequency = LETTER_FREQUENCY[letter]
-              const isHovered = hoveredKey === letter
-              
-              return (
-                <div key={letter} className="flex flex-col items-center">
-                  <Key
-                    letter={letter}
-                    isHovered={isHovered}
-                    dwellProgress={isHovered ? dwellProgress : 0}
-                    onMouseEnter={() => setHoveredKey(letter)}
-                    onMouseLeave={() => setHoveredKey(null)}
-                    onClick={() => onSelect(letter)}
-                  />
-                  
-                  {/* Frequency indicator (subtle) */}
-                  <div className="mt-2">
-                    <div className="text-xs text-gray-500 font-mono">
-                      {frequency.toFixed(1)}%
+      <div className="bg-gray-800/90 backdrop-blur-sm rounded-2xl p-4 md:p-6 shadow-2xl border border-gray-700/50">
+        {/* Keyboard Layout */}
+        <div className="space-y-2 md:space-y-3">
+          {KEYBOARD_LAYOUT.map((row, rowIndex) => (
+            <div
+              key={rowIndex}
+              className="flex justify-center gap-1 md:gap-2"
+            >
+              {row.map(letter => {
+                const frequency = LETTER_FREQUENCY[letter]
+                const isHovered = hoveredKey === letter
+
+                return (
+                  <div key={letter} className="flex flex-col items-center">
+                    <Key
+                      letter={letter}
+                      isHovered={isHovered}
+                      dwellProgress={isHovered ? dwellProgress : 0}
+                      onMouseEnter={() => setHoveredKey(letter)}
+                      onMouseLeave={() => setHoveredKey(null)}
+                      onClick={() => onSelect(letter)}
+                    />
+
+                    {/* Frequency indicator (smaller on mobile) */}
+                    <div className="mt-1 md:mt-2">
+                      <div className="text-xs text-gray-400 font-mono">
+                        {frequency.toFixed(1)}%
+                      </div>
                     </div>
                   </div>
-                </div>
-              )
-            })}
+                )
+              })}
+            </div>
+          ))}
+        </div>
+
+        {/* Mobile instruction */}
+        <div className="mt-4 md:hidden text-center">
+          <div className="text-xs text-gray-400 bg-gray-700/50 px-3 py-2 rounded-lg">
+            Tap and hold a key to select
           </div>
-        ))}
+        </div>
       </div>
 
-      {/* Instructional overlay */}
-      <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 text-center">
-        <div className="text-sm text-gray-600 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-gray-200 shadow-sm">
+      {/* Desktop instruction */}
+      <div className="hidden md:block absolute -bottom-16 left-1/2 transform -translate-x-1/2 text-center">
+        <div className="text-sm text-gray-600 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full border border-gray-200 shadow-sm">
           <span className="font-medium">Focus on a letter for 1.5 seconds to select</span>
           <span className="mx-2">•</span>
           <span className="text-blue-600">Press SPACE to speak</span>

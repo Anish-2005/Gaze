@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useDemoState } from './useDemoState'
 import { useDwellDetection } from './useDwellDetection'
 import { useGazeSimulation } from './useGazeSimulation'
@@ -24,13 +24,55 @@ export default function DemoShell() {
     resetDemo,
   } = useDemoState()
 
+  // Unified selection handler for both keyboard and shortcuts
+  const handleSelection = useCallback((key: string) => {
+    // Handle keyboard letters
+    if (key.length === 1 && key.match(/[A-Z]/)) {
+      addChar(key)
+    }
+    // Handle shortcut actions
+    else if (['SPEAK', 'CLEAR', 'RESET', 'CALIBRATE'].includes(key)) {
+      switch (key) {
+        case 'SPEAK':
+          speak()
+          break
+        case 'CLEAR':
+          clearMessage()
+          break
+        case 'RESET':
+          resetDemo()
+          break
+        case 'CALIBRATE':
+          toggleCalibration()
+          break
+      }
+    }
+    // Handle quick phrases
+    else {
+      const phraseMap: Record<string, string> = {
+        'PAIN': "I AM IN PAIN",
+        'NURSE': "CALL NURSE",
+        'YES': "YES",
+        'NO': "NO",
+        'THANKYOU': "THANK YOU",
+        'WATER': "I NEED WATER",
+        'HELP': "PLEASE HELP",
+        'BREATHE': "I CAN'T BREATHE"
+      }
+      const phrase = phraseMap[key]
+      if (phrase) {
+        addPhrase(phrase)
+      }
+    }
+  }, [addChar, speak, clearMessage, resetDemo, toggleCalibration, addPhrase])
+
   // Dwell detection
   const {
     hoveredKey,
     dwellProgress,
     isDwelling,
     setHoveredKey,
-  } = useDwellDetection(addChar)
+  } = useDwellDetection(handleSelection)
 
   // Gaze simulation (for demo purposes)
   const { gazePoint, isSimulating, toggleSimulation } = useGazeSimulation()
@@ -107,7 +149,7 @@ export default function DemoShell() {
       />
 
       {/* Main Content */}
-      <main className="pt-24 flex-1 flex flex-col items-center justify-center pt-32 pb-40">
+      <main className="pt-36 flex-1 flex flex-col items-center justify-center pt-32 pb-40">
         <div className="container mx-auto px-4">
           {/* Demo title */}
           <div className="text-center mb-12">
@@ -138,26 +180,181 @@ export default function DemoShell() {
               />
             </div>
 
-            {/* Keyboard Shortcuts Help */}
+            {/* Keyboard Shortcuts */}
             <div className="hidden md:block lg:w-64">
-              <div className="text-xs text-gray-500 bg-white/80 backdrop-blur-sm px-4 py-3 rounded-lg border border-gray-200">
-                <div className="font-medium mb-2">Demo Shortcuts:</div>
-                <div className="grid grid-cols-1 gap-y-2">
-                  <div className="flex items-center">
-                    <kbd className="mr-3 px-2 py-1 bg-gray-100 rounded text-xs">Space</kbd>
-                    <span>Speak</span>
+              <div className="bg-gray-800/90 backdrop-blur-sm rounded-2xl p-4 shadow-2xl border border-gray-700/50">
+                <div className="text-sm font-medium text-gray-300 mb-3 text-center">Quick Actions</div>
+                <div className="space-y-2">
+                  {/* Speak Button */}
+                  <div className="relative">
+                    <button
+                      onClick={() => speak()}
+                      onMouseEnter={() => setHoveredKey('SPEAK')}
+                      onMouseLeave={() => setHoveredKey(null)}
+                      className={`w-full h-12 rounded-lg border-2 transition-all duration-200 font-bold text-sm shadow-lg active:shadow-md active:scale-95 relative overflow-hidden ${
+                        hoveredKey === 'SPEAK'
+                          ? 'border-green-400 bg-gradient-to-b from-green-100 to-green-200 text-green-900 shadow-green-200/50 scale-105'
+                          : 'border-gray-600 bg-gradient-to-b from-gray-100 to-gray-300 text-gray-800 hover:from-gray-200 hover:to-gray-400'
+                      }`}
+                    >
+                      <div className="flex items-center justify-center space-x-2 relative z-10">
+                        <span>SPEAK</span>
+                        <kbd className="px-1.5 py-0.5 bg-gray-700 text-gray-200 rounded text-xs">SPACE</kbd>
+                      </div>
+                      {/* Key top surface gradient */}
+                      <div className="absolute inset-0 rounded-lg bg-gradient-to-b from-white/20 to-transparent pointer-events-none" />
+                      {/* Key bottom shadow */}
+                      <div className="absolute -bottom-1 left-1 right-1 h-1 bg-black/20 rounded-b-lg blur-sm pointer-events-none" />
+                    </button>
+
+                    {/* Dwell progress ring */}
+                    {hoveredKey === 'SPEAK' && isDwelling && (
+                      <div className="absolute inset-0 pointer-events-none">
+                        <svg className="w-full h-full transform -rotate-90">
+                          <circle
+                            cx="50%"
+                            cy="50%"
+                            r="45%"
+                            stroke="currentColor"
+                            strokeWidth="3"
+                            fill="none"
+                            strokeLinecap="round"
+                            className="text-green-500"
+                            strokeDasharray={`${2 * Math.PI * 45}`}
+                            strokeDashoffset={`${2 * Math.PI * 45 * (1 - dwellProgress / 100)}`}
+                          />
+                        </svg>
+                      </div>
+                    )}
                   </div>
-                  <div className="flex items-center">
-                    <kbd className="mr-3 px-2 py-1 bg-gray-100 rounded text-xs">Esc</kbd>
-                    <span>Clear</span>
+
+                  {/* Clear Button */}
+                  <div className="relative">
+                    <button
+                      onClick={() => clearMessage()}
+                      onMouseEnter={() => setHoveredKey('CLEAR')}
+                      onMouseLeave={() => setHoveredKey(null)}
+                      className={`w-full h-12 rounded-lg border-2 transition-all duration-200 font-bold text-sm shadow-lg active:shadow-md active:scale-95 relative overflow-hidden ${
+                        hoveredKey === 'CLEAR'
+                          ? 'border-red-400 bg-gradient-to-b from-red-100 to-red-200 text-red-900 shadow-red-200/50 scale-105'
+                          : 'border-gray-600 bg-gradient-to-b from-gray-100 to-gray-300 text-gray-800 hover:from-gray-200 hover:to-gray-400'
+                      }`}
+                    >
+                      <div className="flex items-center justify-center space-x-2 relative z-10">
+                        <span>CLEAR</span>
+                        <kbd className="px-1.5 py-0.5 bg-gray-700 text-gray-200 rounded text-xs">ESC</kbd>
+                      </div>
+                      {/* Key top surface gradient */}
+                      <div className="absolute inset-0 rounded-lg bg-gradient-to-b from-white/20 to-transparent pointer-events-none" />
+                      {/* Key bottom shadow */}
+                      <div className="absolute -bottom-1 left-1 right-1 h-1 bg-black/20 rounded-b-lg blur-sm pointer-events-none" />
+                    </button>
+
+                    {/* Dwell progress ring */}
+                    {hoveredKey === 'CLEAR' && isDwelling && (
+                      <div className="absolute inset-0 pointer-events-none">
+                        <svg className="w-full h-full transform -rotate-90">
+                          <circle
+                            cx="50%"
+                            cy="50%"
+                            r="45%"
+                            stroke="currentColor"
+                            strokeWidth="3"
+                            fill="none"
+                            strokeLinecap="round"
+                            className="text-red-500"
+                            strokeDasharray={`${2 * Math.PI * 45}`}
+                            strokeDashoffset={`${2 * Math.PI * 45 * (1 - dwellProgress / 100)}`}
+                          />
+                        </svg>
+                      </div>
+                    )}
                   </div>
-                  <div className="flex items-center">
-                    <kbd className="mr-3 px-2 py-1 bg-gray-100 rounded text-xs">Ctrl+R</kbd>
-                    <span>Reset</span>
+
+                  {/* Reset Button */}
+                  <div className="relative">
+                    <button
+                      onClick={() => resetDemo()}
+                      onMouseEnter={() => setHoveredKey('RESET')}
+                      onMouseLeave={() => setHoveredKey(null)}
+                      className={`w-full h-12 rounded-lg border-2 transition-all duration-200 font-bold text-sm shadow-lg active:shadow-md active:scale-95 relative overflow-hidden ${
+                        hoveredKey === 'RESET'
+                          ? 'border-orange-400 bg-gradient-to-b from-orange-100 to-orange-200 text-orange-900 shadow-orange-200/50 scale-105'
+                          : 'border-gray-600 bg-gradient-to-b from-gray-100 to-gray-300 text-gray-800 hover:from-gray-200 hover:to-gray-400'
+                      }`}
+                    >
+                      <div className="flex items-center justify-center space-x-2 relative z-10">
+                        <span>RESET</span>
+                        <kbd className="px-1.5 py-0.5 bg-gray-700 text-gray-200 rounded text-xs">Ctrl+R</kbd>
+                      </div>
+                      {/* Key top surface gradient */}
+                      <div className="absolute inset-0 rounded-lg bg-gradient-to-b from-white/20 to-transparent pointer-events-none" />
+                      {/* Key bottom shadow */}
+                      <div className="absolute -bottom-1 left-1 right-1 h-1 bg-black/20 rounded-b-lg blur-sm pointer-events-none" />
+                    </button>
+
+                    {/* Dwell progress ring */}
+                    {hoveredKey === 'RESET' && isDwelling && (
+                      <div className="absolute inset-0 pointer-events-none">
+                        <svg className="w-full h-full transform -rotate-90">
+                          <circle
+                            cx="50%"
+                            cy="50%"
+                            r="45%"
+                            stroke="currentColor"
+                            strokeWidth="3"
+                            fill="none"
+                            strokeLinecap="round"
+                            className="text-orange-500"
+                            strokeDasharray={`${2 * Math.PI * 45}`}
+                            strokeDashoffset={`${2 * Math.PI * 45 * (1 - dwellProgress / 100)}`}
+                          />
+                        </svg>
+                      </div>
+                    )}
                   </div>
-                  <div className="flex items-center">
-                    <kbd className="mr-3 px-2 py-1 bg-gray-100 rounded text-xs">Ctrl+C</kbd>
-                    <span>Calibrate</span>
+
+                  {/* Calibrate Button */}
+                  <div className="relative">
+                    <button
+                      onClick={() => toggleCalibration()}
+                      onMouseEnter={() => setHoveredKey('CALIBRATE')}
+                      onMouseLeave={() => setHoveredKey(null)}
+                      className={`w-full h-12 rounded-lg border-2 transition-all duration-200 font-bold text-sm shadow-lg active:shadow-md active:scale-95 relative overflow-hidden ${
+                        hoveredKey === 'CALIBRATE'
+                          ? 'border-blue-400 bg-gradient-to-b from-blue-100 to-blue-200 text-blue-900 shadow-blue-200/50 scale-105'
+                          : 'border-gray-600 bg-gradient-to-b from-gray-100 to-gray-300 text-gray-800 hover:from-gray-200 hover:to-gray-400'
+                      }`}
+                    >
+                      <div className="flex items-center justify-center space-x-2 relative z-10">
+                        <span>CALIBRATE</span>
+                        <kbd className="px-1.5 py-0.5 bg-gray-700 text-gray-200 rounded text-xs">Ctrl+C</kbd>
+                      </div>
+                      {/* Key top surface gradient */}
+                      <div className="absolute inset-0 rounded-lg bg-gradient-to-b from-white/20 to-transparent pointer-events-none" />
+                      {/* Key bottom shadow */}
+                      <div className="absolute -bottom-1 left-1 right-1 h-1 bg-black/20 rounded-b-lg blur-sm pointer-events-none" />
+                    </button>
+
+                    {/* Dwell progress ring */}
+                    {hoveredKey === 'CALIBRATE' && isDwelling && (
+                      <div className="absolute inset-0 pointer-events-none">
+                        <svg className="w-full h-full transform -rotate-90">
+                          <circle
+                            cx="50%"
+                            cy="50%"
+                            r="45%"
+                            stroke="currentColor"
+                            strokeWidth="3"
+                            fill="none"
+                            strokeLinecap="round"
+                            className="text-blue-500"
+                            strokeDasharray={`${2 * Math.PI * 45}`}
+                            strokeDashoffset={`${2 * Math.PI * 45 * (1 - dwellProgress / 100)}`}
+                          />
+                        </svg>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -192,6 +389,10 @@ export default function DemoShell() {
       <QuickPhrases
         selectedPhrase={state.selectedQuickPhrase}
         onSelect={addPhrase}
+        hoveredKey={hoveredKey}
+        setHoveredKey={setHoveredKey}
+        isDwelling={isDwelling}
+        dwellProgress={dwellProgress}
       />
 
       {/* Gaze Cursor (visible only in simulation mode) */}
