@@ -77,6 +77,11 @@ export default function FloatingPitchController({
     setIsDragging(true)
   }
 
+  // Don't render until window size is available (prevents SSR issues)
+  if (windowSize.width === 0) {
+    return null
+  }
+
   // Minimal floating button when collapsed
   if (isCollapsed) {
     return (
