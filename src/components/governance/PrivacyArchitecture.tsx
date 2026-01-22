@@ -28,7 +28,7 @@ export default function PrivacyArchitecture() {
 
           {/* Data Flow Visualization */}
           <div className="mb-12">
-            <div className="grid md:grid-cols-5 gap-4 items-center">
+            <div className="relative grid md:grid-cols-5 gap-4 items-center">
               {[
                 { icon: <EyeOff className="w-6 h-6" />, label: 'Camera Input', color: 'bg-slate-100 text-slate-600' },
                 { icon: <Cpu className="w-6 h-6" />, label: 'Local Processing', color: 'bg-slate-100 text-slate-600' },

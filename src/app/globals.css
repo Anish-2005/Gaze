@@ -15,3 +15,21 @@
     @apply transition-all duration-300 hover:scale-[1.02] hover:shadow-xl;
   }
 }
+
+/* Add to existing globals.css */
+.judge-mode {
+  scroll-behavior: smooth;
+}
+
+.judge-mode * {
+  animation-duration: 0.5s !important;
+}
+
+/* Reduce motion for judge mode */
+.judge-mode .animate-blob,
+.judge-mode .animate-pulse,
+.judge-mode .animate-bounce,
+.judge-mode .animate-ping {
+  animation-duration: 2s !important;
+  opacity: 0.3;
+}
