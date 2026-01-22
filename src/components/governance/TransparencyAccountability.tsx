@@ -5,7 +5,7 @@ import { BookOpen, Network, FileText, Mail, ShieldCheck, Users, Clock } from 'lu
 
 export default function TransparencyAccountability() {
   return (
-    <section className="py-24 bg-white">
+    <section className="py-24 bg-[#F7F9FC] text-[#0F172A]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -14,7 +14,7 @@ export default function TransparencyAccountability() {
           className="max-w-5xl mx-auto"
         >
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+            <h2 className="text-3xl md:text-4xl font-semibold mb-6">
               <span className="text-gradient">Transparency & accountability</span>
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">

@@ -5,7 +5,7 @@ import { Shield, Lock, Cpu, Users, Gavel } from 'lucide-react'
 
 export default function GovernanceHero() {
   return (
-    <section className="relative py-28 bg-gradient-to-b from-white to-blue-50/30">
+    <section className="relative py-28 bg-[#F7F9FC] text-[#0F172A]">
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" />
         <div className="absolute top-0 right-1/4 w-96 h-96 bg-teal-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000" />
@@ -23,8 +23,8 @@ export default function GovernanceHero() {
             Governance Framework
           </div>
 
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
-            <span className="block text-gray-900">Ethics, privacy, and</span>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight mb-6">
+            <span className="block">Ethics, privacy, and</span>
             <span className="block text-gradient mt-2">accessible by design</span>
           </h1>
 

@@ -5,7 +5,7 @@ import { EyeOff, Cpu, Fingerprint, Server, ShieldCheck, CheckCircle } from 'luci
 
 export default function PrivacyArchitecture() {
   return (
-    <section className="py-24 bg-gray-50">
+    <section className="py-24 bg-[#F7F9FC] text-[#0F172A]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -14,14 +14,14 @@ export default function PrivacyArchitecture() {
           className="max-w-5xl mx-auto"
         >
           <div className="text-center mb-16">
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-red-50 text-red-700 text-sm font-medium mb-4">
+            <div className="inline-flex items-center px-4 py-2 rounded-full border border-slate-300 text-slate-700 text-sm font-medium mb-4">
               <Fingerprint className="w-4 h-4 mr-2" />
               Biometric Privacy
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              <span className="text-gradient">Privacy architecture</span>
+            <h2 className="text-3xl md:text-4xl font-semibold mb-6">
+              Privacy architecture
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <p className="text-lg text-slate-600 max-w-3xl mx-auto">
               Engineered from the ground up to eliminate surveillance risk and biometric data exposure
             </p>
           </div>
@@ -30,11 +30,11 @@ export default function PrivacyArchitecture() {
           <div className="mb-12">
             <div className="grid md:grid-cols-5 gap-4 items-center">
               {[
-                { icon: <EyeOff className="w-6 h-6" />, label: 'Camera Input', color: 'bg-blue-100 text-blue-600' },
-                { icon: <Cpu className="w-6 h-6" />, label: 'Local Processing', color: 'bg-teal-100 text-teal-600' },
-                { icon: <Fingerprint className="w-6 h-6" />, label: 'No Storage', color: 'bg-red-100 text-red-600' },
-                { icon: <Server className="w-6 h-6" />, label: 'Ephemeral Cache', color: 'bg-amber-100 text-amber-600' },
-                { icon: <EyeOff className="w-6 h-6" />, label: 'Local Output', color: 'bg-green-100 text-green-600' },
+                { icon: <EyeOff className="w-6 h-6" />, label: 'Camera Input', color: 'bg-slate-100 text-slate-600' },
+                { icon: <Cpu className="w-6 h-6" />, label: 'Local Processing', color: 'bg-slate-100 text-slate-600' },
+                { icon: <Fingerprint className="w-6 h-6" />, label: 'No Storage', color: 'bg-slate-100 text-slate-600' },
+                { icon: <Server className="w-6 h-6" />, label: 'Ephemeral Cache', color: 'bg-slate-100 text-slate-600' },
+                { icon: <EyeOff className="w-6 h-6" />, label: 'Local Output', color: 'bg-slate-100 text-slate-600' },
               ].map((step, index) => (
                 <div key={index} className="text-center">
                   <div className={`w-16 h-16 rounded-xl ${step.color} flex items-center justify-center mx-auto mb-3`}>
@@ -86,18 +86,18 @@ export default function PrivacyArchitecture() {
                 className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-shadow"
               >
                 <div className="flex items-start mb-4">
-                  <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center mr-4 flex-shrink-0">
-                    <div className="text-blue-600">{item.icon}</div>
+                  <div className="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center mr-4 flex-shrink-0">
+                    <div className="text-slate-600">{item.icon}</div>
                   </div>
                   <div>
                     <h3 className="font-bold mb-2">{item.title}</h3>
-                    <p className="text-gray-600 text-sm mb-4">{item.description}</p>
+                    <p className="text-slate-600 text-sm mb-4">{item.description}</p>
                   </div>
                 </div>
                 <ul className="space-y-2">
                   {item.guarantees.map((guarantee, i) => (
-                    <li key={i} className="flex items-center text-sm text-gray-500">
-                      <CheckCircle className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
+                    <li key={i} className="flex items-center text-sm text-slate-500">
+                      <CheckCircle className="w-4 h-4 text-slate-500 mr-2 flex-shrink-0" />
                       {guarantee}
                     </li>
                   ))}
@@ -111,13 +111,13 @@ export default function PrivacyArchitecture() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="mt-12 p-6 bg-gradient-to-r from-blue-50 to-teal-50 rounded-2xl border border-blue-200"
+            className="mt-12 p-6 bg-slate-50 rounded-2xl border border-slate-200"
           >
             <div className="flex items-start">
-              <ShieldCheck className="w-6 h-6 text-blue-600 mr-4 flex-shrink-0 mt-1" />
+              <ShieldCheck className="w-6 h-6 text-slate-600 mr-4 flex-shrink-0 mt-1" />
               <div>
                 <h4 className="font-bold mb-2">Regulatory Alignment</h4>
-                <p className="text-gray-600">
+                <p className="text-slate-600">
                   Our architecture is designed to comply with global privacy regulations including GDPR,
                   HIPAA, and emerging biometric privacy laws. We maintain documentation for institutional
                   compliance reviews and audits.

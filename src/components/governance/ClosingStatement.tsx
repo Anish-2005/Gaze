@@ -18,7 +18,7 @@ export default function ClosingStatement() {
             Our Commitment
           </div>
 
-          <h2 className="text-3xl md:text-4xl font-bold mb-8">
+          <h2 className="text-3xl md:text-4xl font-semibold mb-8">
             Restoring communication should never compromise dignity
           </h2>
 
