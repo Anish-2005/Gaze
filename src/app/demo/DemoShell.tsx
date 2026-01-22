@@ -11,6 +11,37 @@ import QuickPhrases from './QuickPhrases'
 import CalibrationOverlay from './CalibrationOverlay'
 import GazeCursor from './GazeCursor'
 
+function ActionButton({
+  label,
+  onClick,
+  active,
+  color,
+}: {
+  label: string
+  onClick: () => void
+  active: boolean
+  color: 'emerald' | 'red' | 'amber' | 'blue'
+}) {
+  const colors = {
+    emerald: 'border-emerald-500 text-emerald-700',
+    red: 'border-red-500 text-red-700',
+    amber: 'border-amber-500 text-amber-700',
+    blue: 'border-blue-500 text-blue-700',
+  }
+
+  return (
+    <button
+      onClick={onClick}
+      className={`
+        h-12 rounded-lg border text-sm font-medium transition
+        ${active ? colors[color] + ' bg-slate-50' : 'border-slate-300 text-slate-700'}
+      `}
+    >
+      {label}
+    </button>
+  )
+}
+
 export default function DemoShell() {
   // State management
   const {
@@ -109,37 +140,6 @@ export default function DemoShell() {
     }
   }, [toggleSimulation, resetDemo])
 
-
-  function ActionButton({
-  label,
-  onClick,
-  active,
-  color,
-}: {
-  label: string
-  onClick: () => void
-  active: boolean
-  color: 'emerald' | 'red' | 'amber' | 'blue'
-}) {
-  const colors = {
-    emerald: 'border-emerald-500 text-emerald-700',
-    red: 'border-red-500 text-red-700',
-    amber: 'border-amber-500 text-amber-700',
-    blue: 'border-blue-500 text-blue-700',
-  }
-
-  return (
-    <button
-      onClick={onClick}
-      className={`
-        h-12 rounded-lg border text-sm font-medium transition
-        ${active ? colors[color] + ' bg-slate-50' : 'border-slate-300 text-slate-700'}
-      `}
-    >
-      {label}
-    </button>
-  )
-}
 
   // Handle speak/clear events
   useEffect(() => {

@@ -62,7 +62,7 @@ export function usePerformanceMonitoring() {
           used: Math.round(memInfo.usedJSHeapSize / 1048576 * 100) / 100 + ' MB',
           total: Math.round(memInfo.totalJSHeapSize / 1048576 * 100) / 100 + ' MB',
           limit: Math.round(memInfo.jsHeapSizeLimit / 1048576 * 100) / 100 + ' MB'
-      })
+        })
     }
   }, [])
 

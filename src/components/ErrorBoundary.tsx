@@ -1,5 +1,8 @@
 'use client'
 
+import React, { Component, ErrorInfo, ReactNode } from 'react'
+import { AlertTriangle, RefreshCw, Home } from 'lucide-react'
+
 interface WindowWithSentry extends Window {
   Sentry?: {
     captureException: (error: Error, options?: Record<string, unknown>) => void

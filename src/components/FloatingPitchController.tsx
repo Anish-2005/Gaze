@@ -43,7 +43,7 @@ export default function FloatingPitchController({
     window.addEventListener('resize', updateWindowSize)
 
     return () => window.removeEventListener('resize', updateWindowSize)
-  }, [])
+  }, [setWindowSize])
 
   // Load saved position from localStorage
   useEffect(() => {
@@ -299,7 +299,7 @@ export default function FloatingPitchController({
                     <span className="font-semibold">Delivery:</span> Calm, deliberate pacing with intentional pauses
                   </div>
                   <div className="text-xs text-slate-500">
-                    <span className="font-semibold">🎤 Narration:</span> Click "Play & Narrate" to hear the script spoken aloud
+                    <span className="font-semibold">🎤 Narration:</span> Click &quot;Play &amp; Narrate&quot; to hear the script spoken aloud
                   </div>
                 </div>
               </div>
