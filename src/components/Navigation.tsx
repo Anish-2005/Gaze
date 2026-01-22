@@ -8,10 +8,10 @@ export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
 
   const navItems = [
-    { label: 'System Overview', href: '#overview' },
-    { label: 'Use Cases', href: '#use-cases' },
-    { label: 'Accessibility', href: '#accessibility' },
-    { label: 'Institutions', href: '#institutions' },
+    { label: 'Institutions', href: '/institutions' },
+    { label: 'Governance', href: '/governance' }
+    // { label: 'About', href: '/about' }, // Future addition
+
   ]
 
   return (
