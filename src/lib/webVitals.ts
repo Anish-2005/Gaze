@@ -1,36 +1,52 @@
 import { useEffect } from 'react'
 
+interface WebVitalsMetric {
+  name: string
+  value: number
+  delta: number
+  id: string
+  entries: PerformanceEntry[]
+}
+
+interface PerformanceWithMemory extends Performance {
+  memory?: {
+    usedJSHeapSize: number
+    totalJSHeapSize: number
+    jsHeapSizeLimit: number
+  }
+}
+
 // Web Vitals tracking
 export function useWebVitals() {
   useEffect(() => {
     // Dynamically import web-vitals to avoid SSR issues
     import('web-vitals').then(({ onCLS, onFID, onFCP, onLCP, onTTFB }) => {
       // Cumulative Layout Shift
-      onCLS((metric: any) => {
+      onCLS((metric: WebVitalsMetric) => {
         console.log('CLS:', metric)
         sendToAnalytics('CLS', metric)
       })
 
       // First Input Delay
-      onFID((metric) => {
+      onFID((metric: WebVitalsMetric) => {
         console.log('FID:', metric)
         sendToAnalytics('FID', metric)
       })
 
       // First Contentful Paint
-      onFCP((metric) => {
+      onFCP((metric: WebVitalsMetric) => {
         console.log('FCP:', metric)
         sendToAnalytics('FCP', metric)
       })
 
       // Largest Contentful Paint
-      onLCP((metric) => {
+      onLCP((metric: WebVitalsMetric) => {
         console.log('LCP:', metric)
         sendToAnalytics('LCP', metric)
       })
 
       // Time to First Byte
-      onTTFB((metric) => {
+      onTTFB((metric: WebVitalsMetric) => {
         console.log('TTFB:', metric)
         sendToAnalytics('TTFB', metric)
       })
@@ -41,10 +57,10 @@ export function useWebVitals() {
 }
 
 // Send metrics to analytics
-function sendToAnalytics(metricName: string, metric: any) {
+function sendToAnalytics(metricName: string, metric: WebVitalsMetric) {
   // Google Analytics 4
-  if (typeof window !== 'undefined' && (window as any).gtag) {
-    ;(window as any).gtag('event', metricName, {
+  if (typeof window !== 'undefined' && (window as WindowWithAnalytics).gtag) {
+    (window as WindowWithAnalytics).gtag('event', metricName, {
       value: Math.round(metric.value * 1000) / 1000,
       event_category: 'Web Vitals',
       event_label: metric.name,
@@ -128,11 +144,13 @@ export function useMemoryMonitor() {
   useEffect(() => {
     const checkMemory = () => {
       if ('memory' in performance) {
-        const memInfo = (performance as any).memory
-        const usedPercent = (memInfo.usedJSHeapSize / memInfo.jsHeapSizeLimit) * 100
+        const memInfo = (performance as PerformanceWithMemory).memory
+        if (memInfo) {
+          const usedPercent = (memInfo.usedJSHeapSize / memInfo.jsHeapSizeLimit) * 100
 
-        if (usedPercent > 80) {
-          console.warn('High memory usage detected:', `${usedPercent.toFixed(1)}%`)
+          if (usedPercent > 80) {
+            console.warn('High memory usage detected:', `${usedPercent.toFixed(1)}%`)
+          }
         }
       }
     }

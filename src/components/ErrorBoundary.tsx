@@ -1,7 +1,10 @@
 'use client'
 
-import React, { Component, ErrorInfo, ReactNode } from 'react'
-import { AlertTriangle, RefreshCw, Home } from 'lucide-react'
+interface WindowWithSentry extends Window {
+  Sentry?: {
+    captureException: (error: Error, options?: Record<string, unknown>) => void
+  }
+}
 
 interface Props {
   children: ReactNode
@@ -35,8 +38,8 @@ export class ErrorBoundary extends Component<Props, State> {
     this.props.onError?.(error, errorInfo)
 
     // Send to Sentry or other error tracking
-    if (typeof window !== 'undefined' && (window as any).Sentry) {
-      ;(window as any).Sentry.captureException(error, {
+    if (typeof window !== 'undefined' && (window as WindowWithSentry).Sentry) {
+      (window as WindowWithSentry).Sentry.captureException(error, {
         contexts: {
           react: {
             componentStack: errorInfo.componentStack
@@ -135,8 +138,8 @@ export function useErrorHandler() {
     console.error('Error caught by useErrorHandler:', error, errorInfo)
 
     // Send to error tracking
-    if (typeof window !== 'undefined' && (window as any).Sentry) {
-      ;(window as any).Sentry.captureException(error, {
+    if (typeof window !== 'undefined' && (window as WindowWithSentry).Sentry) {
+      (window as WindowWithSentry).Sentry.captureException(error, {
         contexts: {
           react: {
             componentStack: errorInfo?.componentStack

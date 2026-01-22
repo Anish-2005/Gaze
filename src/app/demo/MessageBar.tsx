@@ -98,7 +98,7 @@ function ControlButton({
   variant,
   active = false,
 }: {
-  icon: any
+  icon: React.ComponentType<{ className?: string }>
   label: string
   onClick: () => void
   disabled?: boolean

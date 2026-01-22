@@ -80,8 +80,8 @@ export default function ImpactSection() {
                         </div>
 
                         <blockquote className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-slate-700 text-lg italic">
-                            "GAZE allows assistive communication to scale like software —
-                            not like medical hardware."
+                            &ldquo;GAZE allows assistive communication to scale like software &mdash;
+                            not like medical hardware.&rdquo;
                         </blockquote>
 
                     </div>

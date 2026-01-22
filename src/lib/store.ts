@@ -183,7 +183,7 @@ export const usePitchControllerStore = create<PitchControllerState>()(
 // API Cache Store
 interface APICacheState {
   // Cache storage
-  cache: Map<string, { data: any; timestamp: number; ttl: number }>
+  cache: Map<string, { data: unknown; timestamp: number; ttl: number }>
 
   // Actions
   get: <T>(key: string) => T | null

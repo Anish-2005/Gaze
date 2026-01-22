@@ -96,7 +96,7 @@ function StatusItem({
   stateColor,
   pulse = false,
 }: {
-  icon: any
+  icon: React.ComponentType<{ className?: string }>
   label: string
   state: string
   stateColor: string
@@ -125,7 +125,7 @@ function ControlButton({
   label,
   onClick,
 }: {
-  icon: any
+  icon: React.ComponentType<{ className?: string }>
   label: string
   onClick: () => void
 }) {

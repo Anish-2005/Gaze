@@ -1,6 +1,18 @@
 import { useEffect, useCallback } from 'react'
 import { usePathname, useSearchParams } from 'next/navigation'
 
+interface WindowWithAnalytics extends Window {
+  gtag?: (command: string, targetId: string, config?: Record<string, unknown>) => void
+}
+
+interface PerformanceWithMemory extends Performance {
+  memory?: {
+    usedJSHeapSize: number
+    totalJSHeapSize: number
+    jsHeapSizeLimit: number
+  }
+}
+
 // Performance monitoring hook
 export function usePerformanceMonitoring() {
   const pathname = usePathname()
@@ -31,8 +43,8 @@ export function usePerformanceMonitoring() {
       console.log(`Route ${pathname} loaded in ${loadTime.toFixed(2)}ms`)
 
       // Send to analytics if available
-      if (typeof window !== 'undefined' && (window as any).gtag) {
-        ;(window as any).gtag('event', 'page_load_time', {
+      if (typeof window !== 'undefined' && (window as WindowWithAnalytics).gtag) {
+        (window as WindowWithAnalytics).gtag('event', 'page_load_time', {
           page_path: pathname,
           page_load_time: loadTime,
           custom_map: { metric1: 'page_load_time' }
@@ -44,11 +56,12 @@ export function usePerformanceMonitoring() {
   // Memory usage monitoring
   const monitorMemoryUsage = useCallback(() => {
     if (typeof window !== 'undefined' && 'memory' in performance) {
-      const memInfo = (performance as any).memory
-      console.log('Memory Usage:', {
-        used: Math.round(memInfo.usedJSHeapSize / 1048576 * 100) / 100 + ' MB',
-        total: Math.round(memInfo.totalJSHeapSize / 1048576 * 100) / 100 + ' MB',
-        limit: Math.round(memInfo.jsHeapSizeLimit / 1048576 * 100) / 100 + ' MB'
+      const memInfo = (performance as PerformanceWithMemory).memory
+      if (memInfo) {
+        console.log('Memory Usage:', {
+          used: Math.round(memInfo.usedJSHeapSize / 1048576 * 100) / 100 + ' MB',
+          total: Math.round(memInfo.totalJSHeapSize / 1048576 * 100) / 100 + ' MB',
+          limit: Math.round(memInfo.jsHeapSizeLimit / 1048576 * 100) / 100 + ' MB'
       })
     }
   }, [])

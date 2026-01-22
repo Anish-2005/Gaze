@@ -31,9 +31,18 @@ export default function FloatingPitchController({
   const [isDragging, setIsDragging] = useState(false)
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 })
 
+  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 })
+
   // Set window size after mount
   useEffect(() => {
-    setWindowSize({ width: window.innerWidth, height: window.innerHeight })
+    const updateWindowSize = () => {
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight })
+    }
+
+    updateWindowSize()
+    window.addEventListener('resize', updateWindowSize)
+
+    return () => window.removeEventListener('resize', updateWindowSize)
   }, [])
 
   // Load saved position from localStorage
@@ -42,7 +51,7 @@ export default function FloatingPitchController({
     if (savedPosition) {
       try {
         setPosition(JSON.parse(savedPosition))
-      } catch (e) {
+      } catch {
         // Use default position if parsing fails
         if (typeof window !== 'undefined') {
           setPosition({ x: 20, y: window.innerHeight - 80 })
@@ -65,7 +74,7 @@ export default function FloatingPitchController({
     localStorage.setItem('floatingControllerPosition', JSON.stringify(position))
   }, [position])
 
-  const handleDragEnd = (_event: any, info: PanInfo) => {
+  const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     setPosition(prev => ({
       x: prev.x + info.offset.x,
       y: prev.y + info.offset.y

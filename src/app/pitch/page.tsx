@@ -52,9 +52,9 @@ function LazyComponent({
   componentName,
   ...props
 }: {
-  Component: React.ComponentType<any>
+  Component: React.ComponentType<Record<string, unknown>>
   componentName: string
-  [key: string]: any
+  [key: string]: unknown
 }) {
   return (
     <ErrorBoundary fallback={<ComponentErrorFallback componentName={componentName} />}>
@@ -74,6 +74,46 @@ export default function PitchPage() {
     const timerRef = useRef<NodeJS.Timeout | null>(null)
     const progressRef = useRef<NodeJS.Timeout | null>(null)
     const speechRef = useRef<SpeechSynthesisUtterance | null>(null)
+
+    const speakText = useCallback((text: string) => {
+        if ('speechSynthesis' in window) {
+            // Stop any current speech
+            window.speechSynthesis.cancel()
+
+            const utterance = new SpeechSynthesisUtterance(text)
+            utterance.rate = 0.9 // Slightly slower for clarity
+            utterance.pitch = 1
+            utterance.volume = 0.8
+
+            // Try to use a natural-sounding voice
+            const voices = window.speechSynthesis.getVoices()
+            const preferredVoice = voices.find(voice =>
+                voice.name.includes('Google') ||
+                voice.name.includes('Natural') ||
+                voice.name.includes('Enhanced') ||
+                voice.lang.startsWith('en-')
+            )
+            if (preferredVoice) {
+                utterance.voice = preferredVoice
+            }
+
+            utterance.onstart = () => setIsSpeaking(true)
+            utterance.onend = () => setIsSpeaking(false)
+            utterance.onerror = () => setIsSpeaking(false)
+
+            speechRef.current = utterance
+            window.speechSynthesis.speak(utterance)
+        } else {
+            console.warn('Speech synthesis not supported in this browser')
+        }
+    }, [])
+
+    const stopSpeaking = useCallback(() => {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel()
+            setIsSpeaking(false)
+        }
+    }, [])
 
     const startScript = useCallback(() => {
         if (isPlaying) {
@@ -153,47 +193,7 @@ export default function PitchPage() {
         }
 
         playNextSegment(currentScriptIndex)
-    }, [isPlaying, currentScriptIndex])
-
-    const speakText = useCallback((text: string) => {
-        if ('speechSynthesis' in window) {
-            // Stop any current speech
-            window.speechSynthesis.cancel()
-
-            const utterance = new SpeechSynthesisUtterance(text)
-            utterance.rate = 0.9 // Slightly slower for clarity
-            utterance.pitch = 1
-            utterance.volume = 0.8
-
-            // Try to use a natural-sounding voice
-            const voices = window.speechSynthesis.getVoices()
-            const preferredVoice = voices.find(voice =>
-                voice.name.includes('Google') ||
-                voice.name.includes('Natural') ||
-                voice.name.includes('Enhanced') ||
-                voice.lang.startsWith('en-')
-            )
-            if (preferredVoice) {
-                utterance.voice = preferredVoice
-            }
-
-            utterance.onstart = () => setIsSpeaking(true)
-            utterance.onend = () => setIsSpeaking(false)
-            utterance.onerror = () => setIsSpeaking(false)
-
-            speechRef.current = utterance
-            window.speechSynthesis.speak(utterance)
-        } else {
-            console.warn('Speech synthesis not supported in this browser')
-        }
-    }, [])
-
-    const stopSpeaking = useCallback(() => {
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel()
-            setIsSpeaking(false)
-        }
-    }, [])
+    }, [isPlaying, currentScriptIndex, speakText, stopSpeaking])
 
     useEffect(() => {
         return () => {

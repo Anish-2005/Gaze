@@ -10,10 +10,27 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-interface QuickPhrasesProps {
-  onSelect: (phrase: string) => void
+interface Phrase {
+  text: string
+  icon: React.ComponentType<{ className?: string }>
+  keyId: string
+  color?: string
+}
+
+interface PhraseButtonProps {
+  phrase: Phrase
   hoveredKey: string | null
-  setHoveredKey: (key: string | null) => void
+  setHoveredKey: (k: string | null) => void
+  isDwelling: boolean
+  dwellProgress: number
+  onSelect: (t: string) => void
+  critical?: boolean
+}
+
+interface QuickPhrasesProps {
+  onSelect: (t: string) => void
+  hoveredKey: string | null
+  setHoveredKey: (k: string | null) => void
   isDwelling: boolean
   dwellProgress: number
 }
@@ -93,15 +110,7 @@ function PhraseButton({
   dwellProgress,
   onSelect,
   critical = false,
-}: {
-  phrase: any
-  hoveredKey: string | null
-  setHoveredKey: (k: string | null) => void
-  isDwelling: boolean
-  dwellProgress: number
-  onSelect: (t: string) => void
-  critical?: boolean
-}) {
+}: PhraseButtonProps) {
   const Icon = phrase.icon
   const active = hoveredKey === phrase.keyId
 
