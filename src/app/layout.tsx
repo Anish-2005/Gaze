@@ -6,9 +6,26 @@ import Navigation from '@/components/Navigation'
 import JudgeModeIndicator from '@/components/JudgeModeIndicator'
 import KeyboardShortcuts from '@/components/KeyboardShortcuts'
 import { useJudgeMode } from '@/lib/useJudgeMode'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
+
+// Client-side only component to avoid hydration mismatch
+function PrintUrl() {
+  const [url, setUrl] = useState('')
+  
+  useEffect(() => {
+    setUrl(window.location.href)
+  }, [])
+  
+  if (!url) return null
+  
+  return (
+    <p className="text-sm text-gray-500 mt-4">
+      Printed from: {url} • {new Date().toLocaleDateString()}
+    </p>
+  )
+}
 
 export default function RootLayout({
   children,
@@ -226,9 +243,7 @@ export default function RootLayout({
           <div className="p-8 border-b border-gray-300">
             <h1 className="text-2xl font-bold">GAZE - The Eye-Tracking Communicator</h1>
             <p className="text-gray-600 mt-2">Giving a voice to the paralyzed using only a smartphone selfie camera.</p>
-            <p className="text-sm text-gray-500 mt-4">
-              Printed from: {typeof window !== 'undefined' ? window.location.href : ''} • {new Date().toLocaleDateString()}
-            </p>
+            <PrintUrl />
           </div>
         </div>
         
