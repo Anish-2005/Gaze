@@ -2,11 +2,18 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
-import { Play, Volume2, Pause, Eye } from 'lucide-react'
-import { useState, useRef, useEffect } from 'react'
-import { useJudgeMode } from '@/lib/useJudgeMode'
+import { Play, Volume2, Pause, Eye, Smartphone, Tablet, Laptop, Shield, Globe, Zap, AlertTriangle, Cpu, Heart, Users, Star, Lock, Crown } from 'lucide-react'
+import { useState, useRef, useEffect, useCallback } from 'react'
+import FloatingPitchController from '@/components/FloatingPitchController'
 
-const SCRIPT = [
+interface ScriptSegment {
+  time: string
+  title: string
+  content: string
+  duration: number
+}
+
+const SCRIPT: ScriptSegment[] = [
   {
     time: "0:00-0:25",
     title: "Problem",
@@ -45,179 +52,303 @@ const SCRIPT = [
   },
 ]
 
-export default function PitchPage() {
-  const [currentScriptIndex, setCurrentScriptIndex] = useState(0)
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [showScript, setShowScript] = useState(false)
-  const timerRef = useRef<NodeJS.Timeout | null>(null)
-  const { judgeMode } = useJudgeMode()
+const SOLUTION_FEATURES = [
+  {
+    icon: Smartphone,
+    title: "Uses Existing Devices",
+    description: "Works on any smartphone, tablet, or laptop with a camera"
+  },
+  {
+    icon: Shield,
+    title: "On-Device Processing",
+    description: "All processing happens locally, no data leaves the device"
+  },
+  {
+    icon: Globe,
+    title: "Global Accessibility",
+    description: "Browser-based deployment works across all regions"
+  },
+  {
+    icon: Zap,
+    title: "Instant Setup",
+    description: "No installation required, works directly in browser"
+  }
+]
 
-  const startScript = () => {
+const METRICS = [
+  {
+    value: "≥90%",
+    label: "Cost Reduction",
+    description: "Compared to hardware-based assistive systems",
+    color: "bg-slate-900"
+  },
+  {
+    value: "$0",
+    label: "Additional Hardware",
+    description: "Required for deployment - uses existing devices",
+    color: "bg-slate-900"
+  },
+  {
+    value: "Global",
+    label: "Deployment Scale",
+    description: "Web-based architecture works across all regions",
+    color: "bg-slate-900"
+  }
+]
+
+const WHY_NOW_ITEMS = [
+  {
+    icon: Smartphone,
+    title: "Cameras are ubiquitous across consumer devices",
+    detail: "Over 6 billion smartphones worldwide with capable cameras"
+  },
+  {
+    icon: Cpu,
+    title: "Computer vision models run efficiently on-device",
+    detail: "ONNX runtime enables local AI processing without cloud dependency"
+  },
+  {
+    icon: Heart,
+    title: "Healthcare systems seek low-cost assistive solutions",
+    detail: "Cost pressure drives innovation in accessible care delivery"
+  },
+  {
+    icon: Users,
+    title: "Accessibility treated as public infrastructure",
+    detail: "Global shift toward inclusive design and universal access"
+  }
+]
+
+const ETHICAL_PRINCIPLES = [
+  {
+    principle: "Dignity",
+    description: "Preserves user agency and autonomy in communication",
+    icon: Star
+  },
+  {
+    principle: "Privacy",
+    description: "On-device processing, no biometric data storage",
+    icon: Lock
+  },
+  {
+    principle: "Access",
+    description: "Free for individuals, scalable for institutions",
+    icon: Crown
+  }
+]
+
+export default function PitchPage() {
+  const [currentScriptIndex, setCurrentScriptIndex] = useState<number>(0)
+  const [isPlaying, setIsPlaying] = useState<boolean>(false)
+  const [segmentProgress, setSegmentProgress] = useState<number>(0)
+  const [isSpeaking, setIsSpeaking] = useState<boolean>(false)
+  const [showScript, setShowScript] = useState<boolean>(false)
+  const timerRef = useRef<NodeJS.Timeout | null>(null)
+  const progressRef = useRef<NodeJS.Timeout | null>(null)
+  const speechRef = useRef<SpeechSynthesisUtterance | null>(null)
+
+  const startScript = useCallback(() => {
     if (isPlaying) {
-      // Stop if already playing
-      if (timerRef.current) clearTimeout(timerRef.current)
+      // Pause if already playing
+      if (timerRef.current) {
+        clearTimeout(timerRef.current)
+        timerRef.current = null
+      }
+      if (progressRef.current) {
+        clearInterval(progressRef.current)
+        progressRef.current = null
+      }
+      stopSpeaking()
       setIsPlaying(false)
       return
     }
 
     setIsPlaying(true)
-    setCurrentScriptIndex(0)
     setShowScript(true)
 
     const playNextSegment = (index: number) => {
       if (index >= SCRIPT.length) {
         setIsPlaying(false)
+        setCurrentScriptIndex(0)
+        setSegmentProgress(0)
+        stopSpeaking()
+        if (timerRef.current) {
+          clearTimeout(timerRef.current)
+          timerRef.current = null
+        }
+        if (progressRef.current) {
+          clearInterval(progressRef.current)
+          progressRef.current = null
+        }
         return
       }
 
       setCurrentScriptIndex(index)
-      
+      setSegmentProgress(0)
+
+      // Speak the current segment
+      speakText(SCRIPT[index].content)
+
+      // Auto-scroll to the corresponding section
+      const sectionIds = ['problem', 'solution', 'live-proof', 'impact', 'why-now', 'decision']
+      const sectionId = sectionIds[index]
+      if (sectionId) {
+        const element = document.getElementById(sectionId)
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+      }
+
+      // Start progress tracking
+      const segmentDuration = SCRIPT[index].duration * 1000
+      const progressInterval = 100 // Update every 100ms
+      let elapsed = 0
+
+      progressRef.current = setInterval(() => {
+        elapsed += progressInterval
+        const progress = Math.min((elapsed / segmentDuration) * 100, 100)
+        setSegmentProgress(progress)
+
+        if (elapsed >= segmentDuration) {
+          if (progressRef.current) {
+            clearInterval(progressRef.current)
+            progressRef.current = null
+          }
+        }
+      }, progressInterval)
+
       timerRef.current = setTimeout(() => {
         playNextSegment(index + 1)
-      }, SCRIPT[index].duration * 1000)
+      }, segmentDuration)
     }
 
-    playNextSegment(0)
-  }
+    playNextSegment(currentScriptIndex)
+  }, [isPlaying, currentScriptIndex])
 
-  useEffect(() => {
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current)
+  const speakText = useCallback((text: string) => {
+    if ('speechSynthesis' in window) {
+      // Stop any current speech
+      window.speechSynthesis.cancel()
+
+      const utterance = new SpeechSynthesisUtterance(text)
+      utterance.rate = 0.9 // Slightly slower for clarity
+      utterance.pitch = 1
+      utterance.volume = 0.8
+
+      // Try to use a natural-sounding voice
+      const voices = window.speechSynthesis.getVoices()
+      const preferredVoice = voices.find(voice =>
+        voice.name.includes('Google') ||
+        voice.name.includes('Natural') ||
+        voice.name.includes('Enhanced') ||
+        voice.lang.startsWith('en-')
+      )
+      if (preferredVoice) {
+        utterance.voice = preferredVoice
+      }
+
+      utterance.onstart = () => setIsSpeaking(true)
+      utterance.onend = () => setIsSpeaking(false)
+      utterance.onerror = () => setIsSpeaking(false)
+
+      speechRef.current = utterance
+      window.speechSynthesis.speak(utterance)
+    } else {
+      console.warn('Speech synthesis not supported in this browser')
     }
   }, [])
 
-  return (
-    <main className="min-h-screen bg-white text-gray-900">
-      {/* Script Player (Floating) */}
-      {judgeMode && (
-        <div className="fixed top-20 right-4 z-50 w-80">
-          <div className="bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden">
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Volume2 className="w-5 h-5" />
-                  <h3 className="font-semibold">2-Minute Pitch Script</h3>
-                </div>
-                <button
-                  onClick={() => setShowScript(!showScript)}
-                  className="text-white/80 hover:text-white"
-                >
-                  {showScript ? '▲' : '▼'}
-                </button>
-              </div>
-              
-              <div className="mt-2 flex items-center justify-between">
-                <button
-                  onClick={startScript}
-                  className={`flex items-center space-x-2 px-3 py-1 rounded-md text-sm font-medium ${
-                    isPlaying 
-                      ? 'bg-white/20 hover:bg-white/30' 
-                      : 'bg-white text-blue-600 hover:bg-white/90'
-                  }`}
-                >
-                  {isPlaying ? (
-                    <>
-                      <Pause className="w-4 h-4" />
-                      <span>Pause</span>
-                    </>
-                  ) : (
-                    <>
-                      <Play className="w-4 h-4" />
-                      <span>Play Script</span>
-                    </>
-                  )}
-                </button>
-                
-                <div className="text-xs text-white/80">
-                  Total: 2:00
-                </div>
-              </div>
-            </div>
+  const stopSpeaking = useCallback(() => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel()
+      setIsSpeaking(false)
+    }
+  }, [])
 
-            <AnimatePresence>
-              {showScript && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  className="overflow-hidden"
-                >
-                  <div className="p-4 max-h-96 overflow-y-auto">
-                    <div className="space-y-4">
-                      {SCRIPT.map((segment, index) => (
-                        <div
-                          key={index}
-                          className={`p-3 rounded-lg border ${
-                            index === currentScriptIndex
-                              ? 'border-blue-500 bg-blue-50'
-                              : 'border-gray-200'
-                          }`}
-                        >
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-sm font-medium text-gray-900">
-                              {segment.title}
-                            </span>
-                            <span className="text-xs text-gray-500">
-                              {segment.time}
-                            </span>
-                          </div>
-                          <p className="text-sm text-gray-600">
-                            {segment.content}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                    
-                    <div className="mt-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                      <div className="text-xs text-gray-500 mb-2">
-                        <span className="font-medium">Timing:</span> ~1:55 total
-                      </div>
-                      <div className="text-xs text-gray-500">
-                        <span className="font-medium">Pacing:</span> Speak calmly. Pause deliberately.
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current)
+      }
+      if (progressRef.current) {
+        clearInterval(progressRef.current)
+      }
+      stopSpeaking()
+    }
+  }, [stopSpeaking])
+
+  return (
+    <main className="min-h-screen bg-[#F7F9FC]">
+      {/* Floating Pitch Controller */}
+      <FloatingPitchController
+        isPlaying={isPlaying}
+        isSpeaking={isSpeaking}
+        currentScriptIndex={currentScriptIndex}
+        segmentProgress={segmentProgress}
+        SCRIPT={SCRIPT}
+        onPlayPause={startScript}
+      />
+
+      {/* Pitch Deck Header */}
+      <div className="bg-white border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold text-slate-900">GAZE Pitch Deck</h1>
+              <p className="text-slate-600 text-sm md:text-base">Investor Presentation • January 2026</p>
+            </div>
+            <div className="bg-slate-900 text-white px-4 py-3 rounded-lg">
+              <div className="text-sm md:text-base font-semibold">Seeking $2.5M Seed</div>
+              <div className="text-xs md:text-sm text-slate-300">Pre-revenue • Proprietary IP</div>
+            </div>
           </div>
         </div>
-      )}
+      </div>
 
       {/* Pitch Content */}
-      <div className={`max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-24 ${judgeMode ? 'pt-32' : 'pt-24'}`}>
-        <div className="max-w-5xl mx-auto space-y-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 md:pt-12 pb-16">
+        <div className="space-y-12 md:space-y-16">
           {/* Section 1: Problem */}
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="scroll-mt-24"
+            id="problem"
           >
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-red-50 text-red-700 text-sm font-medium mb-6">
-              Problem Statement
-            </div>
-            
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-8">
-              Millions cannot communicate.
-            </h1>
+            <div className="bg-white rounded-2xl shadow-lg border border-slate-300 overflow-hidden">
+              <div className="bg-slate-900 text-white px-6 py-4 md:px-8 md:py-6">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 rounded-full bg-white text-slate-900 flex items-center justify-center text-sm font-bold">1</div>
+                  <h2 className="text-xl md:text-2xl font-bold">The Problem</h2>
+                </div>
+              </div>
 
-            <div className="max-w-3xl">
-              <p className="text-xl text-gray-600 leading-relaxed mb-6">
-                People with paralysis, ALS, stroke, or critical illness often lose
-                the ability to speak or type. Existing assistive solutions rely on
-                proprietary eye-tracking hardware costing over $10,000, making
-                access unrealistic for most families, hospitals, and public systems.
-              </p>
-              
-              <div className="mt-8 p-6 bg-red-50 rounded-xl border border-red-200">
-                <div className="flex items-start">
-                  <div className="text-red-600 mr-3 mt-1">💡</div>
-                  <div>
-                    <p className="text-red-800 font-medium mb-2">The Hard Reality:</p>
-                    <p className="text-red-700">
-                      Communication becomes a luxury when technology exists but isn&apos;t accessible.
+              <div className="p-6 md:p-8 lg:p-12">
+                <div className="max-w-4xl mx-auto">
+                  <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-6 md:mb-8 leading-tight text-center">
+                    Communication should not be a luxury.
+                  </h3>
+
+                  <div className="max-w-3xl mx-auto mb-8 md:mb-12">
+                    <p className="text-lg md:text-xl text-slate-600 leading-relaxed text-center">
+                      Millions lose their voice due to paralysis, ALS, stroke, or critical illness. 
+                      Existing eye-tracking solutions require specialized hardware costing over $10,000—making 
+                      basic communication inaccessible for most families and healthcare systems.
                     </p>
+                  </div>
+
+                  <div className="bg-red-50 border border-red-100 rounded-xl p-6 md:p-8">
+                    <div className="flex items-start">
+                      <AlertTriangle className="w-6 h-6 text-red-600 mr-4 flex-shrink-0 mt-1" />
+                      <div>
+                        <p className="text-red-800 font-semibold mb-2 text-lg">Critical Gap in Care:</p>
+                        <p className="text-red-700">
+                          When communication technology exists but remains financially inaccessible, 
+                          we create barriers to fundamental human connection and dignity.
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -228,42 +359,45 @@ export default function PitchPage() {
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
             className="scroll-mt-24"
+            id="solution"
           >
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-green-50 text-green-700 text-sm font-medium mb-6">
-              Core Solution
-            </div>
-            
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-8">
-              GAZE replaces hardware with software.
-            </h2>
-
-            <div className="max-w-3xl">
-              <p className="text-xl text-gray-600 leading-relaxed mb-8">
-                GAZE is a software-based assistive communication system that uses
-                standard cameras already present on phones, tablets, and laptops
-                to enable gaze-based typing and speech — without proprietary
-                devices or infrastructure changes.
-              </p>
-
-              {/* Solution Architecture */}
-              <div className="grid md:grid-cols-2 gap-6 mb-8">
-                <div className="bg-green-50 rounded-xl p-6 border border-green-200">
-                  <div className="text-green-600 text-2xl mb-3">📱</div>
-                  <h4 className="font-bold mb-2">Uses Existing Devices</h4>
-                  <p className="text-gray-600 text-sm">
-                    Works on any smartphone, tablet, or laptop with a camera
-                  </p>
+            <div className="bg-white rounded-2xl shadow-lg border border-slate-300 overflow-hidden">
+              <div className="bg-slate-900 text-white px-6 py-4 md:px-8 md:py-6">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 rounded-full bg-white text-slate-900 flex items-center justify-center text-sm font-bold">2</div>
+                  <h2 className="text-xl md:text-2xl font-bold">The Solution</h2>
                 </div>
-                
-                <div className="bg-blue-50 rounded-xl p-6 border border-blue-200">
-                  <div className="text-blue-600 text-2xl mb-3">⚡</div>
-                  <h4 className="font-bold mb-2">On-Device Processing</h4>
-                  <p className="text-gray-600 text-sm">
-                    All processing happens locally, no data leaves the device
-                  </p>
+              </div>
+
+              <div className="p-6 md:p-8 lg:p-12">
+                <div className="max-w-4xl mx-auto">
+                  <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-8 md:mb-12 leading-tight text-center">
+                    Software where hardware was required.
+                  </h3>
+
+                  <div className="max-w-3xl mx-auto mb-12">
+                    <p className="text-lg md:text-xl text-slate-600 leading-relaxed text-center">
+                      GAZE transforms standard device cameras into assistive communication tools through 
+                      advanced computer vision—enabling gaze-based typing and speech without proprietary 
+                      hardware or complex installations.
+                    </p>
+                  </div>
+
+                  {/* Solution Architecture */}
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                    {SOLUTION_FEATURES.map((feature, index) => (
+                      <div key={index} className="bg-slate-50 rounded-xl p-6 border border-slate-300 hover:border-slate-400 transition-colors">
+                        <div className="w-12 h-12 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center mb-4">
+                          <feature.icon className="w-6 h-6" />
+                        </div>
+                        <h4 className="text-lg font-bold mb-2 text-slate-900">{feature.title}</h4>
+                        <p className="text-slate-600 text-sm md:text-base">{feature.description}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -273,51 +407,60 @@ export default function PitchPage() {
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
             className="scroll-mt-24"
+            id="live-proof"
           >
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-blue-50 text-blue-700 text-sm font-medium mb-6">
-              Live Demonstration
-            </div>
-            
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-8">
-              This is not a concept.
-            </h2>
-
-            <div className="max-w-3xl">
-              <p className="text-xl text-gray-600 leading-relaxed mb-10">
-                The system is operational and available for immediate use.
-                Everything runs in the browser, with on-device processing and
-                no biometric data storage.
-              </p>
-
-              <div className="space-y-6">
-                <Link
-                  href="/demo"
-                  className="inline-flex items-center justify-center px-10 py-5 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white text-lg font-semibold hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 shadow-lg"
-                >
-                  <Eye className="w-6 h-6 mr-3" />
-                  Launch Live Demo
-                </Link>
-                
-                <div className="text-sm text-gray-500">
-                  Opens in fullscreen clinical interface • No installation required
+            <div className="bg-white rounded-2xl shadow-lg border border-slate-300 overflow-hidden">
+              <div className="bg-slate-900 text-white px-6 py-4 md:px-8 md:py-6">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 rounded-full bg-white text-slate-900 flex items-center justify-center text-sm font-bold">3</div>
+                  <h2 className="text-xl md:text-2xl font-bold">Live Proof</h2>
                 </div>
               </div>
 
-              {/* Demo Features */}
-              <div className="mt-12 grid sm:grid-cols-3 gap-4">
-                {[
-                  'Browser-based - no installation',
-                  'On-device processing - no data leaves',
-                  'Medical-grade interface - distraction-free',
-                ].map((feature, index) => (
-                  <div key={index} className="flex items-center text-sm text-gray-600">
-                    <div className="w-2 h-2 rounded-full bg-green-500 mr-3"></div>
-                    {feature}
+              <div className="p-6 md:p-8 lg:p-12">
+                <div className="max-w-4xl mx-auto text-center">
+                  <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-8 leading-tight">
+                    Not a concept—working technology.
+                  </h3>
+
+                  <div className="max-w-3xl mx-auto mb-8 md:mb-12">
+                    <p className="text-lg md:text-xl text-slate-600 leading-relaxed">
+                      The system is fully operational and available for immediate deployment. 
+                      Everything runs securely in the browser with on-device processing—no biometric data ever leaves the device.
+                    </p>
                   </div>
-                ))}
+
+                  <div className="space-y-6">
+                    <Link
+                      href="/demo"
+                      className="inline-flex items-center justify-center px-8 py-4 md:px-12 md:py-6 rounded-xl bg-slate-900 text-white text-lg md:text-xl font-semibold hover:bg-slate-800 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-[1.02] w-full max-w-md mx-auto"
+                    >
+                      <Eye className="w-6 h-6 md:w-7 md:h-7 mr-3 md:mr-4" />
+                      Launch Live Demo
+                    </Link>
+
+                    <div className="text-slate-500 font-medium text-sm md:text-base">
+                      Fullscreen clinical interface • No installation • Privacy-first
+                    </div>
+                  </div>
+
+                  {/* Demo Features */}
+                  <div className="mt-12 md:mt-16 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    {[
+                      'Browser-based • No installation',
+                      'On-device processing • No data leaves',
+                      'Medical-grade interface • Distraction-free',
+                    ].map((feature, index) => (
+                      <div key={index} className="flex items-center justify-center">
+                        <div className="w-2 h-2 rounded-full bg-green-500 mr-3 flex-shrink-0"></div>
+                        <span className="text-slate-700 font-medium text-sm md:text-base">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </motion.section>
@@ -326,54 +469,43 @@ export default function PitchPage() {
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
             className="scroll-mt-24"
+            id="impact"
           >
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-purple-50 text-purple-700 text-sm font-medium mb-6">
-              Impact at Scale
-            </div>
-            
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-12">
-              Accessibility as infrastructure.
-            </h2>
-
-            <div className="grid md:grid-cols-3 gap-8">
-              {[
-                {
-                  value: '≥90%',
-                  label: 'Cost reduction',
-                  description: 'Compared to hardware-based assistive systems',
-                  color: 'from-green-500 to-green-600',
-                },
-                {
-                  value: '$0',
-                  label: 'Additional hardware',
-                  description: 'Required for deployment - uses existing devices',
-                  color: 'from-blue-500 to-blue-600',
-                },
-                {
-                  value: 'Global',
-                  label: 'Deployment scale',
-                  description: 'Web-based architecture works across all regions',
-                  color: 'from-purple-500 to-purple-600',
-                },
-              ].map((metric, index) => (
-                <div key={index} className="text-center">
-                  <div className={`inline-flex items-center justify-center w-24 h-24 rounded-2xl bg-gradient-to-br ${metric.color} text-white text-3xl font-bold mb-4`}>
-                    {metric.value}
-                  </div>
-                  <div className="text-xl font-bold mb-2">{metric.label}</div>
-                  <p className="text-gray-600">{metric.description}</p>
+            <div className="bg-white rounded-2xl shadow-lg border border-slate-300 overflow-hidden">
+              <div className="bg-slate-900 text-white px-6 py-4 md:px-8 md:py-6">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 rounded-full bg-white text-slate-900 flex items-center justify-center text-sm font-bold">4</div>
+                  <h2 className="text-xl md:text-2xl font-bold">Impact at Scale</h2>
                 </div>
-              ))}
-            </div>
+              </div>
 
-            <div className="mt-12 max-w-3xl">
-              <div className="p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-200">
-                <p className="text-gray-700">
-                  &ldquo;That allows accessibility to scale like infrastructure, not like medical equipment.&rdquo;
-                </p>
+              <div className="p-6 md:p-8 lg:p-12">
+                <div className="max-w-4xl mx-auto">
+                  <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-8 md:mb-12 leading-tight text-center">
+                    Accessibility as public infrastructure.
+                  </h3>
+
+                  <div className="grid md:grid-cols-3 gap-6 md:gap-8 mb-12 md:mb-16">
+                    {METRICS.map((metric, index) => (
+                      <div key={index} className="text-center">
+                        <div className={`inline-flex items-center justify-center w-20 h-20 md:w-28 md:h-28 rounded-2xl ${metric.color} text-white text-3xl md:text-4xl font-bold mb-4 md:mb-6 shadow-lg`}>
+                          {metric.value}
+                        </div>
+                        <div className="text-xl md:text-2xl font-bold mb-2 text-slate-900">{metric.label}</div>
+                        <p className="text-slate-600 leading-relaxed text-sm md:text-base">{metric.description}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="bg-slate-50 border border-slate-200 rounded-xl p-6 md:p-8">
+                    <blockquote className="text-slate-700 text-lg md:text-xl italic leading-relaxed text-center">
+                      &ldquo;This allows accessibility to scale like digital infrastructure, not like medical hardware—reaching everyone, everywhere.&rdquo;
+                    </blockquote>
+                  </div>
+                </div>
               </div>
             </div>
           </motion.section>
@@ -382,51 +514,40 @@ export default function PitchPage() {
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
             className="scroll-mt-24"
+            id="why-now"
           >
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-amber-50 text-amber-700 text-sm font-medium mb-6">
-              Timing & Opportunity
-            </div>
-            
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-8">
-              Why now?
-            </h2>
+            <div className="bg-white rounded-2xl shadow-lg border border-slate-300 overflow-hidden">
+              <div className="bg-slate-900 text-white px-6 py-4 md:px-8 md:py-6">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 rounded-full bg-white text-slate-900 flex items-center justify-center text-sm font-bold">5</div>
+                  <h2 className="text-xl md:text-2xl font-bold">Why Now</h2>
+                </div>
+              </div>
 
-            <div className="max-w-3xl">
-              <ul className="space-y-6">
-                {[
-                  {
-                    icon: '📱',
-                    text: 'Cameras are ubiquitous across consumer devices',
-                    detail: 'Over 6 billion smartphones worldwide',
-                  },
-                  {
-                    icon: '🤖',
-                    text: 'Computer vision models can run efficiently on-device',
-                    detail: 'ONNX runtime enables local AI processing',
-                  },
-                  {
-                    icon: '🏥',
-                    text: 'Healthcare systems are actively seeking low-cost assistive solutions',
-                    detail: 'Cost pressure drives innovation in accessible care',
-                  },
-                  {
-                    icon: '🌍',
-                    text: 'Accessibility is increasingly treated as public infrastructure',
-                    detail: 'Global shift toward inclusive design principles',
-                  },
-                ].map((item, index) => (
-                  <li key={index} className="flex items-start">
-                    <span className="text-2xl mr-4 mt-1">{item.icon}</span>
-                    <div>
-                      <p className="text-lg font-medium text-gray-900 mb-1">{item.text}</p>
-                      <p className="text-gray-600">{item.detail}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+              <div className="p-6 md:p-8 lg:p-12">
+                <div className="max-w-4xl mx-auto">
+                  <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-8 md:mb-12 text-center leading-tight">
+                    The convergence is here.
+                  </h3>
+
+                  <div className="space-y-6">
+                    {WHY_NOW_ITEMS.map((item, index) => (
+                      <div key={index} className="flex flex-col sm:flex-row items-start bg-slate-50 rounded-xl p-6 border border-slate-300 hover:border-slate-400 transition-colors">
+                        <div className="w-12 h-12 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center mr-0 sm:mr-6 mb-4 sm:mb-0 flex-shrink-0">
+                          <item.icon className="w-6 h-6" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-xl font-semibold text-slate-900 mb-2">{item.title}</p>
+                          <p className="text-slate-600 text-lg">{item.detail}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </motion.section>
 
@@ -434,67 +555,71 @@ export default function PitchPage() {
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
             className="scroll-mt-24"
+            id="decision"
           >
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-gray-900 text-white text-sm font-medium mb-6">
-              The Decision
-            </div>
-            
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-8">
-              Restoring communication without compromise.
-            </h2>
-
-            <div className="max-w-3xl">
-              <p className="text-xl text-gray-600 leading-relaxed mb-8">
-                GAZE restores a fundamental human capability — communication —
-                using software that can scale globally. It replaces expensive,
-                exclusionary hardware with accessible infrastructure, without
-                compromising privacy, dignity, or safety.
-              </p>
-
-              {/* Ethical Principles */}
-              <div className="grid md:grid-cols-3 gap-6 mt-12">
-                {[
-                  {
-                    principle: 'Dignity',
-                    description: 'User agency and autonomy preserved',
-                  },
-                  {
-                    principle: 'Privacy',
-                    description: 'On-device processing, no biometric storage',
-                  },
-                  {
-                    principle: 'Access',
-                    description: 'Free for individuals, scalable for institutions',
-                  },
-                ].map((item, index) => (
-                  <div key={index} className="text-center p-6 bg-gray-50 rounded-xl border border-gray-200">
-                    <div className="text-2xl mb-3">✨</div>
-                    <div className="font-bold text-gray-900 mb-2">{item.principle}</div>
-                    <div className="text-sm text-gray-600">{item.description}</div>
-                  </div>
-                ))}
+            <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
+              <div className="bg-slate-900 text-white px-6 py-4 md:px-8 md:py-6">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 rounded-full bg-white text-slate-900 flex items-center justify-center text-sm font-bold">6</div>
+                  <h2 className="text-xl md:text-2xl font-bold">The Decision</h2>
+                </div>
               </div>
 
-              {/* Final CTA */}
-              <div className="mt-12 pt-8 border-t border-gray-200">
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Link
-                    href="/demo"
-                    className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-gray-900 text-white font-semibold hover:bg-gray-800 transition-colors"
-                  >
-                    <Eye className="w-5 h-5 mr-2" />
-                    Experience the Demo
-                  </Link>
-                  
-                  <Link
-                    href="/institutions"
-                    className="inline-flex items-center justify-center px-8 py-4 rounded-xl border-2 border-gray-900 text-gray-900 font-semibold hover:bg-gray-50 transition-colors"
-                  >
-                    Institutional Deployment →
-                  </Link>
+              <div className="p-6 md:p-8 lg:p-12">
+                <div className="max-w-4xl mx-auto">
+                  <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-8 leading-tight text-center">
+                    Restoring communication without compromise.
+                  </h3>
+
+                  <div className="max-w-3xl mx-auto mb-8 md:mb-12">
+                    <p className="text-lg md:text-xl text-slate-600 leading-relaxed text-center">
+                      GAZE restores a fundamental human capability through scalable software. 
+                      It replaces expensive, exclusionary hardware with accessible infrastructure—without 
+                      compromising privacy, dignity, or safety.
+                    </p>
+                  </div>
+
+                  {/* Ethical Principles */}
+                  <div className="grid md:grid-cols-3 gap-4 md:gap-6 mb-12 md:mb-16">
+                    {ETHICAL_PRINCIPLES.map((item, index) => (
+                      <div key={index} className="text-center bg-slate-50 rounded-xl p-6 border border-slate-300">
+                        <div className="w-12 h-12 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center mb-4 mx-auto">
+                          <item.icon className="w-6 h-6" />
+                        </div>
+                        <div className="text-xl md:text-2xl font-bold text-slate-900 mb-3">{item.principle}</div>
+                        <div className="text-slate-600 leading-relaxed text-sm md:text-base">{item.description}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Final CTA */}
+                  <div className="border-t border-slate-300 pt-8 md:pt-12">
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                      <Link
+                        href="/demo"
+                        className="inline-flex items-center justify-center px-8 py-4 md:px-10 md:py-5 rounded-xl bg-slate-900 text-white text-base md:text-lg font-semibold hover:bg-slate-800 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
+                      >
+                        <Eye className="w-5 h-5 md:w-6 md:h-6 mr-3" />
+                        Experience the Demo
+                      </Link>
+
+                      <Link
+                        href="/institutions"
+                        className="inline-flex items-center justify-center px-8 py-4 md:px-10 md:py-5 rounded-xl border-2 border-slate-900 text-slate-900 text-base md:text-lg font-semibold hover:bg-slate-50 transition-all duration-300"
+                      >
+                        Institutional Deployment →
+                      </Link>
+                    </div>
+
+                    <div className="mt-6 md:mt-8 text-center">
+                      <p className="text-slate-500 text-sm md:text-base">
+                        Ready to transform assistive communication? Let&apos;s discuss your vision.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

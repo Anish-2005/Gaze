@@ -214,7 +214,7 @@ export default function DemoShell() {
     </div>
 
     {/* Action Dock */}
-    <div className="w-full max-w-xl mx-auto">
+    <div className="w-full mb-20 max-w-xl mx-auto">
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-white border border-slate-200 rounded-xl p-3">
 
         <ActionButton
