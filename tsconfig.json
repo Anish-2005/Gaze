@@ -78,8 +78,7 @@
     "importsNotUsedAsValues": "error",
 
     // Additional checks
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true
   },
 
   "include": [

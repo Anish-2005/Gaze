@@ -56,8 +56,6 @@ export default function CalibrationOverlay({
 
   if (!isVisible) return null
 
-  const current = CALIBRATION_POINTS[currentPoint]
-
   return (
     <div className="fixed inset-0 z-50 bg-black/90 flex flex-col items-center justify-center">
       {/* Progress indicator */}
@@ -87,8 +85,8 @@ export default function CalibrationOverlay({
       <div
         className="absolute transition-all duration-300 ease-out"
         style={{
-          left: `${current.x}%`,
-          top: `${current.y}%`,
+          left: `${CALIBRATION_POINTS[currentPoint].x}%`,
+          top: `${CALIBRATION_POINTS[currentPoint].y}%`,
           transform: 'translate(-50%, -50%)',
         }}
       >

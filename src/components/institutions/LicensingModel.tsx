@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { DollarSign, Server, Lock, ChartBar, CheckCircle } from 'lucide-react'
+import { DollarSign, Server, Lock, BarChart, CheckCircle } from 'lucide-react'
 
 export default function LicensingModel() {
   return (
@@ -92,7 +92,7 @@ export default function LicensingModel() {
                   title: 'Hybrid Model',
                   description: 'Mix of cloud and offline deployments',
                   features: ['Flexible deployment', 'Centralized management', 'Local processing'],
-                  icon: <ChartBar className="w-5 md:w-6 h-5 md:h-6" />,
+                  icon: <BarChart className="w-5 md:w-6 h-5 md:h-6" />,
                 },
               ].map((option, index) => (
                 <div key={index} className="bg-white rounded-xl border border-slate-200 p-4 md:p-6 hover:shadow-lg transition-shadow">

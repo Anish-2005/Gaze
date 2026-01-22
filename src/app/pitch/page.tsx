@@ -1,25 +1,76 @@
 'use client'
 
-import { motion, AnimatePresence } from 'framer-motion'
-import Link from 'next/link'
-import { Play, Volume2, Pause, Eye, Smartphone, Tablet, Laptop, Shield, Globe, Zap, AlertTriangle, Cpu, Heart, Users, Star, Lock, Crown } from 'lucide-react'
 import { useState, useRef, useEffect, useCallback } from 'react'
-import FloatingPitchController from '@/components/FloatingPitchController'
-import PitchDeckHeader from '@/components/PitchDeckHeader'
-import ProblemSection from '@/components/pitch/ProblemSection'
-import SolutionSection from '@/components/pitch/SolutionSection'
-import LiveProofSection from '@/components/pitch/LiveProofSection'
-import ImpactSection from '@/components/pitch/ImpactSection'
-import WhyNowSection from '@/components/pitch/WhyNowSection'
-import DecisionSection from '@/components/pitch/DecisionSection'
+import { lazy, Suspense } from 'react'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { SCRIPT } from '@/components/pitch/pitch-data'
+
+// Lazy load components for better performance
+const FloatingPitchController = lazy(() => import('@/components/FloatingPitchController'))
+const PitchDeckHeader = lazy(() => import('@/components/PitchDeckHeader'))
+const ProblemSection = lazy(() => import('@/components/pitch/ProblemSection'))
+const SolutionSection = lazy(() => import('@/components/pitch/SolutionSection'))
+const LiveProofSection = lazy(() => import('@/components/pitch/LiveProofSection'))
+const ImpactSection = lazy(() => import('@/components/pitch/ImpactSection'))
+const WhyNowSection = lazy(() => import('@/components/pitch/WhyNowSection'))
+const DecisionSection = lazy(() => import('@/components/pitch/DecisionSection'))
+
+// Loading component
+function ComponentLoader() {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+    </div>
+  )
+}
+
+// Error fallback component
+function ComponentErrorFallback({ componentName }: { componentName: string }) {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          Failed to load {componentName}
+        </h2>
+        <p className="text-gray-600 mb-4">
+          Please refresh the page to try again.
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+        >
+          Refresh Page
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// Wrapped component with error boundary
+function LazyComponent({
+  Component,
+  componentName,
+  ...props
+}: {
+  Component: React.ComponentType<any>
+  componentName: string
+  [key: string]: any
+}) {
+  return (
+    <ErrorBoundary fallback={<ComponentErrorFallback componentName={componentName} />}>
+      <Suspense fallback={<ComponentLoader />}>
+        <Component {...props} />
+      </Suspense>
+    </ErrorBoundary>
+  )
+}
 
 export default function PitchPage() {
     const [currentScriptIndex, setCurrentScriptIndex] = useState<number>(0)
     const [isPlaying, setIsPlaying] = useState<boolean>(false)
     const [segmentProgress, setSegmentProgress] = useState<number>(0)
     const [isSpeaking, setIsSpeaking] = useState<boolean>(false)
-    const [showScript, setShowScript] = useState<boolean>(false)
+    const [, setShowScript] = useState<boolean>(false)
     const timerRef = useRef<NodeJS.Timeout | null>(null)
     const progressRef = useRef<NodeJS.Timeout | null>(null)
     const speechRef = useRef<SpeechSynthesisUtterance | null>(null)
@@ -64,7 +115,9 @@ export default function PitchPage() {
             setSegmentProgress(0)
 
             // Speak the current segment
-            speakText(SCRIPT[index].content)
+            if (SCRIPT[index]) {
+                speakText(SCRIPT[index].content)
+            }
 
             // Auto-scroll to the corresponding section
             const sectionIds = ['problem', 'solution', 'live-proof', 'impact', 'why-now', 'decision']
@@ -77,7 +130,7 @@ export default function PitchPage() {
             }
 
             // Start progress tracking
-            const segmentDuration = SCRIPT[index].duration * 1000
+            const segmentDuration = SCRIPT[index]?.duration ? SCRIPT[index].duration * 1000 : 0
             const progressInterval = 100 // Update every 100ms
             let elapsed = 0
 
@@ -157,7 +210,9 @@ export default function PitchPage() {
     return (
         <main className="min-h-screen bg-[#F7F9FC]">
             {/* Floating Pitch Controller */}
-            <FloatingPitchController
+            <LazyComponent
+                Component={FloatingPitchController}
+                componentName="FloatingPitchController"
                 isPlaying={isPlaying}
                 isSpeaking={isSpeaking}
                 currentScriptIndex={currentScriptIndex}
@@ -167,20 +222,40 @@ export default function PitchPage() {
             />
 
             {/* Pitch Deck Header */}
-            <PitchDeckHeader />
-
+            <LazyComponent
+                Component={PitchDeckHeader}
+                componentName="PitchDeckHeader"
+            />
 
             {/* Pitch Content */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 md:pt-12 pb-16">
                 <div className="space-y-12 md:space-y-16">
-                    <ProblemSection />
-                    <SolutionSection />
-                    <LiveProofSection />
-                    <ImpactSection />
-                    <WhyNowSection />
-                    <DecisionSection />
+                    <LazyComponent
+                        Component={ProblemSection}
+                        componentName="ProblemSection"
+                    />
+                    <LazyComponent
+                        Component={SolutionSection}
+                        componentName="SolutionSection"
+                    />
+                    <LazyComponent
+                        Component={LiveProofSection}
+                        componentName="LiveProofSection"
+                    />
+                    <LazyComponent
+                        Component={ImpactSection}
+                        componentName="ImpactSection"
+                    />
+                    <LazyComponent
+                        Component={WhyNowSection}
+                        componentName="WhyNowSection"
+                    />
+                    <LazyComponent
+                        Component={DecisionSection}
+                        componentName="DecisionSection"
+                    />
                 </div>
-                </div>
+            </div>
         </main>
     )
 }

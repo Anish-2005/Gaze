@@ -17,24 +17,6 @@
   animation: calibrationComplete 0.5s ease-out forwards;
 }
 
-/* Medical interface scrollbar */
-::-webkit-scrollbar {
-  width: 4px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 2px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
 /* demo.module.css */
 .judge-mode body {
   cursor: none !important;

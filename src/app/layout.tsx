@@ -1,3 +1,5 @@
+'use client'
+
 import { Inter } from 'next/font/google'
 import './globals.css'
 import Navigation from '@/components/Navigation'
@@ -79,21 +81,22 @@ function ClientLayout({ children }: { children: React.ReactNode }) {
               break
             case '5':
               e.preventDefault()
-            window.location.href = '/governance'
-            break
+              window.location.href = '/governance'
+              break
+          }
         }
-      }
 
-      // Print mode (Ctrl+P)
-      if (e.ctrlKey && e.key === 'p') {
-        e.preventDefault()
-        window.print()
-      }
+        // Print mode (Ctrl+P)
+        if (e.ctrlKey && e.key === 'p') {
+          e.preventDefault()
+          window.print()
+        }
 
-      // Quick judge mode entry (J)
-      if (e.key === 'J' && e.ctrlKey && e.shiftKey) {
-        // Handled by useJudgeMode hook
-      }
+        // Quick judge mode entry (J)
+        if (e.key === 'J' && e.ctrlKey && e.shiftKey) {
+          // Handled by useJudgeMode hook
+        }
+      }, 0) // Execute immediately
     }
 
     window.addEventListener('keydown', handleKeyDown)
