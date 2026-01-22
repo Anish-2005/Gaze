@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { cn } from '@/lib/utils'
 
 interface KeyProps {
@@ -20,19 +20,20 @@ export default function Key({
   onMouseLeave,
   onClick,
 }: KeyProps) {
-  const [audio] = useState(() => {
-    if (typeof Audio !== 'undefined') {
-      return new Audio('/click.mp3')
-    }
-    return null
-  })
+  const audioRef = useRef<HTMLAudioElement | null>(null)
 
   useEffect(() => {
-    if (isHovered && audio) {
-      audio.currentTime = 0
-      audio.play().catch(() => {})
+    if (typeof Audio !== 'undefined') {
+      audioRef.current = new Audio('/click.mp3')
     }
-  }, [isHovered, audio])
+  }, [])
+
+  useEffect(() => {
+    if (isHovered && audioRef.current) {
+      audioRef.current.currentTime = 0
+      audioRef.current.play().catch(() => {})
+    }
+  }, [isHovered])
 
   return (
     <div

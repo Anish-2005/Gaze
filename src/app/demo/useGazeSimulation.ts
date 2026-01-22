@@ -9,7 +9,7 @@ interface GazePoint {
 }
 
 export function useGazeSimulation() {
-  const [gazePoint, setGazePoint] = useState<GazePoint>({ x: 50, y: 50, timestamp: Date.now() })
+  const [gazePoint, setGazePoint] = useState<GazePoint>(() => ({ x: 50, y: 50, timestamp: Date.now() }))
   const [isSimulating, setIsSimulating] = useState(true)
   const [simulationSpeed] = useState(2)
 

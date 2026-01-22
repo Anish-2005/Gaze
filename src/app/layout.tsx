@@ -12,11 +12,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 // Client-side only component to avoid hydration mismatch
 function PrintUrl() {
-  const [url, setUrl] = useState('')
-  
-  useEffect(() => {
-    setUrl(window.location.href)
-  }, [])
+  const [url] = useState(() => typeof window !== 'undefined' ? window.location.href : '')
   
   if (!url) return null
   

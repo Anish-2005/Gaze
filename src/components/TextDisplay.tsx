@@ -6,7 +6,7 @@ interface TextDisplayProps {
   onClear: () => void;
 }
 
-export default function TextDisplay({ text, onSpeak: _onSpeak, onClear }: TextDisplayProps) {
+export default function TextDisplay({ text, onClear }: TextDisplayProps) {
   useEffect(() => {
     // Auto speak when text changes, or on button
   }, [text]);

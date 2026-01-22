@@ -10,6 +10,7 @@ export function useJudgeMode() {
     // Check URL parameter
     const params = new URLSearchParams(window.location.search)
     if (params.get('judge') === 'true') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setJudgeMode(true)
       setShowIndicator(true)
       

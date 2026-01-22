@@ -30,6 +30,7 @@ export default function Keyboard({ gazeX, gazeY, onLetter, dwellTime }: Keyboard
 
     if (screenX < keyboardX || screenX > keyboardX + keyboardWidth ||
         screenY < keyboardY || screenY > keyboardY + keyboardHeight) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setHoveredKey(null);
       setDwellStart(null);
       return;

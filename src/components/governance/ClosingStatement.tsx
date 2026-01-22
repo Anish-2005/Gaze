@@ -30,7 +30,7 @@ export default function ClosingStatement() {
             </p>
 
             <p>
-              GAZE is built on the conviction that restoring a person's ability to communicate
+              GAZE is built on the conviction that restoring a person&apos;s ability to communicate
               must never come at the cost of their privacy, autonomy, or dignity. We believe
               technology should serve people in their most vulnerable moments without creating
               new vulnerabilities.

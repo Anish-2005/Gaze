@@ -33,6 +33,20 @@ export function useDwellDetection(
     }
   }, [])
 
+  const resetDwell = useCallback(() => {
+    if (progressIntervalRef.current) {
+      clearInterval(progressIntervalRef.current)
+      progressIntervalRef.current = null
+    }
+
+    dwellStartRef.current = null
+    setState({
+      hoveredKey: null,
+      dwellProgress: 0,
+      isDwelling: false,
+    })
+  }, [])
+
   const startDwell = useCallback((key: string) => {
     setState({
       hoveredKey: key,
@@ -62,21 +76,7 @@ export function useDwellDetection(
         resetDwell()
       }
     }, PROGRESS_UPDATE_INTERVAL)
-  }, [onSelect, onProgress])
-
-  const resetDwell = useCallback(() => {
-    if (progressIntervalRef.current) {
-      clearInterval(progressIntervalRef.current)
-      progressIntervalRef.current = null
-    }
-
-    dwellStartRef.current = null
-    setState({
-      hoveredKey: null,
-      dwellProgress: 0,
-      isDwelling: false,
-    })
-  }, [])
+  }, [onSelect, onProgress, resetDwell])
 
   const setHoveredKey = useCallback((key: string | null) => {
     if (key === state.hoveredKey) return

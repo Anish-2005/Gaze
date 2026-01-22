@@ -26,6 +26,7 @@ export default function CalibrationOverlay({
 
   useEffect(() => {
     if (!isVisible) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCurrentPoint(0)
       setCalibrationProgress(0)
       return

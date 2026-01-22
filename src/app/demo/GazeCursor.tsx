@@ -16,6 +16,7 @@ export default function GazeCursor({ x, y, visible }: GazeCursorProps) {
     if (!visible) return
 
     const newPoint = { x, y }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setTrail(prev => {
       const newTrail = [newPoint, ...prev.slice(0, 10)]
       return newTrail
