@@ -13,7 +13,9 @@ const PROGRESS_UPDATE_INTERVAL = 50
 
 export function useDwellDetection(
   onSelect: (key: string) => void,
-  onProgress?: (progress: number) => void
+  onProgress?: (progress: number) => void,
+  getDwellTime?: (key: string) => number,
+  onWordSelect?: (index: number) => void
 ) {
   const [state, setState] = useState<DwellState>({
     hoveredKey: null,
@@ -48,6 +50,7 @@ export function useDwellDetection(
   }, [])
 
   const startDwell = useCallback((key: string) => {
+    const dwellTime = getDwellTime ? getDwellTime(key) : DWELL_TIME
     setState({
       hoveredKey: key,
       dwellProgress: 0,
@@ -61,7 +64,7 @@ export function useDwellDetection(
       if (!dwellStartRef.current) return
 
       const elapsed = Date.now() - dwellStartRef.current
-      const progress = Math.min((elapsed / DWELL_TIME) * 100, 100)
+      const progress = Math.min((elapsed / dwellTime) * 100, 100)
 
       setState(prev => ({
         ...prev,
@@ -71,8 +74,13 @@ export function useDwellDetection(
       if (onProgress) onProgress(progress)
 
       // Selection complete
-      if (elapsed >= DWELL_TIME) {
-        onSelect(key)
+      if (elapsed >= dwellTime) {
+        if (key.startsWith('WORD_') && onWordSelect) {
+          const index = parseInt(key.replace('WORD_', ''))
+          onWordSelect(index)
+        } else {
+          onSelect(key)
+        }
         resetDwell()
       }
     }, PROGRESS_UPDATE_INTERVAL)

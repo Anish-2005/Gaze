@@ -2,12 +2,17 @@
 
 import { useEffect } from 'react'
 import Key from './Key'
+import WordPredictions from './WordPredictions'
 
 interface GazeKeyboardProps {
   onSelect: (key: string) => void
+  onSelectWord: (word: string) => void
+  predictions: string[]
+  addHoveredKey: (key: string) => void
   hoveredKey: string | null
   dwellProgress: number
   setHoveredKey: (key: string | null) => void
+  isGenerating?: boolean
 }
 
 const KEYBOARD_LAYOUT = [
@@ -20,21 +25,30 @@ const KEYBOARD_LAYOUT = [
 
 export default function GazeKeyboard({
   onSelect,
+  onSelectWord,
+  predictions,
+  addHoveredKey,
   hoveredKey,
   dwellProgress,
   setHoveredKey,
+  isGenerating = false
 }: GazeKeyboardProps) {
 
   /* ---------- GAZE EVENTS ---------- */
   useEffect(() => {
     const handleGazeHover = (event: CustomEvent) => {
-      setHoveredKey(event.detail.key)
+      const key = event.detail.key
+      setHoveredKey(key)
+      // Track hovered keys for word prediction (only letters)
+      if (key && key.length === 1 && /[A-Z]/.test(key)) {
+        addHoveredKey(key)
+      }
     }
 
     window.addEventListener('gazehover', handleGazeHover as EventListener)
     return () =>
       window.removeEventListener('gazehover', handleGazeHover as EventListener)
-  }, [setHoveredKey])
+  }, [setHoveredKey, addHoveredKey])
 
   /* ---------- KEYBOARD (JUDGE MODE) ---------- */
   useEffect(() => {
@@ -81,7 +95,10 @@ export default function GazeKeyboard({
                   letter={letter}
                   isHovered={hoveredKey === letter}
                   dwellProgress={hoveredKey === letter ? dwellProgress : 0}
-                  onMouseEnter={() => setHoveredKey(letter)}
+                  onMouseEnter={() => {
+                    setHoveredKey(letter)
+                    addHoveredKey(letter)
+                  }}
                   onMouseLeave={() => setHoveredKey(null)}
                   onClick={() => onSelect(letter)}
                 />
@@ -95,6 +112,15 @@ export default function GazeKeyboard({
           Focus on a letter to select • Tap to test
         </div>
       </div>
+
+      {/* Word Predictions */}
+      <WordPredictions
+        predictions={predictions}
+        onSelectWord={onSelectWord}
+        hoveredKey={hoveredKey}
+        setHoveredKey={setHoveredKey}
+        isGenerating={isGenerating}
+      />
 
       {/* Desktop hint */}
       <div className="hidden sm:block mt-4 text-center text-sm text-slate-600">

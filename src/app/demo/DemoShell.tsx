@@ -10,6 +10,7 @@ import GazeKeyboard from './GazeKeyboard'
 import QuickPhrases from './QuickPhrases'
 import CalibrationOverlay from './CalibrationOverlay'
 import GazeCursor from './GazeCursor'
+import WordPredictions from './WordPredictions'
 
 function ActionButton({
   label,
@@ -97,13 +98,39 @@ export default function DemoShell() {
     }
   }, [addChar, speak, clearMessage, resetDemo, toggleCalibration, addPhrase])
 
+  // Handle word selection from predictions
+  const handleWordSelection = useCallback((word: string) => {
+    addPhrase(word.toUpperCase())
+  }, [addPhrase])
+
+  // Word prediction
+  const { predictions, isGenerating, addHoveredKey } = useWordPrediction()
+
+  console.log('DemoShell word prediction state:', { predictions, isGenerating })
+
+  // Handle word selection by index
+  const handleWordSelectByIndex = useCallback((index: number) => {
+    if (predictions[index]) {
+      handleWordSelection(predictions[index])
+    }
+  }, [predictions, handleWordSelection])
+
   // Dwell detection
+  const getDwellTime = useCallback((key: string) => {
+    // Word predictions: 100ms dwell time
+    if (key.startsWith('WORD_')) {
+      return 100
+    }
+    // Letters and other keys: 1500ms dwell time
+    return 1500
+  }, [])
+
   const {
     hoveredKey,
     dwellProgress,
     isDwelling,
     setHoveredKey,
-  } = useDwellDetection(handleSelection)
+  } = useDwellDetection(handleSelection, undefined, getDwellTime, handleWordSelectByIndex)
 
   // Gaze simulation (for demo purposes)
   const { gazePoint, isSimulating, toggleSimulation } = useGazeSimulation()
@@ -207,9 +234,13 @@ export default function DemoShell() {
     <div className="flex justify-center mb-10">
       <GazeKeyboard
         onSelect={addChar}
+        onSelectWord={handleWordSelection}
+        predictions={predictions}
+        addHoveredKey={addHoveredKey}
         hoveredKey={hoveredKey}
         dwellProgress={dwellProgress}
         setHoveredKey={setHoveredKey}
+        isGenerating={isGenerating}
       />
     </div>
 
