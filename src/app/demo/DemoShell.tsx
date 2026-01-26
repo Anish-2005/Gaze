@@ -10,7 +10,7 @@ import GazeKeyboard from './GazeKeyboard'
 import QuickPhrases from './QuickPhrases'
 import CalibrationOverlay from './CalibrationOverlay'
 import GazeCursor from './GazeCursor'
-import WordPredictions from './WordPredictions'
+import { useWordPrediction } from './useWordPrediction'
 
 function ActionButton({
   label,
@@ -55,6 +55,7 @@ export default function DemoShell() {
     toggleTracking,
     resetDemo,
   } = useDemoState()
+  const { predictions, isGenerating, addHoveredKey, clearSequence } = useWordPrediction()
 
   // Unified selection handler for both keyboard and shortcuts
   const handleSelection = useCallback((key: string) => {
@@ -101,19 +102,17 @@ export default function DemoShell() {
   // Handle word selection from predictions
   const handleWordSelection = useCallback((word: string) => {
     addPhrase(word.toUpperCase())
-  }, [addPhrase])
+    // Clear the word prediction sequence after selection
+    clearSequence()
+  }, [addPhrase, clearSequence])
 
-  // Word prediction
-  const { predictions, isGenerating, addHoveredKey } = useWordPrediction()
-
-  console.log('DemoShell word prediction state:', { predictions, isGenerating })
-
-  // Handle word selection by index
+  // Handle word selection by index (for gaze/dwell detection)
   const handleWordSelectByIndex = useCallback((index: number) => {
     if (predictions[index]) {
       handleWordSelection(predictions[index])
     }
   }, [predictions, handleWordSelection])
+
 
   // Dwell detection
   const getDwellTime = useCallback((key: string) => {

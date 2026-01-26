@@ -1,5 +1,7 @@
 'use client'
 
+import { cn } from '@/lib/utils'
+
 interface WordPredictionsProps {
   predictions: string[]
   onSelectWord: (word: string) => void
@@ -15,18 +17,19 @@ export default function WordPredictions({
   setHoveredKey,
   isGenerating = false
 }: WordPredictionsProps) {
-  console.log('WordPredictions rendered with:', { predictions, isGenerating })
+  // Don't show anything if no predictions and not generating
+  if (predictions.length === 0 && !isGenerating) return null
 
-  // Always show for debugging
   return (
-    <div className="mt-4 p-3 bg-red-100 border border-red-300 rounded-lg">
-      <div className="text-xs font-medium text-red-600 mb-2">
-        DEBUG: {isGenerating ? 'Generating...' : 'Ready'} | Predictions: {predictions.length} | Hovered: {hoveredKey}
+    <div className="mt-4 p-3 bg-slate-50 border border-slate-200 rounded-lg">
+      <div className="text-xs font-medium text-slate-600 mb-2">
+        {isGenerating ? 'Generating suggestions...' : 'Word suggestions:'}
       </div>
-      <div className="text-xs text-red-500 mb-2">
-        Predictions: {predictions.join(', ')}
-      </div>
-      {predictions.length > 0 ? (
+      {isGenerating ? (
+        <div className="flex items-center justify-center py-2">
+          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-slate-600"></div>
+        </div>
+      ) : predictions.length > 0 ? (
         <div className="flex flex-wrap gap-2">
           {predictions.map((word, index) => (
             <button
@@ -34,7 +37,11 @@ export default function WordPredictions({
               onClick={() => onSelectWord(word)}
               onMouseEnter={() => setHoveredKey(`WORD_${index}`)}
               onMouseLeave={() => setHoveredKey(null)}
-              className="px-3 py-1 text-sm rounded-md border transition-all duration-150 hover:bg-red-200 hover:border-red-400 bg-white"
+              className={cn(
+                'px-3 py-1 text-sm rounded-md border transition-all duration-150',
+                'hover:bg-slate-100 hover:border-slate-300',
+                hoveredKey === `WORD_${index}` && 'bg-slate-200 border-slate-400'
+              )}
               data-gaze-key={`WORD_${index}`}
             >
               {word}
@@ -42,7 +49,9 @@ export default function WordPredictions({
           ))}
         </div>
       ) : (
-        <div className="text-xs text-red-500">No predictions</div>
+        <div className="text-sm text-slate-500 italic py-2">
+          No words found from collected letters
+        </div>
       )}
     </div>
   )
