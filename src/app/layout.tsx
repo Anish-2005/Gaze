@@ -24,7 +24,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${inter.variable} font-sans bg-white text-gray-900 antialiased min-h-screen flex flex-col`}>
+      <body className={`${inter.variable} font-sans bg-slate-900 text-slate-100 antialiased min-h-screen flex flex-col`}>
         <Suspense fallback={<div>Loading...</div>}>
           <ClientLayout>
             {children}
