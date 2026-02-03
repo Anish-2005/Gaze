@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useDemoState } from './useDemoState'
 import { useDwellDetection } from './useDwellDetection'
 import { useGazeSimulation } from './useGazeSimulation'
+import { useEyeTracking } from './useEyeTracking'
 import StatusBar from './StatusBar'
 import MessageBar from './MessageBar'
 import GazeKeyboard from './GazeKeyboard'
@@ -131,8 +132,38 @@ export default function DemoShell() {
     setHoveredKey,
   } = useDwellDetection(handleSelection, undefined, getDwellTime, handleWordSelectByIndex)
 
-  // Gaze simulation (for demo purposes)
-  const { gazePoint, isSimulating, toggleSimulation } = useGazeSimulation()
+  // Eye tracking and simulation
+  const eyeTracking = useEyeTracking()
+  const gazeSimulation = useGazeSimulation()
+
+  // Track which mode is active: 'real' or 'simulation'
+  const [trackingMode, setTrackingMode] = useState<'real' | 'simulation'>('simulation')
+
+  // Use the appropriate gaze source based on mode
+  const gazePoint = trackingMode === 'real' ? eyeTracking.gazePoint : gazeSimulation.gazePoint
+  const isGazeActive = trackingMode === 'real' ? eyeTracking.isTracking : gazeSimulation.isSimulating
+
+  // Toggle between modes
+  const handleModeSwitch = useCallback(async () => {
+    if (trackingMode === 'simulation') {
+      // Switch to real eye tracking
+      await eyeTracking.startTracking()
+      setTrackingMode('real')
+    } else {
+      // Switch back to simulation
+      eyeTracking.stopTracking()
+      setTrackingMode('simulation')
+    }
+  }, [trackingMode, eyeTracking])
+
+  // Toggle gaze within current mode
+  const toggleGaze = useCallback(() => {
+    if (trackingMode === 'real') {
+      eyeTracking.toggleTracking()
+    } else {
+      gazeSimulation.toggleSimulation()
+    }
+  }, [trackingMode, eyeTracking, gazeSimulation])
 
   // Calibration
   const [showCalibration, setShowCalibration] = useState(false)
@@ -145,13 +176,19 @@ export default function DemoShell() {
         e.preventDefault()
         setShowCalibration(true)
       }
-      
-      // T for toggle gaze simulation
+
+      // T for toggle gaze
       if (e.key === 't' && e.ctrlKey) {
         e.preventDefault()
-        toggleSimulation()
+        toggleGaze()
       }
-      
+
+      // E for switch between real/simulation mode
+      if (e.key === 'e' && e.ctrlKey) {
+        e.preventDefault()
+        handleModeSwitch()
+      }
+
       // R for reset
       if (e.key === 'r' && e.ctrlKey) {
         e.preventDefault()
@@ -160,11 +197,11 @@ export default function DemoShell() {
     }
 
     window.addEventListener('keydown', handleGlobalKeyDown)
-    
+
     return () => {
       window.removeEventListener('keydown', handleGlobalKeyDown)
     }
-  }, [toggleSimulation, resetDemo])
+  }, [toggleGaze, handleModeSwitch, resetDemo])
 
 
   // Handle speak/clear events
@@ -174,7 +211,7 @@ export default function DemoShell() {
 
     window.addEventListener('speak', handleSpeak)
     window.addEventListener('clear', handleClear)
-    
+
     return () => {
       window.removeEventListener('speak', handleSpeak)
       window.removeEventListener('clear', handleClear)
@@ -206,98 +243,111 @@ export default function DemoShell() {
         onReset={resetDemo}
       />
 
-   {/* Main Content */}
-<main className="flex-1 flex flex-col items-center pt-24 pb-32">
-  <div className="max-w-8xl w-full px-4 sm:px-6">
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col items-center pt-24 pb-32">
+        <div className="max-w-8xl w-full px-4 sm:px-6">
 
-    {/* Header */}
-    <div className="text-center mb-10">
-      <h1 className="text-2xl sm:text-3xl font-semibold text-slate-900 mb-2">
-        GAZE Communication Interface
-      </h1>
-      <p className="text-sm sm:text-base text-slate-600 max-w-lg mx-auto">
-        Eye-controlled communication for patients with limited motor function
-      </p>
+          {/* Header */}
+          <div className="text-center mb-10">
+            <h1 className="text-2xl sm:text-3xl font-semibold text-slate-900 mb-2">
+              GAZE Communication Interface
+            </h1>
+            <p className="text-sm sm:text-base text-slate-600 max-w-lg mx-auto">
+              Eye-controlled communication for patients with limited motor function
+            </p>
 
-      <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 text-xs">
-        <span
-          className={`w-2 h-2 rounded-full ${
-            isSimulating ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'
-          }`}
-        />
-        {isSimulating ? 'Gaze simulation active' : 'Pointer mode'}
-      </div>
-    </div>
-
-    {/* Keyboard */}
-    <div className="flex justify-center mb-10">
-      <GazeKeyboard
-        onSelect={addChar}
-        onSelectWord={handleWordSelection}
-        predictions={predictions}
-        addHoveredKey={addHoveredKey}
-        hoveredKey={hoveredKey}
-        dwellProgress={dwellProgress}
-        setHoveredKey={setHoveredKey}
-        isGenerating={isGenerating}
-      />
-    </div>
-
-    {/* Action Dock */}
-    <div className="w-full mb-20 max-w-xl mx-auto">
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-white border border-slate-200 rounded-xl p-3">
-
-        <ActionButton
-          label="Speak"
-          active={hoveredKey === 'SPEAK'}
-          onClick={speak}
-          color="emerald"
-        />
-
-        <ActionButton
-          label="Clear"
-          active={hoveredKey === 'CLEAR'}
-          onClick={clearMessage}
-          color="red"
-        />
-
-        <ActionButton
-          label="Reset"
-          active={hoveredKey === 'RESET'}
-          onClick={resetDemo}
-          color="amber"
-        />
-
-        <ActionButton
-          label="Calibrate"
-          active={hoveredKey === 'CALIBRATE'}
-          onClick={toggleCalibration}
-          color="blue"
-        />
-      </div>
-    </div>
-
-    {/* Dwell Feedback (single source of truth) */}
-    {isDwelling && (
-      <div className="fixed bottom-6 right-1/2 translate-x-1/2 sm:right-6 sm:translate-x-0 z-40">
-        <div className="bg-white border border-slate-200 rounded-lg px-4 py-3 shadow-md">
-          <div className="text-xs text-slate-500 text-center mb-1">
-            Dwell selection
+            <div className="mt-4 flex flex-col sm:flex-row items-center gap-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 text-xs">
+                <span
+                  className={`w-2 h-2 rounded-full ${isGazeActive ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'
+                    }`}
+                />
+                {trackingMode === 'real'
+                  ? (isGazeActive ? 'Eye tracking active' : 'Eye tracking paused')
+                  : (isGazeActive ? 'Gaze simulation active' : 'Pointer mode')
+                }
+              </div>
+              <button
+                onClick={handleModeSwitch}
+                className="text-xs px-3 py-1.5 rounded-full border border-slate-300 hover:bg-slate-50 transition text-slate-600"
+              >
+                {trackingMode === 'real' ? 'Switch to Simulation' : 'Use Real Eye Tracking'}
+              </button>
+              {eyeTracking.error && (
+                <span className="text-xs text-red-500">{eyeTracking.error}</span>
+              )}
+            </div>
           </div>
-          <div className="text-2xl font-semibold text-slate-900 text-center">
-            {Math.round(dwellProgress)}%
-          </div>
-          <div className="mt-2 w-32 h-1.5 bg-slate-200 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-slate-900 transition-all"
-              style={{ width: `${dwellProgress}%` }}
+
+          {/* Keyboard */}
+          <div className="flex justify-center mb-10">
+            <GazeKeyboard
+              onSelect={addChar}
+              onSelectWord={handleWordSelection}
+              predictions={predictions}
+              addHoveredKey={addHoveredKey}
+              hoveredKey={hoveredKey}
+              dwellProgress={dwellProgress}
+              setHoveredKey={setHoveredKey}
+              isGenerating={isGenerating}
             />
           </div>
+
+          {/* Action Dock */}
+          <div className="w-full mb-20 max-w-xl mx-auto">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-white border border-slate-200 rounded-xl p-3">
+
+              <ActionButton
+                label="Speak"
+                active={hoveredKey === 'SPEAK'}
+                onClick={speak}
+                color="emerald"
+              />
+
+              <ActionButton
+                label="Clear"
+                active={hoveredKey === 'CLEAR'}
+                onClick={clearMessage}
+                color="red"
+              />
+
+              <ActionButton
+                label="Reset"
+                active={hoveredKey === 'RESET'}
+                onClick={resetDemo}
+                color="amber"
+              />
+
+              <ActionButton
+                label="Calibrate"
+                active={hoveredKey === 'CALIBRATE'}
+                onClick={toggleCalibration}
+                color="blue"
+              />
+            </div>
+          </div>
+
+          {/* Dwell Feedback (single source of truth) */}
+          {isDwelling && (
+            <div className="fixed bottom-6 right-1/2 translate-x-1/2 sm:right-6 sm:translate-x-0 z-40">
+              <div className="bg-white border border-slate-200 rounded-lg px-4 py-3 shadow-md">
+                <div className="text-xs text-slate-500 text-center mb-1">
+                  Dwell selection
+                </div>
+                <div className="text-2xl font-semibold text-slate-900 text-center">
+                  {Math.round(dwellProgress)}%
+                </div>
+                <div className="mt-2 w-32 h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-slate-900 transition-all"
+                    style={{ width: `${dwellProgress}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
-      </div>
-    )}
-  </div>
-</main>
+      </main>
 
 
       {/* Quick Phrases */}
@@ -309,11 +359,11 @@ export default function DemoShell() {
         dwellProgress={dwellProgress}
       />
 
-      {/* Gaze Cursor (visible only in simulation mode) */}
+      {/* Gaze Cursor (visible when tracking is active) */}
       <GazeCursor
         x={gazePoint.x}
         y={gazePoint.y}
-        visible={isSimulating}
+        visible={isGazeActive}
       />
 
       {/* Calibration Overlay */}
@@ -332,11 +382,18 @@ export default function DemoShell() {
           Calibrate
         </button>
         <button
-          onClick={toggleSimulation}
+          onClick={toggleGaze}
           className="px-3 py-2 text-xs bg-gray-800 text-white rounded-lg opacity-20 hover:opacity-100 transition-opacity"
-          title="Toggle gaze simulation (Ctrl+T)"
+          title="Toggle gaze (Ctrl+T)"
         >
-          {isSimulating ? 'Stop Gaze' : 'Start Gaze'}
+          {isGazeActive ? 'Stop Gaze' : 'Start Gaze'}
+        </button>
+        <button
+          onClick={handleModeSwitch}
+          className="px-3 py-2 text-xs bg-gray-800 text-white rounded-lg opacity-20 hover:opacity-100 transition-opacity"
+          title="Switch tracking mode (Ctrl+E)"
+        >
+          {trackingMode === 'real' ? 'Simulation' : 'Real Eye'}
         </button>
         <button
           onClick={resetDemo}
