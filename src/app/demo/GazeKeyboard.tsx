@@ -1,8 +1,10 @@
 'use client'
 
 import { useEffect } from 'react'
+import { motion } from 'framer-motion'
 import Key from './Key'
 import WordPredictions from './WordPredictions'
+import { Keyboard as KeyboardIcon } from 'lucide-react'
 
 interface GazeKeyboardProps {
   onSelect: (key: string) => void
@@ -80,14 +82,45 @@ export default function GazeKeyboard({
     <div className="w-full max-w-xl mx-auto">
 
       {/* Keyboard shell */}
-      <div className="glass-card p-4 sm:p-6">
+      <motion.div
+        className="glass-card p-4 sm:p-6 relative overflow-hidden"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-center gap-2 mb-4 pb-4 border-b border-slate-700/50">
+          <motion.div
+            className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center"
+            animate={{ rotate: [0, 5, -5, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <KeyboardIcon className="w-4 h-4 text-blue-400" />
+          </motion.div>
+          <span className="text-sm font-medium text-slate-400">Eye-Controlled Keyboard</span>
+        </div>
+
+        {/* Ambient background glow */}
+        <div className="absolute inset-0 pointer-events-none">
+          <motion.div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl"
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.05, 0.1, 0.05],
+            }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </div>
 
         {/* Rows */}
-        <div className="space-y-3 sm:space-y-4">
+        <div className="space-y-3 sm:space-y-4 relative z-10">
           {KEYBOARD_LAYOUT.map((row, rowIndex) => (
-            <div
+            <motion.div
               key={rowIndex}
               className="flex justify-center gap-2 sm:gap-3"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: rowIndex * 0.05 }}
             >
               {row.map(letter => (
                 <Key
@@ -103,15 +136,21 @@ export default function GazeKeyboard({
                   onClick={() => onSelect(letter)}
                 />
               ))}
-            </div>
+            </motion.div>
           ))}
         </div>
 
         {/* Mobile hint */}
-        <div className="mt-4 sm:hidden text-center text-xs text-slate-500">
+        <motion.div
+          className="mt-4 sm:hidden text-center text-xs text-slate-500 flex items-center justify-center gap-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          <span className="w-1 h-1 rounded-full bg-slate-600" />
           Focus on a letter to select • Tap to test
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* Word Predictions */}
       <WordPredictions
@@ -123,9 +162,17 @@ export default function GazeKeyboard({
       />
 
       {/* Desktop hint */}
-      <div className="hidden sm:block mt-4 text-center text-sm text-slate-500">
-        Focus on a letter for a moment to type • Press <span className="font-medium text-slate-400">Space</span> to speak
-      </div>
+      <motion.div
+        className="hidden sm:flex mt-4 text-center text-sm text-slate-500 items-center justify-center gap-2"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.6 }}
+      >
+        <span className="w-1.5 h-1.5 rounded-full bg-blue-500/50" />
+        Focus on a letter for a moment to type
+        <span className="mx-2 text-slate-600">•</span>
+        Press <kbd className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-400 font-mono text-xs">Space</kbd> to speak
+      </motion.div>
     </div>
   )
 }

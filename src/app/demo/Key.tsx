@@ -28,8 +28,8 @@ export default function Key({
   const handleSelect = (e: React.MouseEvent | React.TouchEvent) => {
     // Create ripple effect
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
-    const x = 'touches' in e ? (e as React.TouchEvent).touches[0].clientX - rect.left : (e as React.MouseEvent).clientX - rect.left
-    const y = 'touches' in e ? (e as React.TouchEvent).touches[0].clientY - rect.top : (e as React.MouseEvent).clientY - rect.top
+    const x = 'touches' in e ? ((e as React.TouchEvent).touches[0]?.clientX ?? 0) - rect.left : (e as React.MouseEvent).clientX - rect.left
+    const y = 'touches' in e ? ((e as React.TouchEvent).touches[0]?.clientY ?? 0) - rect.top : (e as React.MouseEvent).clientY - rect.top
     setRipple({ x, y })
     setTimeout(() => setRipple(null), 600)
 
