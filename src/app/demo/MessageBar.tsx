@@ -19,7 +19,7 @@ export default function MessageBar({
   onReset,
 }: MessageBarProps) {
   return (
-    <div className="fixed top-12 left-0 right-0 z-40 bg-white border-b border-slate-200">
+    <div className="fixed top-12 left-0 right-0 z-40 bg-slate-800/90 backdrop-blur-xl border-b border-slate-700/50">
       <div className="max-w-8xl mx-auto px-3 sm:px-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-4">
 
@@ -33,11 +33,11 @@ export default function MessageBar({
               className={cn(
                 'leading-snug transition-colors',
                 message
-                  ? 'text-slate-900'
-                  : 'text-slate-400 italic'
+                  ? 'text-white'
+                  : 'text-slate-500 italic'
               )}
             >
-              <span className="block text-xl sm:text-2xl md:text-3xl font-medium break-words">
+              <span className="block text-xl sm:text-2xl md:text-3xl font-semibold break-words">
                 {message || 'Waiting for input…'}
               </span>
             </div>
@@ -107,11 +107,11 @@ function ControlButton({
 }) {
   const styles = {
     primary:
-      'bg-slate-900 text-white hover:bg-slate-800',
+      'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:shadow-lg hover:shadow-blue-500/20',
     danger:
-      'bg-transparent text-red-600 hover:bg-red-50',
+      'bg-transparent text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/30',
     neutral:
-      'bg-transparent text-slate-600 hover:bg-slate-100',
+      'bg-transparent text-slate-400 hover:bg-slate-700 border border-transparent hover:border-slate-600',
   }
 
   return (
@@ -119,7 +119,7 @@ function ControlButton({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        'flex flex-col items-center justify-center rounded-lg px-4 py-2 transition',
+        'flex flex-col items-center justify-center rounded-xl px-4 py-2 transition-all duration-200',
         'min-w-[64px]',
         disabled
           ? 'opacity-40 cursor-not-allowed'
@@ -129,7 +129,7 @@ function ControlButton({
       <div className="relative">
         <Icon className="w-5 h-5" />
         {active && (
-          <span className="absolute -inset-1 rounded-full border border-slate-400 animate-pulse" />
+          <span className="absolute -inset-1 rounded-full border border-blue-400 animate-pulse" />
         )}
       </div>
       <span className="mt-1 text-[11px] sm:text-xs font-medium">

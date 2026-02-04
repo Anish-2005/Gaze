@@ -25,18 +25,18 @@ function ActionButton({
   color: 'emerald' | 'red' | 'amber' | 'blue'
 }) {
   const colors = {
-    emerald: 'border-emerald-500 text-emerald-700',
-    red: 'border-red-500 text-red-700',
-    amber: 'border-amber-500 text-amber-700',
-    blue: 'border-blue-500 text-blue-700',
+    emerald: 'border-emerald-500/50 text-emerald-400 bg-emerald-500/10',
+    red: 'border-red-500/50 text-red-400 bg-red-500/10',
+    amber: 'border-amber-500/50 text-amber-400 bg-amber-500/10',
+    blue: 'border-blue-500/50 text-blue-400 bg-blue-500/10',
   }
 
   return (
     <button
       onClick={onClick}
       className={`
-        h-12 rounded-lg border text-sm font-medium transition
-        ${active ? colors[color] + ' bg-slate-50' : 'border-slate-300 text-slate-700'}
+        h-12 rounded-xl border text-sm font-medium transition-all duration-200
+        ${active ? colors[color] : 'border-slate-700 text-slate-400 bg-slate-800/50 hover:bg-slate-800 hover:border-slate-600'}
       `}
     >
       {label}
@@ -224,7 +224,7 @@ export default function DemoShell() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex flex-col">
+    <div className="min-h-screen bg-slate-900 flex flex-col">
       {/* Status Bar */}
       <StatusBar
         cameraActive={state.cameraActive}
@@ -249,17 +249,17 @@ export default function DemoShell() {
 
           {/* Header */}
           <div className="text-center mb-10">
-            <h1 className="text-2xl sm:text-3xl font-semibold text-slate-900 mb-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
               GAZE Communication Interface
             </h1>
-            <p className="text-sm sm:text-base text-slate-600 max-w-lg mx-auto">
+            <p className="text-sm sm:text-base text-slate-400 max-w-lg mx-auto">
               Eye-controlled communication for patients with limited motor function
             </p>
 
             <div className="mt-4 flex flex-col sm:flex-row items-center gap-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 text-xs">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800 border border-slate-700 text-slate-300 text-xs">
                 <span
-                  className={`w-2 h-2 rounded-full ${isGazeActive ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'
+                  className={`w-2 h-2 rounded-full ${isGazeActive ? 'bg-emerald-400 animate-pulse' : 'bg-slate-500'
                     }`}
                 />
                 {trackingMode === 'real'
@@ -269,12 +269,12 @@ export default function DemoShell() {
               </div>
               <button
                 onClick={handleModeSwitch}
-                className="text-xs px-3 py-1.5 rounded-full border border-slate-300 hover:bg-slate-50 transition text-slate-600"
+                className="text-xs px-3 py-1.5 rounded-full border border-slate-700 hover:bg-slate-800 transition text-slate-400 hover:text-slate-200"
               >
                 {trackingMode === 'real' ? 'Switch to Simulation' : 'Use Real Eye Tracking'}
               </button>
               {eyeTracking.error && (
-                <span className="text-xs text-red-500">{eyeTracking.error}</span>
+                <span className="text-xs text-red-400">{eyeTracking.error}</span>
               )}
             </div>
           </div>
@@ -295,7 +295,7 @@ export default function DemoShell() {
 
           {/* Action Dock */}
           <div className="w-full mb-20 max-w-xl mx-auto">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-white border border-slate-200 rounded-xl p-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 glass-card p-4">
 
               <ActionButton
                 label="Speak"
@@ -330,16 +330,16 @@ export default function DemoShell() {
           {/* Dwell Feedback (single source of truth) */}
           {isDwelling && (
             <div className="fixed bottom-6 right-1/2 translate-x-1/2 sm:right-6 sm:translate-x-0 z-40">
-              <div className="bg-white border border-slate-200 rounded-lg px-4 py-3 shadow-md">
-                <div className="text-xs text-slate-500 text-center mb-1">
+              <div className="glass-card px-5 py-4 shadow-xl shadow-blue-500/10">
+                <div className="text-xs text-slate-400 text-center mb-1">
                   Dwell selection
                 </div>
-                <div className="text-2xl font-semibold text-slate-900 text-center">
+                <div className="text-2xl font-bold text-white text-center">
                   {Math.round(dwellProgress)}%
                 </div>
-                <div className="mt-2 w-32 h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                <div className="mt-2 w-32 h-2 bg-slate-700 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-slate-900 transition-all"
+                    className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all"
                     style={{ width: `${dwellProgress}%` }}
                   />
                 </div>

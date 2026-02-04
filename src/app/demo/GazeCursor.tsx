@@ -18,7 +18,7 @@ export default function GazeCursor({ x, y, visible }: GazeCursorProps) {
     const newPoint = { x, y }
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setTrail(prev => {
-      const newTrail = [newPoint, ...prev.slice(0, 10)]
+      const newTrail = [newPoint, ...prev.slice(0, 8)]
       return newTrail
     })
   }, [x, y, visible])
@@ -27,34 +27,56 @@ export default function GazeCursor({ x, y, visible }: GazeCursorProps) {
 
   return (
     <>
-      {/* Trail dots */}
+      {/* Trail dots with gradient opacity */}
       {trail.map((point, index) => (
         <div
           key={index}
-          className="fixed w-1 h-1 rounded-full bg-blue-400/30 pointer-events-none z-[9998]"
+          className="fixed rounded-full pointer-events-none z-[9998]"
           style={{
             left: `${point.x}%`,
             top: `${point.y}%`,
             transform: 'translate(-50%, -50%)',
+            width: `${8 - index * 0.8}px`,
+            height: `${8 - index * 0.8}px`,
+            background: `linear-gradient(135deg, rgba(59, 130, 246, ${0.5 - index * 0.05}), rgba(139, 92, 246, ${0.5 - index * 0.05}))`,
             opacity: 1 - index / trail.length,
-            scale: 1 - index / trail.length,
           }}
         />
       ))}
 
-      {/* Main cursor */}
+      {/* Outer glow ring */}
       <div
-        className="fixed w-6 h-6 rounded-full border-4 border-blue-500 bg-white/20 backdrop-blur-sm pointer-events-none z-[9999]"
+        className="fixed w-16 h-16 rounded-full pointer-events-none z-[9998] animate-pulse-glow"
         style={{
           left: `${x}%`,
           top: `${y}%`,
           transform: 'translate(-50%, -50%)',
-          boxShadow: '0 0 20px rgba(59, 130, 246, 0.5)',
+          background: 'radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%)',
+        }}
+      />
+
+      {/* Main cursor */}
+      <div
+        className="fixed w-8 h-8 rounded-full pointer-events-none z-[9999]"
+        style={{
+          left: `${x}%`,
+          top: `${y}%`,
+          transform: 'translate(-50%, -50%)',
+          background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%)',
+          border: '2px solid rgba(59, 130, 246, 0.6)',
+          boxShadow: '0 0 20px rgba(59, 130, 246, 0.4), 0 0 40px rgba(139, 92, 246, 0.2)',
+          backdropFilter: 'blur(4px)',
         }}
       >
         {/* Center dot */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse" />
+          <div
+            className="w-2 h-2 rounded-full animate-pulse"
+            style={{
+              background: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
+              boxShadow: '0 0 10px rgba(59, 130, 246, 0.8)',
+            }}
+          />
         </div>
       </div>
     </>

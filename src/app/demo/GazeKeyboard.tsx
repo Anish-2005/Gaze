@@ -80,10 +80,10 @@ export default function GazeKeyboard({
     <div className="w-full max-w-xl mx-auto">
 
       {/* Keyboard shell */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-3 sm:p-4 shadow-md">
+      <div className="glass-card p-4 sm:p-6">
 
         {/* Rows */}
-        <div className="space-y-2 sm:space-y-3">
+        <div className="space-y-3 sm:space-y-4">
           {KEYBOARD_LAYOUT.map((row, rowIndex) => (
             <div
               key={rowIndex}
@@ -108,7 +108,7 @@ export default function GazeKeyboard({
         </div>
 
         {/* Mobile hint */}
-        <div className="mt-3 sm:hidden text-center text-xs text-slate-500">
+        <div className="mt-4 sm:hidden text-center text-xs text-slate-500">
           Focus on a letter to select • Tap to test
         </div>
       </div>
@@ -123,8 +123,8 @@ export default function GazeKeyboard({
       />
 
       {/* Desktop hint */}
-      <div className="hidden sm:block mt-4 text-center text-sm text-slate-600">
-        Focus on a letter for a moment to type • Press <span className="font-medium">Space</span> to speak
+      <div className="hidden sm:block mt-4 text-center text-sm text-slate-500">
+        Focus on a letter for a moment to type • Press <span className="font-medium text-slate-400">Space</span> to speak
       </div>
     </div>
   )

@@ -9,25 +9,34 @@ const problems = [
     title: 'Conventional interfaces exclude millions',
     description:
       'Individuals affected by paralysis, ALS, stroke, or critical illness often lose the ability to speak or use standard input devices, resulting in complete communication breakdown.',
+    color: 'from-red-500 to-orange-500',
   },
   {
     icon: DollarSign,
     title: 'Assistive communication relies on expensive hardware',
     description:
       'Existing eye-tracking and AAC systems typically require proprietary hardware costing upwards of $10,000, making large-scale deployment financially unviable.',
+    color: 'from-amber-500 to-yellow-500',
   },
   {
     icon: Lock,
     title: 'Access to communication becomes conditional',
     description:
       'When essential communication tools are limited by cost and infrastructure, dignity, autonomy, and care quality are compromised.',
+    color: 'from-purple-500 to-pink-500',
   },
 ]
 
 export default function Problem() {
   return (
-    <section className="py-24 bg-[#F7F9FC] text-[#0F172A]">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-24 bg-slate-900 relative overflow-hidden">
+      {/* Background elements */}
+      <div className="absolute inset-0">
+        <div className="absolute top-1/2 left-0 w-96 h-96 bg-red-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl" />
+      </div>
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
         {/* Section Header */}
         <motion.div
@@ -35,13 +44,16 @@ export default function Problem() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="max-w-3xl mb-20"
+          className="max-w-3xl mb-16"
         >
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold leading-tight mb-6">
+          <div className="text-sm font-medium text-red-400 mb-4 tracking-wider uppercase">
+            The Problem
+          </div>
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white leading-tight mb-6">
             Communication loss is a systemic problem.
           </h2>
 
-          <p className="text-lg text-slate-600">
+          <p className="text-lg text-slate-400">
             Despite advances in medical care, millions of people worldwide remain
             unable to communicate basic needs due to physical or neurological
             impairment.
@@ -49,7 +61,7 @@ export default function Problem() {
         </motion.div>
 
         {/* Problem Grid */}
-        <div className="grid md:grid-cols-3 gap-12">
+        <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
           {problems.map((problem, index) => {
             const Icon = problem.icon
             return (
@@ -58,18 +70,18 @@ export default function Problem() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-white border border-slate-200 rounded-xl p-8"
+                transition={{ delay: index * 0.15 }}
+                className="glass-card p-8 card-hover group"
               >
-                <div className="mb-6 text-slate-700">
-                  <Icon className="w-7 h-7" />
+                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${problem.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                  <Icon className="w-6 h-6 text-white" />
                 </div>
 
-                <h3 className="text-lg font-semibold mb-4">
+                <h3 className="text-lg font-semibold text-white mb-4">
                   {problem.title}
                 </h3>
 
-                <p className="text-slate-600 text-base leading-relaxed">
+                <p className="text-slate-400 text-base leading-relaxed">
                   {problem.description}
                 </p>
               </motion.div>
