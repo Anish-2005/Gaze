@@ -3,7 +3,7 @@
 import { motion, useMotionValue, useTransform, animate } from 'framer-motion'
 import Link from 'next/link'
 import { Eye, Zap, Globe, Shield } from 'lucide-react'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 
 const stats = [
     { value: 0, suffix: '$0', label: 'Hardware Cost', icon: Zap },
