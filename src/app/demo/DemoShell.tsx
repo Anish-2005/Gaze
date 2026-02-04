@@ -56,7 +56,12 @@ export default function DemoShell() {
     toggleTracking,
     resetDemo,
   } = useDemoState()
-  const { predictions, isGenerating, addHoveredKey, clearSequence } = useWordPrediction()
+  const { predictions, isGenerating, addHoveredKey, clearSequence, updateCurrentMessage } = useWordPrediction()
+
+  // Keep word prediction in sync with current message for context-aware suggestions
+  useEffect(() => {
+    updateCurrentMessage(state.message)
+  }, [state.message, updateCurrentMessage])
 
   // Unified selection handler for both keyboard and shortcuts
   const handleSelection = useCallback((key: string) => {
