@@ -1,5 +1,5 @@
 'use client'
-
+// Client layout for GAZE application
 import JudgeModeIndicator from '@/components/JudgeModeIndicator'
 import KeyboardShortcuts from '@/components/KeyboardShortcuts'
 import Navigation from '@/components/Navigation'
@@ -8,10 +8,7 @@ import { useJudgeMode } from '@/lib/useJudgeMode'
 import { usePerformanceMonitoring } from '@/lib/performance'
 import { useWebVitals, usePerformanceObserver, useMemoryMonitor } from '@/lib/webVitals'
 import { useEffect } from 'react'
-import dynamic from 'next/dynamic'
 
-// Client-side only components
-const PrintUrl = dynamic(() => import('@/components/PrintUrl'), { ssr: false })
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const judgeMode = useJudgeMode()
@@ -150,7 +147,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         <Navigation />
         <JudgeModeIndicator />
         <KeyboardShortcuts />
-        <PrintUrl />
         {children}
       </ErrorBoundary>
     </>

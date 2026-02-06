@@ -8,6 +8,12 @@ import { motion, AnimatePresence } from 'framer-motion'
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  // Track hydration - only enable animations after client mount
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   // Track scroll position for navbar styling
   useEffect(() => {
@@ -27,10 +33,10 @@ export default function Navigation() {
   return (
     <motion.nav
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled
-          ? 'bg-slate-900/95 backdrop-blur-xl border-b border-slate-800/50 shadow-lg shadow-slate-900/20'
-          : 'bg-transparent'
+        ? 'bg-slate-900/95 backdrop-blur-xl border-b border-slate-800/50 shadow-lg shadow-slate-900/20'
+        : 'bg-transparent'
         }`}
-      initial={{ y: -100 }}
+      initial={mounted ? { y: -100 } : false}
       animate={{ y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
@@ -59,9 +65,9 @@ export default function Navigation() {
             {navItems.map((item, index) => (
               <motion.div
                 key={item.label}
-                initial={{ opacity: 0, y: -10 }}
+                initial={mounted ? { opacity: 0, y: -10 } : false}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
+                transition={{ delay: mounted ? index * 0.1 : 0 }}
               >
                 <Link
                   href={item.href}
@@ -80,9 +86,9 @@ export default function Navigation() {
 
             <Link href="/demo">
               <motion.button
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={mounted ? { opacity: 0, scale: 0.9 } : false}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.3 }}
+                transition={{ delay: mounted ? 0.3 : 0 }}
                 whileHover={{ scale: 1.05, y: -1 }}
                 whileTap={{ scale: 0.95 }}
                 className="ml-4 px-5 py-2.5 rounded-xl font-medium text-white bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 transition-all btn-shimmer flex items-center gap-2 group"
