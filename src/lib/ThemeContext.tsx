@@ -12,55 +12,61 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
-    const [theme, setThemeState] = useState<Theme>('dark')
-    const [mounted, setMounted] = useState(false)
+const getStoredTheme = (): Theme | null => {
+    if (typeof window === 'undefined') return null
 
-    // Load theme from localStorage on mount
-    useEffect(() => {
-        setMounted(true)
+    try {
         const savedTheme = localStorage.getItem('gaze-theme') as Theme | null
-        if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark')) {
-            setThemeState(savedTheme)
-        } else {
-            // Check system preference
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-            setThemeState(prefersDark ? 'dark' : 'light')
-        }
-    }, [])
+        if (savedTheme === 'light' || savedTheme === 'dark') return savedTheme
+    } catch {
+        return null
+    }
 
-    // Apply theme to document
-    useEffect(() => {
-        if (!mounted) return
+    return null
+}
 
-        console.log('Applying theme to document:', theme)
+const getSystemTheme = (): Theme => {
+    if (typeof window === 'undefined') return 'dark'
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+}
+
+const resolveTheme = (): Theme => {
+    if (typeof document !== 'undefined') {
         const root = document.documentElement
-        console.log('Current classes before:', root.className)
-        root.classList.remove('light', 'dark')
-        root.classList.add(theme)
-        console.log('Current classes after:', root.className)
-        localStorage.setItem('gaze-theme', theme)
-        console.log('Saved to localStorage:', theme)
-    }, [theme, mounted])
+        if (root.classList.contains('light')) return 'light'
+        if (root.classList.contains('dark')) return 'dark'
+    }
+
+    return getStoredTheme() ?? getSystemTheme()
+}
+
+const applyThemeToDom = (nextTheme: Theme) => {
+    if (typeof document === 'undefined') return
+
+    const root = document.documentElement
+    root.classList.remove('light', 'dark')
+    root.classList.add(nextTheme)
+
+    try {
+        localStorage.setItem('gaze-theme', nextTheme)
+    } catch {
+        // Ignore storage errors.
+    }
+}
+
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+    const [theme, setThemeState] = useState<Theme>(() => resolveTheme())
+
+    useEffect(() => {
+        applyThemeToDom(theme)
+    }, [theme])
 
     const toggleTheme = () => {
-        console.log('Toggle theme called, current theme:', theme)
-        const newTheme = theme === 'dark' ? 'light' : 'dark'
-        console.log('Setting new theme:', newTheme)
-        setThemeState(newTheme)
+        setThemeState(prev => (prev === 'dark' ? 'light' : 'dark'))
     }
 
     const setTheme = (newTheme: Theme) => {
         setThemeState(newTheme)
-    }
-
-    // Prevent flash during hydration
-    if (!mounted) {
-        return (
-            <div style={{ visibility: 'hidden' }}>
-                {children}
-            </div>
-        )
     }
 
     return (
@@ -72,8 +78,19 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
 export function useTheme() {
     const context = useContext(ThemeContext)
-    if (context === undefined) {
-        throw new Error('useTheme must be used within a ThemeProvider')
+    if (context !== undefined) {
+        return context
     }
-    return context
+
+    return {
+        theme: resolveTheme(),
+        toggleTheme: () => {
+            const current = resolveTheme()
+            const next = current === 'dark' ? 'light' : 'dark'
+            applyThemeToDom(next)
+        },
+        setTheme: (nextTheme: Theme) => {
+            applyThemeToDom(nextTheme)
+        }
+    }
 }

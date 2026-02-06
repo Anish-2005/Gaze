@@ -135,7 +135,7 @@ export default function Pricing() {
           viewport={{ once: true }}
           className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto"
         >
-          {plans.map((plan, index) => (
+          {plans.map((plan) => (
             <motion.div
               key={plan.name}
               variants={itemVariants}

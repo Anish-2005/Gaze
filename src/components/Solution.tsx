@@ -117,7 +117,7 @@ export default function Solution() {
           viewport={{ once: true }}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-16"
         >
-          {features.map((feature, index) => {
+          {features.map((feature) => {
             const colors = colorClasses[feature.color as keyof typeof colorClasses]
             return (
               <motion.div

@@ -8,6 +8,7 @@ import { useJudgeMode } from '@/lib/useJudgeMode'
 import { usePerformanceMonitoring } from '@/lib/performance'
 import { useWebVitals, usePerformanceObserver, useMemoryMonitor } from '@/lib/webVitals'
 import { useEffect } from 'react'
+import { ThemeProvider } from '@/lib/ThemeContext'
 
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
@@ -142,13 +143,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   }, [])
 
   return (
-    <>
+    <ThemeProvider>
       <ErrorBoundary>
         <Navigation />
         <JudgeModeIndicator />
         <KeyboardShortcuts />
         {children}
       </ErrorBoundary>
-    </>
+    </ThemeProvider>
   )
 }

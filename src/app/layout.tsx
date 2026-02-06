@@ -2,7 +2,6 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import ClientLayout from '@/components/ClientLayout'
 import { Suspense } from 'react'
-import { ThemeProvider } from '@/lib/ThemeContext'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -43,13 +42,11 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} font-sans antialiased min-h-screen flex flex-col`}>
-        <ThemeProvider>
-          <Suspense fallback={<div>Loading...</div>}>
-            <ClientLayout>
-              {children}
-            </ClientLayout>
-          </Suspense>
-        </ThemeProvider>
+        <Suspense fallback={<div>Loading...</div>}>
+          <ClientLayout>
+            {children}
+          </ClientLayout>
+        </Suspense>
       </body>
     </html>
   )

@@ -137,7 +137,7 @@ export default function HowItWorks() {
             { value: '<100ms', label: 'Response latency' },
             { value: '98.5%', label: 'Accuracy rate' },
             { value: '0', label: 'Downloads needed' }
-          ].map((stat, index) => (
+          ].map((stat) => (
             <div key={stat.label} className="text-center p-4 rounded-xl bg-[var(--card-bg)] border border-[var(--card-border)]">
               <div className="text-2xl font-bold text-[rgb(var(--text-primary))] mb-1">{stat.value}</div>
               <div className="text-xs text-[rgb(var(--text-muted))]">{stat.label}</div>

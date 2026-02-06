@@ -347,7 +347,7 @@ export default function Hero() {
                                 { icon: Smartphone, label: 'Mobile First' },
                                 { icon: Brain, label: 'AI Powered' },
                                 { icon: Users, label: 'Accessible' }
-                            ].map((item, i) => (
+                            ].map((item) => (
                                 <div
                                     key={item.label}
                                     className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[var(--card-bg)] border border-[var(--card-border)]"
