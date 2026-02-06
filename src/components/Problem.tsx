@@ -1,180 +1,188 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { DollarSign, ShieldOff, Lock } from 'lucide-react'
+import { AlertTriangle, DollarSign, Clock, Users, TrendingDown, Hospital, Accessibility } from 'lucide-react'
 
-const problems = [
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1, delayChildren: 0.2 }
+  }
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+}
+
+const problemStats = [
   {
-    icon: ShieldOff,
-    title: 'Conventional interfaces exclude millions',
-    description:
-      'Individuals affected by paralysis, ALS, stroke, or critical illness often lose the ability to speak or use standard input devices, resulting in complete communication breakdown.',
-    color: 'from-red-500 to-orange-500',
-    bgColor: 'bg-red-500/10',
-    shadowColor: 'shadow-red-500/20',
+    value: '50M+',
+    label: 'People Affected',
+    description: 'Living with conditions causing speech loss',
+    icon: Users,
+    color: 'from-red-500 to-orange-500'
   },
   {
+    value: '$15K+',
+    label: 'Current Device Cost',
+    description: 'Price of traditional eye-tracking systems',
     icon: DollarSign,
-    title: 'Assistive communication relies on expensive hardware',
-    description:
-      'Existing eye-tracking and AAC systems typically require proprietary hardware costing upwards of $10,000, making large-scale deployment financially unviable.',
-    color: 'from-amber-500 to-yellow-500',
-    bgColor: 'bg-amber-500/10',
-    shadowColor: 'shadow-amber-500/20',
+    color: 'from-amber-500 to-yellow-500'
   },
   {
-    icon: Lock,
-    title: 'Access to communication becomes conditional',
-    description:
-      'When essential communication tools are limited by cost and infrastructure, dignity, autonomy, and care quality are compromised.',
-    color: 'from-purple-500 to-pink-500',
-    bgColor: 'bg-purple-500/10',
-    shadowColor: 'shadow-purple-500/20',
+    value: '6-12mo',
+    label: 'Waitlist Time',
+    description: 'Average time to receive assistive devices',
+    icon: Clock,
+    color: 'from-purple-500 to-pink-500'
   },
+  {
+    value: '< 5%',
+    label: 'Access Rate',
+    description: 'Patients who can afford current solutions',
+    icon: TrendingDown,
+    color: 'from-blue-500 to-cyan-500'
+  }
+]
+
+const painPoints = [
+  {
+    title: 'Prohibitive Costs',
+    description: 'Specialized eye-tracking hardware costs $10,000-$30,000, excluding the majority of patients and institutions.',
+    icon: DollarSign
+  },
+  {
+    title: 'Complex Setup',
+    description: 'Current systems require trained technicians, specialized calibration, and ongoing maintenance.',
+    icon: Hospital
+  },
+  {
+    title: 'Limited Accessibility',
+    description: 'Available primarily in wealthy nations, leaving developing regions without any options.',
+    icon: Accessibility
+  }
 ]
 
 export default function Problem() {
   return (
-    <section className="py-24 sm:py-32 bg-slate-900 relative overflow-hidden">
-      {/* Enhanced Background elements */}
+    <section className="relative py-20 sm:py-32 bg-slate-900 overflow-hidden">
+      {/* Background Elements */}
       <div className="absolute inset-0">
-        <motion.div
-          className="absolute top-1/2 left-0 w-96 h-96 bg-red-500/10 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.1, 1],
-            opacity: [0.1, 0.15, 0.1],
-          }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute bottom-0 right-1/4 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.15, 1],
-            opacity: [0.1, 0.12, 0.1],
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        />
-        <motion.div
-          className="absolute top-1/4 right-0 w-64 h-64 bg-purple-500/8 rounded-full blur-3xl"
-          animate={{
-            y: [0, -20, 0],
-            opacity: [0.08, 0.12, 0.08],
-          }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        />
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent" />
+        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent" />
 
-        {/* Dotted grid pattern */}
-        <div
-          className="absolute inset-0 opacity-[0.02]"
-          style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.3) 1px, transparent 0)`,
-            backgroundSize: '32px 32px'
-          }}
-        />
+        {/* Subtle glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-red-500/5 rounded-full blur-[120px]" />
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="max-w-3xl mb-16 sm:mb-20"
+          className="text-center mb-16"
         >
-          <motion.div
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border-gradient mb-6"
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-          >
-            <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse" />
-            <span className="text-sm font-medium text-slate-300">
-              The Problem
-            </span>
-          </motion.div>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 mb-6">
+            <AlertTriangle className="w-4 h-4 text-red-400" />
+            <span className="text-sm font-medium text-red-400">The Problem</span>
+          </div>
 
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight mb-6">
-            Communication loss is a{' '}
-            <span className="text-gradient">systemic problem</span>.
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+            Millions Are{' '}
+            <span className="bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent">
+              Locked Out
+            </span>
           </h2>
 
-          <p className="text-lg sm:text-xl text-slate-400 leading-relaxed">
-            Despite advances in medical care, millions of people worldwide remain
-            unable to communicate basic needs due to physical or neurological
-            impairment.
+          <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+            Current assistive communication technology is prohibitively expensive,
+            inaccessible, and unavailable in most of the world.
           </p>
         </motion.div>
 
-        {/* Problem Grid */}
-        <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
-          {problems.map((problem, index) => {
-            const Icon = problem.icon
-            return (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.15, duration: 0.5 }}
-                className="group"
-              >
-                <motion.div
-                  className="glass-card-hover p-8 h-full relative overflow-hidden"
-                  whileHover={{ scale: 1.02 }}
-                >
-                  {/* Background glow on hover */}
-                  <motion.div
-                    className={`absolute inset-0 ${problem.bgColor} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl`}
-                  />
-
-                  {/* Content */}
-                  <div className="relative z-10">
-                    {/* Icon with animation */}
-                    <motion.div
-                      className={`w-14 h-14 rounded-xl bg-gradient-to-br ${problem.color} flex items-center justify-center mb-6 shadow-lg ${problem.shadowColor}`}
-                      whileHover={{
-                        scale: 1.1,
-                        rotate: 5,
-                      }}
-                      transition={{ type: "spring", stiffness: 400 }}
-                    >
-                      <Icon className="w-7 h-7 text-white" />
-                    </motion.div>
-
-                    <h3 className="text-xl font-semibold text-white mb-4 group-hover:text-gradient transition-all duration-300">
-                      {problem.title}
-                    </h3>
-
-                    <p className="text-slate-400 text-base leading-relaxed group-hover:text-slate-300 transition-colors">
-                      {problem.description}
-                    </p>
-                  </div>
-
-                  {/* Decorative corner gradient */}
-                  <div className={`absolute -bottom-20 -right-20 w-40 h-40 bg-gradient-to-br ${problem.color} opacity-5 rounded-full blur-2xl group-hover:opacity-10 transition-opacity`} />
-                </motion.div>
-              </motion.div>
-            )
-          })}
-        </div>
-
-        {/* Impact Statement */}
+        {/* Stats Bento Grid */}
         <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
           viewport={{ once: true }}
-          transition={{ delay: 0.5 }}
-          className="mt-16 sm:mt-20 text-center"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-16"
         >
-          <p className="text-slate-500 text-sm sm:text-base max-w-2xl mx-auto">
-            Every minute of communication loss represents a missed opportunity for
-            <span className="text-slate-400"> connection</span>,
-            <span className="text-slate-400"> care</span>, and
-            <span className="text-slate-400"> dignity</span>.
-          </p>
+          {problemStats.map((stat, index) => (
+            <motion.div
+              key={stat.label}
+              variants={itemVariants}
+              className="group relative p-6 rounded-2xl bg-slate-800/50 border border-slate-700/50 backdrop-blur-sm overflow-hidden hover:border-slate-600/50 transition-colors"
+            >
+              {/* Gradient accent */}
+              <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${stat.color}`} />
+
+              <div className="flex items-start justify-between mb-4">
+                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} bg-opacity-20 flex items-center justify-center`}>
+                  <stat.icon className="w-6 h-6 text-white" />
+                </div>
+              </div>
+
+              <div className="text-3xl sm:text-4xl font-bold text-white mb-2">
+                {stat.value}
+              </div>
+              <div className="text-sm font-medium text-slate-300 mb-1">
+                {stat.label}
+              </div>
+              <div className="text-xs text-slate-500">
+                {stat.description}
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Pain Points */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="grid md:grid-cols-3 gap-6"
+        >
+          {painPoints.map((point, index) => (
+            <motion.div
+              key={point.title}
+              variants={itemVariants}
+              className="group relative p-6 rounded-2xl bg-gradient-to-b from-slate-800/80 to-slate-900/80 border border-slate-700/50 hover:border-red-500/30 transition-all duration-300"
+            >
+              <div className="absolute inset-0 bg-gradient-to-b from-red-500/0 to-red-500/0 group-hover:from-red-500/5 group-hover:to-transparent rounded-2xl transition-all duration-300" />
+
+              <div className="relative z-10">
+                <div className="w-12 h-12 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-4 group-hover:bg-red-500/20 transition-colors">
+                  <point.icon className="w-6 h-6 text-red-400" />
+                </div>
+
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  {point.title}
+                </h3>
+                <p className="text-sm text-slate-400 leading-relaxed">
+                  {point.description}
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Bottom Quote */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.4 }}
+          className="mt-16 text-center"
+        >
+          <blockquote className="text-xl sm:text-2xl text-slate-300 italic max-w-3xl mx-auto">
+            "Communication is a fundamental human right –
+            <span className="text-white font-medium"> not a luxury for those who can afford it.</span>"
+          </blockquote>
         </motion.div>
       </div>
     </section>

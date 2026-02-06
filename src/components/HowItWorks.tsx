@@ -1,100 +1,149 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Play, Target, Zap } from 'lucide-react'
+import { Camera, Brain, MessageSquare, Monitor, ArrowRight } from 'lucide-react'
 
 const steps = [
   {
-    icon: Play,
-    title: 'Access the system',
-    description:
-      'GAZE runs directly in a web browser or mobile application, requiring no installation or specialized setup.',
+    number: '01',
+    title: 'Camera Access',
+    description: 'Patient opens GAZE in any browser. The system requests camera access – no downloads needed.',
+    icon: Camera,
+    color: 'blue'
   },
   {
-    icon: Target,
-    title: 'Complete a short calibration',
-    description:
-      'A brief guided calibration aligns eye movement with screen coordinates for accurate interaction.',
+    number: '02',
+    title: 'AI Calibration',
+    description: 'Quick 30-second calibration adapts to the patient\'s unique eye movements and positioning.',
+    icon: Brain,
+    color: 'purple'
   },
   {
-    icon: Zap,
-    title: 'Begin hands-free communication',
-    description:
-      'Users can immediately start selecting, typing, and speaking using gaze-based interaction.',
+    number: '03',
+    title: 'Gaze Detection',
+    description: 'Real-time AI tracks eye position with sub-100ms latency, mapping gaze to screen coordinates.',
+    icon: Monitor,
+    color: 'teal'
   },
+  {
+    number: '04',
+    title: 'Communication',
+    description: 'Patients select letters, words, or phrases by looking. AI predicts and accelerates typing.',
+    icon: MessageSquare,
+    color: 'emerald'
+  }
 ]
+
+const colorClasses = {
+  blue: { bg: 'bg-blue-500', border: 'border-blue-500/30', text: 'text-blue-400', glow: 'shadow-blue-500/20' },
+  purple: { bg: 'bg-purple-500', border: 'border-purple-500/30', text: 'text-purple-400', glow: 'shadow-purple-500/20' },
+  teal: { bg: 'bg-teal-500', border: 'border-teal-500/30', text: 'text-teal-400', glow: 'shadow-teal-500/20' },
+  emerald: { bg: 'bg-emerald-500', border: 'border-emerald-500/30', text: 'text-emerald-400', glow: 'shadow-emerald-500/20' }
+}
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="py-24 bg-[#F7F9FC] text-[#0F172A]">
-      <div className="max-w-full mx-auto px-6 lg:px-12">
+    <section className="relative py-20 sm:py-32 bg-slate-900 overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent" />
+        <div className="absolute top-1/2 right-0 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[100px]" />
+      </div>
 
-        {/* Section Header */}
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="max-w-3xl mb-20"
+          className="text-center mb-16"
         >
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold leading-tight mb-6">
-            Deployment workflow
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 mb-6">
+            <Brain className="w-4 h-4 text-purple-400" />
+            <span className="text-sm font-medium text-purple-400">How It Works</span>
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+            Simple.{' '}
+            <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              Powerful.
+            </span>
+            {' '}Accessible.
           </h2>
-          <p className="text-lg text-slate-600">
-            GAZE is designed to minimize setup complexity while maintaining
-            reliability in clinical and home environments.
+
+          <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+            From camera access to conversation in under a minute.
+            No technical expertise required.
           </p>
         </motion.div>
 
-        {/* Steps */}
-        <div className="grid md:grid-cols-3 gap-12">
+        {/* Steps Timeline */}
+        <div className="max-w-4xl mx-auto">
           {steps.map((step, index) => {
-            const Icon = step.icon
+            const colors = colorClasses[step.color as keyof typeof colorClasses]
+            const isLast = index === steps.length - 1
+
             return (
               <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                key={step.number}
+                initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-white border border-slate-200 rounded-xl p-8"
+                className="relative flex gap-6 pb-12 last:pb-0"
               >
-                <div className="mb-6 flex items-center justify-between">
-                  <div className="w-10 h-10 rounded-md bg-slate-900 text-white flex items-center justify-center">
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <div className="text-sm text-slate-400 font-medium">
-                    Step {index + 1}
-                  </div>
+                {/* Timeline Line */}
+                {!isLast && (
+                  <div className="absolute left-6 top-14 w-0.5 h-[calc(100%-3.5rem)] bg-gradient-to-b from-slate-700 to-slate-800" />
+                )}
+
+                {/* Step Number */}
+                <div className={`relative z-10 flex-shrink-0 w-12 h-12 rounded-full ${colors.bg} flex items-center justify-center shadow-xl ${colors.glow}`}>
+                  <step.icon className="w-6 h-6 text-white" />
                 </div>
 
-                <h3 className="text-lg font-semibold mb-3">
-                  {step.title}
-                </h3>
+                {/* Content */}
+                <div className="flex-1 pt-1">
+                  <div className={`inline-block text-xs font-semibold ${colors.text} mb-2`}>
+                    STEP {step.number}
+                  </div>
+                  <h3 className="text-xl font-semibold text-white mb-2">
+                    {step.title}
+                  </h3>
+                  <p className="text-slate-400 leading-relaxed">
+                    {step.description}
+                  </p>
 
-                <p className="text-slate-600 leading-relaxed">
-                  {step.description}
-                </p>
+                  {!isLast && (
+                    <div className="mt-4">
+                      <ArrowRight className="w-4 h-4 text-slate-600" />
+                    </div>
+                  )}
+                </div>
               </motion.div>
             )
           })}
         </div>
 
-        {/* Closing Statement */}
+        {/* Bottom Stats */}
         <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
-          className="mt-20 max-w-4xl"
+          className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-4"
         >
-          <p className="text-slate-600 text-lg leading-relaxed">
-            The entire process is designed to be completed within minutes,
-            enabling rapid deployment in time-sensitive environments such as
-            intensive care units and rehabilitation centers.
-          </p>
+          {[
+            { value: '30s', label: 'Calibration time' },
+            { value: '<100ms', label: 'Response latency' },
+            { value: '98.5%', label: 'Accuracy rate' },
+            { value: '0', label: 'Downloads needed' }
+          ].map((stat, index) => (
+            <div key={stat.label} className="text-center p-4 rounded-xl bg-slate-800/50 border border-slate-700/50">
+              <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
+              <div className="text-xs text-slate-500">{stat.label}</div>
+            </div>
+          ))}
         </motion.div>
-
       </div>
     </section>
   )
