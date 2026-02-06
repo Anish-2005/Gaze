@@ -1,19 +1,8 @@
 'use client'
 
-import { lazy, Suspense } from 'react'
+import dynamic from 'next/dynamic'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { motion } from 'framer-motion'
-
-// Lazy load components for better performance
-const Hero = lazy(() => import('@/components/Hero'))
-const Problem = lazy(() => import('@/components/Problem'))
-const Solution = lazy(() => import('@/components/Solution'))
-const UseCases = lazy(() => import('@/components/UseCases'))
-const HowItWorks = lazy(() => import('@/components/HowItWorks'))
-const Pricing = lazy(() => import('@/components/Pricing'))
-const SocialImpact = lazy(() => import('@/components/SocialImpact'))
-const CTA = lazy(() => import('@/components/CTA'))
-const Footer = lazy(() => import('@/components/Footer'))
 
 // Premium loading skeleton
 function ComponentLoader() {
@@ -30,6 +19,44 @@ function ComponentLoader() {
     </div>
   )
 }
+
+// Use next/dynamic with ssr: false to prevent hydration mismatches
+const Hero = dynamic(() => import('@/components/Hero'), {
+  ssr: false,
+  loading: () => <ComponentLoader />
+})
+const Problem = dynamic(() => import('@/components/Problem'), {
+  ssr: false,
+  loading: () => <ComponentLoader />
+})
+const Solution = dynamic(() => import('@/components/Solution'), {
+  ssr: false,
+  loading: () => <ComponentLoader />
+})
+const UseCases = dynamic(() => import('@/components/UseCases'), {
+  ssr: false,
+  loading: () => <ComponentLoader />
+})
+const HowItWorks = dynamic(() => import('@/components/HowItWorks'), {
+  ssr: false,
+  loading: () => <ComponentLoader />
+})
+const Pricing = dynamic(() => import('@/components/Pricing'), {
+  ssr: false,
+  loading: () => <ComponentLoader />
+})
+const SocialImpact = dynamic(() => import('@/components/SocialImpact'), {
+  ssr: false,
+  loading: () => <ComponentLoader />
+})
+const CTA = dynamic(() => import('@/components/CTA'), {
+  ssr: false,
+  loading: () => <ComponentLoader />
+})
+const Footer = dynamic(() => import('@/components/Footer'), {
+  ssr: false,
+  loading: () => <ComponentLoader />
+})
 
 // Error fallback component
 function ComponentErrorFallback({ componentName }: { componentName: string }) {
@@ -56,35 +83,36 @@ function ComponentErrorFallback({ componentName }: { componentName: string }) {
   )
 }
 
-// Wrapped component with error boundary
-function LazyComponent({
-  Component,
-  componentName
-}: {
-  Component: React.ComponentType
-  componentName: string
-}) {
-  return (
-    <ErrorBoundary fallback={<ComponentErrorFallback componentName={componentName} />}>
-      <Suspense fallback={<ComponentLoader />}>
-        <Component />
-      </Suspense>
-    </ErrorBoundary>
-  )
-}
-
 export default function Home() {
   return (
-    <main className="min-h-screen bg-slate-900">
-      <LazyComponent Component={Hero} componentName="Hero" />
-      <LazyComponent Component={Problem} componentName="Problem" />
-      <LazyComponent Component={Solution} componentName="Solution" />
-      <LazyComponent Component={UseCases} componentName="Use Cases" />
-      <LazyComponent Component={HowItWorks} componentName="How It Works" />
-      <LazyComponent Component={Pricing} componentName="Pricing" />
-      <LazyComponent Component={SocialImpact} componentName="Social Impact" />
-      <LazyComponent Component={CTA} componentName="Call to Action" />
-      <LazyComponent Component={Footer} componentName="Footer" />
+    <main className="min-h-screen">
+      <ErrorBoundary fallback={<ComponentErrorFallback componentName="Hero" />}>
+        <Hero />
+      </ErrorBoundary>
+      <ErrorBoundary fallback={<ComponentErrorFallback componentName="Problem" />}>
+        <Problem />
+      </ErrorBoundary>
+      <ErrorBoundary fallback={<ComponentErrorFallback componentName="Solution" />}>
+        <Solution />
+      </ErrorBoundary>
+      <ErrorBoundary fallback={<ComponentErrorFallback componentName="Use Cases" />}>
+        <UseCases />
+      </ErrorBoundary>
+      <ErrorBoundary fallback={<ComponentErrorFallback componentName="How It Works" />}>
+        <HowItWorks />
+      </ErrorBoundary>
+      <ErrorBoundary fallback={<ComponentErrorFallback componentName="Pricing" />}>
+        <Pricing />
+      </ErrorBoundary>
+      <ErrorBoundary fallback={<ComponentErrorFallback componentName="Social Impact" />}>
+        <SocialImpact />
+      </ErrorBoundary>
+      <ErrorBoundary fallback={<ComponentErrorFallback componentName="Call to Action" />}>
+        <CTA />
+      </ErrorBoundary>
+      <ErrorBoundary fallback={<ComponentErrorFallback componentName="Footer" />}>
+        <Footer />
+      </ErrorBoundary>
     </main>
   )
 }

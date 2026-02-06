@@ -256,10 +256,10 @@ export default function Hero() {
                         <motion.div variants={itemVariants} className="space-y-4">
                             <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.1] tracking-tight">
                                 <span className="text-white">Giving </span>
-                                <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-teal-400 bg-clip-text text-transparent">Voice</span>
+                                <span style={{ background: 'linear-gradient(to right, #60a5fa, #a78bfa, #2dd4bf)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Voice</span>
                                 <br />
                                 <span className="text-white">to the </span>
-                                <span className="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">Paralyzed</span>
+                                <span style={{ background: 'linear-gradient(to right, #a78bfa, #60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Paralyzed</span>
                             </h1>
 
                             <p className="text-lg sm:text-xl text-slate-400 max-w-xl leading-relaxed">

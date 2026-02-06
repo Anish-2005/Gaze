@@ -57,7 +57,7 @@ export default function CTA() {
           {/* Headline */}
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
             Ready to{' '}
-            <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-teal-400 bg-clip-text text-transparent">
+            <span style={{ background: 'linear-gradient(to right, #60a5fa, #a78bfa, #2dd4bf)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
               Transform
             </span>
             <br />

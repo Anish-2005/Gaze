@@ -101,7 +101,7 @@ export default function SocialImpact() {
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
             Technology with{' '}
-            <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <span style={{ background: 'linear-gradient(to right, #60a5fa, #a78bfa, #f472b6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
               Purpose
             </span>
           </h2>

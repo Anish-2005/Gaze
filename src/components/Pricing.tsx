@@ -116,7 +116,7 @@ export default function Pricing() {
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
             Accessible for{' '}
-            <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-teal-400 bg-clip-text text-transparent">
+            <span style={{ background: 'linear-gradient(to right, #60a5fa, #a78bfa, #2dd4bf)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
               Everyone
             </span>
           </h2>
@@ -140,8 +140,8 @@ export default function Pricing() {
               key={plan.name}
               variants={itemVariants}
               className={`group relative rounded-2xl transition-all duration-500 ${plan.popular
-                  ? 'md:-mt-4 md:mb-4'
-                  : ''
+                ? 'md:-mt-4 md:mb-4'
+                : ''
                 }`}
             >
               {/* Glow effect for popular */}
@@ -150,8 +150,8 @@ export default function Pricing() {
               )}
 
               <div className={`relative h-full p-6 sm:p-8 rounded-2xl border backdrop-blur-sm transition-all duration-300 ${plan.popular
-                  ? 'bg-slate-900 border-slate-700/50'
-                  : 'bg-slate-800/50 border-slate-700/50 hover:bg-slate-800/70 hover:border-slate-600/50'
+                ? 'bg-slate-900 border-slate-700/50'
+                : 'bg-slate-800/50 border-slate-700/50 hover:bg-slate-800/70 hover:border-slate-600/50'
                 }`}>
 
                 {/* Popular Badge */}
@@ -196,8 +196,8 @@ export default function Pricing() {
                     whileHover={{ scale: 1.02, y: -2 }}
                     whileTap={{ scale: 0.98 }}
                     className={`w-full py-3.5 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 group/btn ${plan.popular
-                        ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40'
-                        : 'bg-slate-700/50 text-white border border-slate-600/50 hover:bg-slate-700 hover:border-slate-500'
+                      ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40'
+                      : 'bg-slate-700/50 text-white border border-slate-600/50 hover:bg-slate-700 hover:border-slate-500'
                       }`}
                   >
                     {plan.cta}

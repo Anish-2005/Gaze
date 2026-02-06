@@ -85,7 +85,7 @@ export default function UseCases() {
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
             Built for{' '}
-            <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+            <span style={{ background: 'linear-gradient(to right, #60a5fa, #22d3ee)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
               Real-World Impact
             </span>
           </h2>

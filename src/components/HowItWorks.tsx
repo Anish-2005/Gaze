@@ -65,7 +65,7 @@ export default function HowItWorks() {
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
             Simple.{' '}
-            <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <span style={{ background: 'linear-gradient(to right, #a78bfa, #f472b6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
               Powerful.
             </span>
             {' '}Accessible.

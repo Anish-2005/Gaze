@@ -92,7 +92,7 @@ export default function Problem() {
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
             Millions Are{' '}
-            <span className="bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent">
+            <span style={{ background: 'linear-gradient(to right, #f87171, #fb923c)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
               Locked Out
             </span>
           </h2>

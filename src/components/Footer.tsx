@@ -134,7 +134,7 @@ export default function Footer() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-sm text-slate-500">
-              © {new Date().getFullYear()} GAZE. Open source assistive technology.
+              © 2026 GAZE. Open source assistive technology.
             </p>
             <p className="text-sm text-slate-500 flex items-center gap-1">
               Built with <Heart className="w-4 h-4 text-red-500 inline" /> for accessibility
