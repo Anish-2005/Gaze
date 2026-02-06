@@ -43,10 +43,10 @@ const colorClasses = {
 
 export default function HowItWorks() {
   return (
-    <section className="relative py-20 sm:py-32 bg-slate-900 overflow-hidden">
+    <section className="relative py-20 sm:py-32 bg-[rgb(var(--section-bg))] overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0">
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent" />
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[rgb(var(--bg-tertiary))] to-transparent" />
         <div className="absolute top-1/2 right-0 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[100px]" />
       </div>
 
@@ -63,7 +63,7 @@ export default function HowItWorks() {
             <span className="text-sm font-medium text-purple-400">How It Works</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[rgb(var(--text-primary))] mb-6">
             Simple.{' '}
             <span style={{ background: 'linear-gradient(to right, #a78bfa, #f472b6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
               Powerful.
@@ -71,7 +71,7 @@ export default function HowItWorks() {
             {' '}Accessible.
           </h2>
 
-          <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+          <p className="text-lg text-[rgb(var(--text-secondary))] max-w-2xl mx-auto">
             From camera access to conversation in under a minute.
             No technical expertise required.
           </p>
@@ -94,7 +94,7 @@ export default function HowItWorks() {
               >
                 {/* Timeline Line */}
                 {!isLast && (
-                  <div className="absolute left-6 top-14 w-0.5 h-[calc(100%-3.5rem)] bg-gradient-to-b from-slate-700 to-slate-800" />
+                  <div className="absolute left-6 top-14 w-0.5 h-[calc(100%-3.5rem)] bg-gradient-to-b from-[rgb(var(--bg-tertiary))] to-[rgb(var(--bg-secondary))]" />
                 )}
 
                 {/* Step Number */}
@@ -107,16 +107,16 @@ export default function HowItWorks() {
                   <div className={`inline-block text-xs font-semibold ${colors.text} mb-2`}>
                     STEP {step.number}
                   </div>
-                  <h3 className="text-xl font-semibold text-white mb-2">
+                  <h3 className="text-xl font-semibold text-[rgb(var(--text-primary))] mb-2">
                     {step.title}
                   </h3>
-                  <p className="text-slate-400 leading-relaxed">
+                  <p className="text-[rgb(var(--text-secondary))] leading-relaxed">
                     {step.description}
                   </p>
 
                   {!isLast && (
                     <div className="mt-4">
-                      <ArrowRight className="w-4 h-4 text-slate-600" />
+                      <ArrowRight className="w-4 h-4 text-[rgb(var(--text-muted))]" />
                     </div>
                   )}
                 </div>
@@ -138,9 +138,9 @@ export default function HowItWorks() {
             { value: '98.5%', label: 'Accuracy rate' },
             { value: '0', label: 'Downloads needed' }
           ].map((stat, index) => (
-            <div key={stat.label} className="text-center p-4 rounded-xl bg-slate-800/50 border border-slate-700/50">
-              <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
-              <div className="text-xs text-slate-500">{stat.label}</div>
+            <div key={stat.label} className="text-center p-4 rounded-xl bg-[var(--card-bg)] border border-[var(--card-border)]">
+              <div className="text-2xl font-bold text-[rgb(var(--text-primary))] mb-1">{stat.value}</div>
+              <div className="text-xs text-[rgb(var(--text-muted))]">{stat.label}</div>
             </div>
           ))}
         </motion.div>

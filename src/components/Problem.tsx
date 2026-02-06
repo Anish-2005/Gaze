@@ -67,11 +67,11 @@ const painPoints = [
 
 export default function Problem() {
   return (
-    <section className="relative py-20 sm:py-32 bg-slate-900 overflow-hidden">
+    <section className="relative py-20 sm:py-32 bg-[rgb(var(--section-bg))] overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0">
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent" />
-        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent" />
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[rgb(var(--bg-tertiary))] to-transparent" />
+        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[rgb(var(--bg-tertiary))] to-transparent" />
 
         {/* Subtle glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-red-500/5 rounded-full blur-[120px]" />
@@ -90,14 +90,14 @@ export default function Problem() {
             <span className="text-sm font-medium text-red-400">The Problem</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[rgb(var(--text-primary))] mb-6">
             Millions Are{' '}
             <span style={{ background: 'linear-gradient(to right, #f87171, #fb923c)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
               Locked Out
             </span>
           </h2>
 
-          <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+          <p className="text-lg text-[rgb(var(--text-secondary))] max-w-2xl mx-auto">
             Current assistive communication technology is prohibitively expensive,
             inaccessible, and unavailable in most of the world.
           </p>
@@ -115,7 +115,7 @@ export default function Problem() {
             <motion.div
               key={stat.label}
               variants={itemVariants}
-              className="group relative p-6 rounded-2xl bg-slate-800/50 border border-slate-700/50 backdrop-blur-sm overflow-hidden hover:border-slate-600/50 transition-colors"
+              className="group relative p-6 rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)] backdrop-blur-sm overflow-hidden hover:border-black/10 transition-colors"
             >
               {/* Gradient accent */}
               <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${stat.color}`} />
@@ -126,13 +126,13 @@ export default function Problem() {
                 </div>
               </div>
 
-              <div className="text-3xl sm:text-4xl font-bold text-white mb-2">
+              <div className="text-3xl sm:text-4xl font-bold text-[rgb(var(--text-primary))] mb-2">
                 {stat.value}
               </div>
-              <div className="text-sm font-medium text-slate-300 mb-1">
+              <div className="text-sm font-medium text-[rgb(var(--text-secondary))] mb-1">
                 {stat.label}
               </div>
-              <div className="text-xs text-slate-500">
+              <div className="text-xs text-[rgb(var(--text-muted))]">
                 {stat.description}
               </div>
             </motion.div>
@@ -151,7 +151,7 @@ export default function Problem() {
             <motion.div
               key={point.title}
               variants={itemVariants}
-              className="group relative p-6 rounded-2xl bg-gradient-to-b from-slate-800/80 to-slate-900/80 border border-slate-700/50 hover:border-red-500/30 transition-all duration-300"
+              className="group relative p-6 rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)] hover:border-red-500/30 transition-all duration-300"
             >
               <div className="absolute inset-0 bg-gradient-to-b from-red-500/0 to-red-500/0 group-hover:from-red-500/5 group-hover:to-transparent rounded-2xl transition-all duration-300" />
 
@@ -160,10 +160,10 @@ export default function Problem() {
                   <point.icon className="w-6 h-6 text-red-400" />
                 </div>
 
-                <h3 className="text-lg font-semibold text-white mb-2">
+                <h3 className="text-lg font-semibold text-[rgb(var(--text-primary))] mb-2">
                   {point.title}
                 </h3>
-                <p className="text-sm text-slate-400 leading-relaxed">
+                <p className="text-sm text-[rgb(var(--text-secondary))] leading-relaxed">
                   {point.description}
                 </p>
               </div>
@@ -179,9 +179,9 @@ export default function Problem() {
           transition={{ delay: 0.4 }}
           className="mt-16 text-center"
         >
-          <blockquote className="text-xl sm:text-2xl text-slate-300 italic max-w-3xl mx-auto">
+          <blockquote className="text-xl sm:text-2xl text-[rgb(var(--text-secondary))] italic max-w-3xl mx-auto">
             "Communication is a fundamental human right –
-            <span className="text-white font-medium"> not a luxury for those who can afford it.</span>"
+            <span className="text-[rgb(var(--text-primary))] font-medium"> not a luxury for those who can afford it.</span>"
           </blockquote>
         </motion.div>
       </div>

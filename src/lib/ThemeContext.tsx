@@ -33,14 +33,21 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         if (!mounted) return
 
+        console.log('Applying theme to document:', theme)
         const root = document.documentElement
+        console.log('Current classes before:', root.className)
         root.classList.remove('light', 'dark')
         root.classList.add(theme)
+        console.log('Current classes after:', root.className)
         localStorage.setItem('gaze-theme', theme)
+        console.log('Saved to localStorage:', theme)
     }, [theme, mounted])
 
     const toggleTheme = () => {
-        setThemeState(prev => prev === 'dark' ? 'light' : 'dark')
+        console.log('Toggle theme called, current theme:', theme)
+        const newTheme = theme === 'dark' ? 'light' : 'dark'
+        console.log('Setting new theme:', newTheme)
+        setThemeState(newTheme)
     }
 
     const setTheme = (newTheme: Theme) => {

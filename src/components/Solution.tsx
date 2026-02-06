@@ -76,7 +76,7 @@ const benefits = [
 
 export default function Solution() {
   return (
-    <section className="relative py-20 sm:py-32 bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800 overflow-hidden">
+    <section className="relative py-20 sm:py-32 bg-gradient-to-b from-[rgb(var(--section-bg))] via-[rgb(var(--section-bg))] to-[rgb(var(--section-bg-alt))] overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[100px]" />
@@ -96,14 +96,14 @@ export default function Solution() {
             <span className="text-sm font-medium text-emerald-400">The Solution</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[rgb(var(--text-primary))] mb-6">
             Eye-Tracking for{' '}
             <span style={{ background: 'linear-gradient(to right, #60a5fa, #a78bfa, #2dd4bf)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
               Everyone
             </span>
           </h2>
 
-          <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+          <p className="text-lg text-[rgb(var(--text-secondary))] max-w-2xl mx-auto">
             GAZE replaces expensive proprietary hardware with software that runs
             on devices people already own.
           </p>
@@ -123,16 +123,16 @@ export default function Solution() {
               <motion.div
                 key={feature.title}
                 variants={itemVariants}
-                className={`group relative p-6 rounded-2xl bg-slate-800/50 border border-slate-700/50 backdrop-blur-sm hover:bg-slate-800/70 hover:border-slate-600/50 transition-all duration-300 hover:shadow-xl ${colors.glow}`}
+                className={`group relative p-6 rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)] backdrop-blur-sm hover:bg-black/5 hover:border-black/10 transition-all duration-300 hover:shadow-xl ${colors.glow}`}
               >
                 <div className={`w-12 h-12 rounded-xl ${colors.bg} ${colors.border} border flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                   <feature.icon className={`w-6 h-6 ${colors.icon}`} />
                 </div>
 
-                <h3 className="text-lg font-semibold text-white mb-2">
+                <h3 className="text-lg font-semibold text-[rgb(var(--text-primary))] mb-2">
                   {feature.title}
                 </h3>
-                <p className="text-sm text-slate-400 leading-relaxed">
+                <p className="text-sm text-[rgb(var(--text-secondary))] leading-relaxed">
                   {feature.description}
                 </p>
               </motion.div>
@@ -148,8 +148,8 @@ export default function Solution() {
           className="grid lg:grid-cols-2 gap-8 items-center"
         >
           {/* Benefits List */}
-          <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-slate-700/50">
-            <h3 className="text-xl font-semibold text-white mb-6">
+          <div className="p-6 sm:p-8 rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)]">
+            <h3 className="text-xl font-semibold text-[rgb(var(--text-primary))] mb-6">
               Why Choose GAZE?
             </h3>
             <div className="grid sm:grid-cols-2 gap-3">
@@ -165,7 +165,7 @@ export default function Solution() {
                   <div className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
                     <CheckCircle2 className="w-3 h-3 text-emerald-400" />
                   </div>
-                  <span className="text-sm text-slate-300">{benefit}</span>
+                  <span className="text-sm text-[rgb(var(--text-secondary))]">{benefit}</span>
                 </motion.div>
               ))}
             </div>
@@ -174,18 +174,18 @@ export default function Solution() {
           {/* CTA Card */}
           <div className="relative group">
             <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-purple-500 to-teal-500 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity" />
-            <div className="relative p-6 sm:p-8 rounded-2xl bg-slate-900 border border-slate-700/50">
+            <div className="relative p-6 sm:p-8 rounded-2xl bg-[rgb(var(--section-bg))] border border-[var(--card-border)]">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
                   <Eye className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-white">Ready to see it in action?</h3>
-                  <p className="text-sm text-slate-400">Experience GAZE firsthand</p>
+                  <h3 className="text-lg font-semibold text-[rgb(var(--text-primary))]">Ready to see it in action?</h3>
+                  <p className="text-sm text-[rgb(var(--text-muted))]">Experience GAZE firsthand</p>
                 </div>
               </div>
 
-              <p className="text-slate-400 mb-6">
+              <p className="text-[rgb(var(--text-secondary))] mb-6">
                 Try our live demo using just your device camera. No signup required.
               </p>
 

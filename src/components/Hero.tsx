@@ -59,7 +59,7 @@ function StatCard({ value, label, suffix = '', prefix = '', icon: Icon, delay = 
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay, duration: 0.5 }}
-            className="group relative p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-slate-700/50 backdrop-blur-xl overflow-hidden"
+            className="group relative p-4 sm:p-6 rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)] backdrop-blur-xl overflow-hidden"
         >
             {/* Glow effect on hover */}
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/0 to-purple-500/0 group-hover:from-blue-500/10 group-hover:to-purple-500/10 transition-all duration-500" />
@@ -70,10 +70,10 @@ function StatCard({ value, label, suffix = '', prefix = '', icon: Icon, delay = 
                         <Icon className="w-5 h-5 text-blue-400" />
                     </div>
                 </div>
-                <div className="text-2xl sm:text-3xl font-bold text-white mb-1">
+                <div className="text-2xl sm:text-3xl font-bold text-[rgb(var(--text-primary))] mb-1">
                     {prefix}{count}{suffix}
                 </div>
-                <div className="text-sm text-slate-400">{label}</div>
+                <div className="text-sm text-[rgb(var(--text-muted))]">{label}</div>
             </div>
         </motion.div>
     )
@@ -86,7 +86,7 @@ function FeaturePill({ children, delay = 0 }: { children: React.ReactNode; delay
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay, duration: 0.4 }}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/60 border border-slate-700/50 text-sm text-slate-300"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--card-bg)] border border-[var(--card-border)] text-sm text-[rgb(var(--text-secondary))]"
         >
             <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
             {children}
@@ -105,23 +105,23 @@ function DemoPreview() {
         >
             <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-purple-500 to-teal-500 rounded-3xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity duration-500" />
 
-            <div className="relative rounded-2xl bg-slate-900 border border-slate-700/50 overflow-hidden">
+            <div className="relative rounded-2xl bg-[rgb(var(--section-bg))] border border-[var(--card-border)] overflow-hidden">
                 {/* Mock Browser Header */}
-                <div className="flex items-center gap-2 px-4 py-3 bg-slate-800/50 border-b border-slate-700/50">
+                <div className="flex items-center gap-2 px-4 py-3 bg-[var(--card-bg)] border-b border-[var(--card-border)]">
                     <div className="flex gap-1.5">
                         <div className="w-3 h-3 rounded-full bg-red-500/60" />
                         <div className="w-3 h-3 rounded-full bg-yellow-500/60" />
                         <div className="w-3 h-3 rounded-full bg-green-500/60" />
                     </div>
                     <div className="flex-1 mx-4">
-                        <div className="h-6 rounded-md bg-slate-700/50 flex items-center px-3">
-                            <span className="text-xs text-slate-500">gaze-demo.app</span>
+                        <div className="h-6 rounded-md bg-black/10 flex items-center px-3">
+                            <span className="text-xs text-[rgb(var(--text-muted))]">gaze-demo.app</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Demo Content */}
-                <div className="aspect-video bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center relative">
+                <div className="aspect-video bg-gradient-to-br from-[rgb(var(--section-bg-alt))] to-[rgb(var(--section-bg))] flex items-center justify-center relative">
                     {/* Eye Tracking Visualization */}
                     <div className="absolute inset-0 flex items-center justify-center">
                         {/* Concentric circles */}
@@ -165,7 +165,7 @@ function DemoPreview() {
                 </div>
 
                 {/* Play Button Overlay */}
-                <Link href="/demo" className="absolute inset-0 flex items-center justify-center bg-slate-900/0 hover:bg-slate-900/40 transition-colors duration-300 group/play">
+                <Link href="/demo" className="absolute inset-0 flex items-center justify-center bg-black/0 hover:bg-black/20 transition-colors duration-300 group/play">
                     <motion.div
                         className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover/play:opacity-100 transition-opacity"
                         whileHover={{ scale: 1.1 }}
@@ -181,11 +181,11 @@ function DemoPreview() {
 
 export default function Hero() {
     return (
-        <section className="relative min-h-screen bg-slate-900 overflow-hidden">
+        <section className="relative min-h-screen bg-[rgb(var(--section-bg))] overflow-hidden">
             {/* Animated Background */}
             <div className="absolute inset-0">
                 {/* Base gradient */}
-                <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800" />
+                <div className="absolute inset-0 bg-gradient-to-b from-[rgb(var(--section-bg))] via-[rgb(var(--section-bg))] to-[rgb(var(--section-bg-alt))]" />
 
                 {/* Animated gradient orbs */}
                 <motion.div
@@ -234,12 +234,12 @@ export default function Hero() {
                     animate={{ opacity: 1, y: 0 }}
                     className="flex justify-center mb-8"
                 >
-                    <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-slate-800/60 border border-slate-700/50 backdrop-blur-sm">
+                    <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-[var(--card-bg)] border border-[var(--card-border)] backdrop-blur-sm">
                         <span className="relative flex h-2 w-2">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                         </span>
-                        <span className="text-sm font-medium text-slate-300">Open Source • Medical-Grade Accessibility</span>
+                        <span className="text-sm font-medium text-[rgb(var(--text-secondary))]">Open Source • Medical-Grade Accessibility</span>
                     </div>
                 </motion.div>
 
@@ -255,14 +255,14 @@ export default function Hero() {
                         {/* Headline */}
                         <motion.div variants={itemVariants} className="space-y-4">
                             <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.1] tracking-tight">
-                                <span className="text-white">Giving </span>
+                                <span className="text-[rgb(var(--text-primary))]">Giving </span>
                                 <span style={{ background: 'linear-gradient(to right, #60a5fa, #a78bfa, #2dd4bf)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Voice</span>
                                 <br />
-                                <span className="text-white">to the </span>
+                                <span className="text-[rgb(var(--text-primary))]">to the </span>
                                 <span style={{ background: 'linear-gradient(to right, #a78bfa, #60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Paralyzed</span>
                             </h1>
 
-                            <p className="text-lg sm:text-xl text-slate-400 max-w-xl leading-relaxed">
+                            <p className="text-lg sm:text-xl text-[rgb(var(--text-secondary))] max-w-xl leading-relaxed">
                                 Medical-grade eye-tracking communication that works on any smartphone.
                                 No expensive hardware. Just a camera and our AI.
                             </p>
@@ -297,7 +297,7 @@ export default function Hero() {
                                 <motion.button
                                     whileHover={{ scale: 1.02, y: -2 }}
                                     whileTap={{ scale: 0.98 }}
-                                    className="w-full sm:w-auto px-8 py-4 rounded-2xl font-semibold text-white bg-slate-800/80 border border-slate-700 hover:bg-slate-700/80 hover:border-slate-600 transition-all"
+                                    className="w-full sm:w-auto px-8 py-4 rounded-2xl font-semibold text-[rgb(var(--text-primary))] bg-[var(--card-bg)] border border-[var(--card-border)] hover:bg-black/5 transition-all"
                                 >
                                     For Institutions
                                 </motion.button>
@@ -350,10 +350,10 @@ export default function Hero() {
                             ].map((item, i) => (
                                 <div
                                     key={item.label}
-                                    className="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-800/40 border border-slate-700/30"
+                                    className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[var(--card-bg)] border border-[var(--card-border)]"
                                 >
-                                    <item.icon className="w-4 h-4 text-slate-400" />
-                                    <span className="text-sm text-slate-400">{item.label}</span>
+                                    <item.icon className="w-4 h-4 text-[rgb(var(--text-muted))]" />
+                                    <span className="text-sm text-[rgb(var(--text-secondary))]">{item.label}</span>
                                 </div>
                             ))}
                         </motion.div>
@@ -367,14 +367,14 @@ export default function Hero() {
                     transition={{ delay: 1.5 }}
                     className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden lg:flex flex-col items-center gap-2"
                 >
-                    <span className="text-xs text-slate-500">Scroll to explore</span>
+                    <span className="text-xs text-[rgb(var(--text-muted))]">Scroll to explore</span>
                     <motion.div
                         animate={{ y: [0, 8, 0] }}
                         transition={{ duration: 1.5, repeat: Infinity }}
                         className="w-6 h-10 rounded-full border-2 border-slate-700 flex items-start justify-center p-2"
                     >
                         <motion.div
-                            className="w-1 h-2 rounded-full bg-slate-500"
+                            className="w-1 h-2 rounded-full bg-[rgb(var(--text-muted))]"
                             animate={{ opacity: [0.3, 1, 0.3] }}
                             transition={{ duration: 1.5, repeat: Infinity }}
                         />

@@ -34,7 +34,7 @@ export default function Navigation() {
   return (
     <motion.nav
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled
-        ? 'bg-slate-900/95 backdrop-blur-xl border-b border-slate-800/50 shadow-lg shadow-slate-900/20'
+        ? 'bg-[var(--nav-bg)] backdrop-blur-xl border-b border-[var(--nav-border)] shadow-lg shadow-black/10'
         : 'bg-transparent'
         }`}
       initial={mounted ? { y: -100 } : false}
@@ -54,7 +54,7 @@ export default function Navigation() {
               <Eye className="w-5 h-5 text-white" />
             </motion.div>
             <motion.span
-              className="text-xl font-bold text-white group-hover:text-gradient transition-all duration-300"
+              className="text-xl font-bold text-[rgb(var(--text-primary))] group-hover:text-gradient transition-all duration-300"
               whileHover={{ scale: 1.02 }}
             >
               GAZE
@@ -72,7 +72,7 @@ export default function Navigation() {
               >
                 <Link
                   href={item.href}
-                  className="text-sm font-medium text-slate-300 hover:text-white transition-colors relative group py-2 dark:text-slate-300 dark:hover:text-white"
+                  className="text-sm font-medium text-[rgb(var(--text-secondary))] hover:text-[rgb(var(--text-primary))] transition-colors relative group py-2"
                 >
                   {item.label}
                   <motion.span
@@ -105,7 +105,7 @@ export default function Navigation() {
           {/* Mobile Toggle */}
           <motion.button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden text-slate-300 hover:text-white p-2 rounded-lg hover:bg-slate-800 transition relative"
+            className="md:hidden text-[rgb(var(--text-secondary))] hover:text-[rgb(var(--text-primary))] p-2 rounded-lg hover:bg-black/10 transition relative"
             aria-label="Toggle navigation"
             whileTap={{ scale: 0.9 }}
           >
@@ -143,7 +143,7 @@ export default function Navigation() {
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="md:hidden border-t border-slate-700/50 overflow-hidden bg-slate-900/95 backdrop-blur-xl"
+              className="md:hidden border-t border-[var(--nav-border)] overflow-hidden bg-[var(--nav-bg)] backdrop-blur-xl"
             >
               <div className="py-4 space-y-1">
                 {navItems.map((item, index) => (
@@ -155,7 +155,7 @@ export default function Navigation() {
                   >
                     <Link
                       href={item.href}
-                      className="flex items-center justify-between px-4 py-3 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-lg transition group"
+                      className="flex items-center justify-between px-4 py-3 text-sm font-medium text-[rgb(var(--text-secondary))] hover:text-[rgb(var(--text-primary))] hover:bg-black/10 rounded-lg transition group"
                       onClick={() => setIsOpen(false)}
                     >
                       <span>{item.label}</span>
@@ -170,7 +170,7 @@ export default function Navigation() {
                   transition={{ delay: 0.15 }}
                   className="px-4 py-2 flex items-center justify-between"
                 >
-                  <span className="text-sm font-medium text-slate-400">Theme</span>
+                  <span className="text-sm font-medium text-[rgb(var(--text-muted))]">Theme</span>
                   <ThemeToggle />
                 </motion.div>
 

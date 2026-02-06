@@ -79,10 +79,10 @@ const plans = [
 
 export default function Pricing() {
   return (
-    <section className="relative py-24 sm:py-32 bg-slate-900 overflow-hidden">
+    <section className="relative py-24 sm:py-32 bg-[rgb(var(--section-bg))] overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0">
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent" />
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[rgb(var(--bg-tertiary))] to-transparent" />
         <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[120px]" />
         <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[100px]" />
 
@@ -114,14 +114,14 @@ export default function Pricing() {
             <span className="text-sm font-medium text-blue-300">Simple Pricing</span>
           </motion.div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[rgb(var(--text-primary))] mb-6">
             Accessible for{' '}
             <span style={{ background: 'linear-gradient(to right, #60a5fa, #a78bfa, #2dd4bf)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
               Everyone
             </span>
           </h2>
 
-          <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+          <p className="text-lg text-[rgb(var(--text-secondary))] max-w-2xl mx-auto">
             Personal use is always free. Institutions pay to support development
             and unlock advanced clinical features.
           </p>
@@ -150,8 +150,8 @@ export default function Pricing() {
               )}
 
               <div className={`relative h-full p-6 sm:p-8 rounded-2xl border backdrop-blur-sm transition-all duration-300 ${plan.popular
-                ? 'bg-slate-900 border-slate-700/50'
-                : 'bg-slate-800/50 border-slate-700/50 hover:bg-slate-800/70 hover:border-slate-600/50'
+                ? 'bg-[rgb(var(--section-bg))] border-[var(--card-border)]'
+                : 'bg-[var(--card-bg)] border-[var(--card-border)] hover:bg-black/5 hover:border-black/10'
                 }`}>
 
                 {/* Popular Badge */}
@@ -170,12 +170,12 @@ export default function Pricing() {
 
                 {/* Plan Header */}
                 <div className="mb-6">
-                  <h3 className="text-xl font-bold text-white mb-2">{plan.name}</h3>
+                  <h3 className="text-xl font-bold text-[rgb(var(--text-primary))] mb-2">{plan.name}</h3>
                   <div className="flex items-baseline gap-1 mb-3">
-                    <span className="text-4xl sm:text-5xl font-bold text-white">{plan.price}</span>
-                    <span className="text-slate-500 text-sm">/{plan.period}</span>
+                    <span className="text-4xl sm:text-5xl font-bold text-[rgb(var(--text-primary))]">{plan.price}</span>
+                    <span className="text-[rgb(var(--text-muted))] text-sm">/{plan.period}</span>
                   </div>
-                  <p className="text-sm text-slate-400">{plan.description}</p>
+                  <p className="text-sm text-[rgb(var(--text-secondary))]">{plan.description}</p>
                 </div>
 
                 {/* Features */}
@@ -185,7 +185,7 @@ export default function Pricing() {
                       <div className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                         <Check className="w-3 h-3 text-emerald-400" />
                       </div>
-                      <span className="text-sm text-slate-300">{feature}</span>
+                      <span className="text-sm text-[rgb(var(--text-secondary))]">{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -197,7 +197,7 @@ export default function Pricing() {
                     whileTap={{ scale: 0.98 }}
                     className={`w-full py-3.5 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 group/btn ${plan.popular
                       ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40'
-                      : 'bg-slate-700/50 text-white border border-slate-600/50 hover:bg-slate-700 hover:border-slate-500'
+                      : 'bg-[var(--card-bg)] text-[rgb(var(--text-primary))] border border-[var(--card-border)] hover:bg-black/5'
                       }`}
                   >
                     {plan.cta}
@@ -215,7 +215,7 @@ export default function Pricing() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3 }}
-          className="mt-16 flex flex-wrap items-center justify-center gap-6 text-sm text-slate-500"
+          className="mt-16 flex flex-wrap items-center justify-center gap-6 text-sm text-[rgb(var(--text-muted))]"
         >
           {['No credit card required', 'Cancel anytime', '14-day free trial', 'HIPAA compliant'].map((item) => (
             <div key={item} className="flex items-center gap-2">

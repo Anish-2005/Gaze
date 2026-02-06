@@ -63,10 +63,10 @@ const useCases = [
 
 export default function UseCases() {
   return (
-    <section className="relative py-20 sm:py-32 bg-slate-800 overflow-hidden">
+    <section className="relative py-20 sm:py-32 bg-[rgb(var(--section-bg-alt))] overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0">
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-600 to-transparent" />
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[rgb(var(--bg-tertiary))] to-transparent" />
         <div className="absolute top-1/2 left-1/4 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[120px]" />
       </div>
 
@@ -83,14 +83,14 @@ export default function UseCases() {
             <span className="text-sm font-medium text-blue-400">Use Cases</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[rgb(var(--text-primary))] mb-6">
             Built for{' '}
             <span style={{ background: 'linear-gradient(to right, #60a5fa, #22d3ee)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
               Real-World Impact
             </span>
           </h2>
 
-          <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+          <p className="text-lg text-[rgb(var(--text-secondary))] max-w-2xl mx-auto">
             From emergency rooms to living rooms, GAZE adapts to diverse
             healthcare environments and patient needs.
           </p>
@@ -108,7 +108,7 @@ export default function UseCases() {
             <motion.div
               key={useCase.title}
               variants={itemVariants}
-              className="group relative p-6 rounded-2xl bg-slate-900/50 border border-slate-700/50 backdrop-blur-sm hover:border-slate-600/50 transition-all duration-300 overflow-hidden"
+              className="group relative p-6 rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)] backdrop-blur-sm hover:border-black/10 transition-all duration-300 overflow-hidden"
             >
               {/* Gradient accent on hover */}
               <div className={`absolute inset-0 bg-gradient-to-br ${useCase.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
@@ -119,18 +119,18 @@ export default function UseCases() {
               </div>
 
               {/* Content */}
-              <h3 className="text-xl font-semibold text-white mb-3">
+              <h3 className="text-xl font-semibold text-[rgb(var(--text-primary))] mb-3">
                 {useCase.title}
               </h3>
-              <p className="text-sm text-slate-400 leading-relaxed mb-4">
+              <p className="text-sm text-[rgb(var(--text-secondary))] leading-relaxed mb-4">
                 {useCase.description}
               </p>
 
               {/* Stats */}
-              <div className="pt-4 border-t border-slate-700/50">
+              <div className="pt-4 border-t border-[var(--card-border)]">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-bold text-white">{useCase.stats.value}</span>
-                  <span className="text-xs text-slate-500">{useCase.stats.label}</span>
+                  <span className="text-2xl font-bold text-[rgb(var(--text-primary))]">{useCase.stats.value}</span>
+                  <span className="text-xs text-[rgb(var(--text-muted))]">{useCase.stats.label}</span>
                 </div>
               </div>
             </motion.div>

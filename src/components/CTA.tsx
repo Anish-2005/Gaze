@@ -6,11 +6,11 @@ import Link from 'next/link'
 
 export default function CTA() {
   return (
-    <section className="relative py-20 sm:py-32 bg-slate-900 overflow-hidden">
+    <section className="relative py-20 sm:py-32 bg-[rgb(var(--section-bg))] overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0">
         {/* Gradient Mesh */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-slate-900 to-purple-900/20" />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/10 via-[rgb(var(--section-bg))] to-purple-900/10" />
 
         {/* Animated Orbs */}
         <motion.div
@@ -55,7 +55,7 @@ export default function CTA() {
           </div>
 
           {/* Headline */}
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[rgb(var(--text-primary))] mb-6 leading-tight">
             Ready to{' '}
             <span style={{ background: 'linear-gradient(to right, #60a5fa, #a78bfa, #2dd4bf)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
               Transform
@@ -64,7 +64,7 @@ export default function CTA() {
             Communication?
           </h2>
 
-          <p className="text-xl text-slate-400 mb-10 max-w-2xl mx-auto">
+          <p className="text-xl text-[rgb(var(--text-secondary))] mb-10 max-w-2xl mx-auto">
             Experience the future of accessible communication technology.
             Try GAZE today – no signup, no download, no cost.
           </p>
@@ -97,7 +97,7 @@ export default function CTA() {
               <motion.button
                 whileHover={{ scale: 1.03, y: -2 }}
                 whileTap={{ scale: 0.98 }}
-                className="px-10 py-5 rounded-2xl font-semibold text-white bg-slate-800/80 border border-slate-700 hover:bg-slate-700/80 hover:border-slate-600 transition-all text-lg"
+                className="px-10 py-5 rounded-2xl font-semibold text-[rgb(var(--text-primary))] bg-[var(--card-bg)] border border-[var(--card-border)] hover:bg-black/5 transition-all text-lg"
               >
                 For Institutions
               </motion.button>
@@ -110,7 +110,7 @@ export default function CTA() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
-            className="mt-12 flex flex-wrap items-center justify-center gap-6 text-sm text-slate-500"
+            className="mt-12 flex flex-wrap items-center justify-center gap-6 text-sm text-[rgb(var(--text-muted))]"
           >
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-emerald-400" />

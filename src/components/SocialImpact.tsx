@@ -64,10 +64,10 @@ const partners = [
 
 export default function SocialImpact() {
   return (
-    <section className="relative py-24 sm:py-32 bg-slate-800 overflow-hidden">
+    <section className="relative py-24 sm:py-32 bg-[rgb(var(--section-bg-alt))] overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0">
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-600 to-transparent" />
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[rgb(var(--bg-tertiary))] to-transparent" />
         <div className="absolute top-1/3 left-1/4 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[120px]" />
         <div className="absolute bottom-1/3 right-1/4 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[100px]" />
 
@@ -99,14 +99,14 @@ export default function SocialImpact() {
             <span className="text-sm font-medium text-pink-300">Social Impact</span>
           </motion.div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[rgb(var(--text-primary))] mb-6">
             Technology with{' '}
             <span style={{ background: 'linear-gradient(to right, #60a5fa, #a78bfa, #f472b6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
               Purpose
             </span>
           </h2>
 
-          <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+          <p className="text-lg text-[rgb(var(--text-secondary))] max-w-2xl mx-auto">
             We believe communication is a fundamental human right. Our mission is
             to make assistive technology accessible to everyone, everywhere.
           </p>
@@ -126,14 +126,14 @@ export default function SocialImpact() {
               <motion.div
                 key={metric.label}
                 variants={itemVariants}
-                className={`group relative p-6 rounded-2xl bg-slate-900/50 border ${colors.border} backdrop-blur-sm text-center transition-all duration-300 ${colors.hover}`}
+                className={`group relative p-6 rounded-2xl bg-[var(--card-bg)] border ${colors.border} backdrop-blur-sm text-center transition-all duration-300 ${colors.hover}`}
               >
                 <div className={`w-14 h-14 rounded-2xl ${colors.bg} ${colors.border} border flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform`}>
                   <metric.icon className={`w-7 h-7 ${colors.icon}`} />
                 </div>
-                <div className="text-3xl sm:text-4xl font-bold text-white mb-2">{metric.value}</div>
-                <div className="text-sm font-medium text-slate-300 mb-1">{metric.label}</div>
-                <div className="text-xs text-slate-500">{metric.description}</div>
+                <div className="text-3xl sm:text-4xl font-bold text-[rgb(var(--text-primary))] mb-2">{metric.value}</div>
+                <div className="text-sm font-medium text-[rgb(var(--text-secondary))] mb-1">{metric.label}</div>
+                <div className="text-xs text-[rgb(var(--text-muted))]">{metric.description}</div>
               </motion.div>
             )
           })}
@@ -149,23 +149,23 @@ export default function SocialImpact() {
             className="relative group"
           >
             <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity" />
-            <div className="relative p-8 rounded-2xl bg-slate-900 border border-slate-700/50 h-full">
+            <div className="relative p-8 rounded-2xl bg-[rgb(var(--section-bg))] border border-[var(--card-border)] h-full">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
                   <Sparkles className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-xl font-semibold text-white">Our Mission</h3>
+                <h3 className="text-xl font-semibold text-[rgb(var(--text-primary))]">Our Mission</h3>
               </div>
 
-              <blockquote className="text-lg sm:text-xl text-slate-300 italic mb-6 leading-relaxed">
+              <blockquote className="text-lg sm:text-xl text-[rgb(var(--text-secondary))] italic mb-6 leading-relaxed">
                 "Our goal is not profit – it's impact. Every feature we build,
                 every optimization we make, is measured by one metric:{' '}
-                <span className="text-white font-semibold not-italic">
+                <span className="text-[rgb(var(--text-primary))] font-semibold not-italic">
                   did it help someone communicate?
                 </span>"
               </blockquote>
 
-              <p className="text-sm text-slate-500">— The GAZE Team</p>
+              <p className="text-sm text-[rgb(var(--text-muted))]">— The GAZE Team</p>
             </div>
           </motion.div>
 
@@ -174,18 +174,18 @@ export default function SocialImpact() {
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="p-8 rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-slate-700/50"
+            className="p-8 rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)]"
           >
-            <h3 className="text-xl font-semibold text-white mb-6">Join the Movement</h3>
+            <h3 className="text-xl font-semibold text-[rgb(var(--text-primary))] mb-6">Join the Movement</h3>
 
-            <p className="text-slate-400 mb-6">
+            <p className="text-[rgb(var(--text-secondary))] mb-6">
               We partner with organizations worldwide to bring accessible
               communication to those who need it most.
             </p>
 
             <div className="grid grid-cols-2 gap-3 mb-8">
               {partners.map((partner) => (
-                <div key={partner} className="flex items-center gap-2 text-sm text-slate-400">
+                <div key={partner} className="flex items-center gap-2 text-sm text-[rgb(var(--text-secondary))]">
                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                   {partner}
                 </div>
