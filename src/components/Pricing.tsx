@@ -1,8 +1,21 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Check, Sparkles, Building2, Users, ArrowRight } from 'lucide-react'
+import { Check, Sparkles, Building2, Users, ArrowRight, Zap } from 'lucide-react'
 import Link from 'next/link'
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15, delayChildren: 0.2 }
+  }
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+}
 
 const plans = [
   {
@@ -19,7 +32,9 @@ const plans = [
     ],
     cta: 'Get Started Free',
     href: '/demo',
-    popular: false
+    popular: false,
+    icon: Users,
+    gradient: 'from-slate-500 to-slate-600'
   },
   {
     name: 'Clinical',
@@ -36,12 +51,14 @@ const plans = [
     ],
     cta: 'Start Free Trial',
     href: '/institutions',
-    popular: true
+    popular: true,
+    icon: Building2,
+    gradient: 'from-blue-500 to-purple-600'
   },
   {
     name: 'Enterprise',
     price: 'Custom',
-    period: '',
+    period: 'pricing',
     description: 'For hospital networks and large institutions.',
     features: [
       'Everything in Clinical',
@@ -54,17 +71,29 @@ const plans = [
     ],
     cta: 'Contact Sales',
     href: '/institutions',
-    popular: false
+    popular: false,
+    icon: Zap,
+    gradient: 'from-purple-500 to-pink-600'
   }
 ]
 
 export default function Pricing() {
   return (
-    <section className="relative py-20 sm:py-32 bg-slate-800 overflow-hidden">
+    <section className="relative py-24 sm:py-32 bg-slate-900 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0">
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-600 to-transparent" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-blue-500/5 rounded-full blur-[120px]" />
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent" />
+        <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[120px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[100px]" />
+
+        {/* Grid pattern */}
+        <div
+          className="absolute inset-0 opacity-[0.02]"
+          style={{
+            backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)',
+            backgroundSize: '40px 40px'
+          }}
+        />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
@@ -75,100 +104,126 @@ export default function Pricing() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/20 mb-6">
-            <Sparkles className="w-4 h-4 text-amber-400" />
-            <span className="text-sm font-medium text-amber-400">Pricing</span>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 mb-6"
+          >
+            <Sparkles className="w-4 h-4 text-blue-400" />
+            <span className="text-sm font-medium text-blue-300">Simple Pricing</span>
+          </motion.div>
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
-            Accessible{' '}
-            <span className="bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
-              Pricing
+            Accessible for{' '}
+            <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-teal-400 bg-clip-text text-transparent">
+              Everyone
             </span>
-            {' '}for All
           </h2>
 
           <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-            Our mission is accessibility. Personal use is always free.
-            Institutions pay to support development and get premium features.
+            Personal use is always free. Institutions pay to support development
+            and unlock advanced clinical features.
           </p>
         </motion.div>
 
         {/* Pricing Cards */}
-        <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto"
+        >
           {plans.map((plan, index) => (
             <motion.div
               key={plan.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className={`relative p-6 sm:p-8 rounded-2xl border backdrop-blur-sm transition-all duration-300 ${plan.popular
-                  ? 'bg-gradient-to-b from-slate-800 to-slate-900 border-blue-500/50 shadow-xl shadow-blue-500/10'
-                  : 'bg-slate-900/50 border-slate-700/50 hover:border-slate-600/50'
+              variants={itemVariants}
+              className={`group relative rounded-2xl transition-all duration-500 ${plan.popular
+                  ? 'md:-mt-4 md:mb-4'
+                  : ''
                 }`}
             >
-              {/* Popular Badge */}
+              {/* Glow effect for popular */}
               {plan.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <div className="px-4 py-1 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-xs font-semibold text-white">
-                    Most Popular
-                  </div>
-                </div>
+                <div className="absolute -inset-[1px] bg-gradient-to-r from-blue-500 via-purple-500 to-teal-500 rounded-2xl blur opacity-30 group-hover:opacity-50 transition-opacity" />
               )}
 
-              {/* Plan Header */}
-              <div className="mb-6">
-                <div className="flex items-center gap-2 mb-2">
-                  {plan.name === 'Personal' && <Users className="w-5 h-5 text-slate-400" />}
-                  {plan.name === 'Clinical' && <Building2 className="w-5 h-5 text-blue-400" />}
-                  {plan.name === 'Enterprise' && <Building2 className="w-5 h-5 text-purple-400" />}
-                  <span className="font-semibold text-white">{plan.name}</span>
+              <div className={`relative h-full p-6 sm:p-8 rounded-2xl border backdrop-blur-sm transition-all duration-300 ${plan.popular
+                  ? 'bg-slate-900 border-slate-700/50'
+                  : 'bg-slate-800/50 border-slate-700/50 hover:bg-slate-800/70 hover:border-slate-600/50'
+                }`}>
+
+                {/* Popular Badge */}
+                {plan.popular && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                    <div className="px-4 py-1.5 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-xs font-bold text-white shadow-lg shadow-blue-500/30">
+                      MOST POPULAR
+                    </div>
+                  </div>
+                )}
+
+                {/* Plan Icon */}
+                <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${plan.gradient} flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform`}>
+                  <plan.icon className="w-7 h-7 text-white" />
                 </div>
-                <div className="flex items-baseline gap-1 mb-2">
-                  <span className="text-4xl font-bold text-white">{plan.price}</span>
-                  <span className="text-slate-500">{plan.period}</span>
+
+                {/* Plan Header */}
+                <div className="mb-6">
+                  <h3 className="text-xl font-bold text-white mb-2">{plan.name}</h3>
+                  <div className="flex items-baseline gap-1 mb-3">
+                    <span className="text-4xl sm:text-5xl font-bold text-white">{plan.price}</span>
+                    <span className="text-slate-500 text-sm">/{plan.period}</span>
+                  </div>
+                  <p className="text-sm text-slate-400">{plan.description}</p>
                 </div>
-                <p className="text-sm text-slate-400">{plan.description}</p>
+
+                {/* Features */}
+                <ul className="space-y-3 mb-8">
+                  {plan.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-3">
+                      <div className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <Check className="w-3 h-3 text-emerald-400" />
+                      </div>
+                      <span className="text-sm text-slate-300">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                {/* CTA */}
+                <Link href={plan.href} className="block mt-auto">
+                  <motion.button
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    className={`w-full py-3.5 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 group/btn ${plan.popular
+                        ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40'
+                        : 'bg-slate-700/50 text-white border border-slate-600/50 hover:bg-slate-700 hover:border-slate-500'
+                      }`}
+                  >
+                    {plan.cta}
+                    <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                  </motion.button>
+                </Link>
               </div>
-
-              {/* Features */}
-              <ul className="space-y-3 mb-8">
-                {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-slate-300">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-
-              {/* CTA */}
-              <Link href={plan.href}>
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={`w-full py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 group ${plan.popular
-                      ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg shadow-blue-500/20'
-                      : 'bg-slate-800 text-white border border-slate-700 hover:bg-slate-700'
-                    }`}
-                >
-                  {plan.cta}
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </motion.button>
-              </Link>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        {/* Bottom Note */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+        {/* Bottom Features */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center text-sm text-slate-500 mt-12"
+          transition={{ delay: 0.3 }}
+          className="mt-16 flex flex-wrap items-center justify-center gap-6 text-sm text-slate-500"
         >
-          All plans include unlimited users. No hidden fees. Cancel anytime.
-        </motion.p>
+          {['No credit card required', 'Cancel anytime', '14-day free trial', 'HIPAA compliant'].map((item) => (
+            <div key={item} className="flex items-center gap-2">
+              <Check className="w-4 h-4 text-emerald-400" />
+              <span>{item}</span>
+            </div>
+          ))}
+        </motion.div>
       </div>
     </section>
   )
