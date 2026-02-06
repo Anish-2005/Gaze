@@ -7,7 +7,7 @@ import { motion } from 'framer-motion'
 // Premium loading skeleton
 function ComponentLoader() {
   return (
-    <div className="min-h-[60vh] flex items-center justify-center bg-slate-900">
+    <div className="min-h-[60vh] flex items-center justify-center">
       <div className="flex flex-col items-center gap-4">
         <motion.div
           className="w-12 h-12 rounded-full border-2 border-blue-500 border-t-transparent"
@@ -61,7 +61,7 @@ const Footer = dynamic(() => import('@/components/Footer'), {
 // Error fallback component
 function ComponentErrorFallback({ componentName }: { componentName: string }) {
   return (
-    <div className="min-h-[40vh] flex items-center justify-center bg-slate-900">
+    <div className="min-h-[40vh] flex items-center justify-center">
       <div className="text-center p-8 rounded-2xl bg-slate-800/50 border border-slate-700/50 max-w-md mx-4">
         <div className="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center mx-auto mb-4">
           <span className="text-2xl">⚠️</span>

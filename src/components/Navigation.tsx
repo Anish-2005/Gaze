@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Menu, X, Eye, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
+import ThemeToggle from './ThemeToggle'
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
@@ -71,7 +72,7 @@ export default function Navigation() {
               >
                 <Link
                   href={item.href}
-                  className="text-sm font-medium text-slate-300 hover:text-white transition-colors relative group py-2"
+                  className="text-sm font-medium text-slate-300 hover:text-white transition-colors relative group py-2 dark:text-slate-300 dark:hover:text-white"
                 >
                   {item.label}
                   <motion.span
@@ -84,6 +85,8 @@ export default function Navigation() {
               </motion.div>
             ))}
 
+            <ThemeToggle />
+
             <Link href="/demo">
               <motion.button
                 initial={mounted ? { opacity: 0, scale: 0.9 } : false}
@@ -91,7 +94,7 @@ export default function Navigation() {
                 transition={{ delay: mounted ? 0.3 : 0 }}
                 whileHover={{ scale: 1.05, y: -1 }}
                 whileTap={{ scale: 0.95 }}
-                className="ml-4 px-5 py-2.5 rounded-xl font-medium text-white bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 transition-all btn-shimmer flex items-center gap-2 group"
+                className="ml-2 px-5 py-2.5 rounded-xl font-medium text-white bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 transition-all btn-shimmer flex items-center gap-2 group"
               >
                 <span>Live Demo</span>
                 <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -160,6 +163,16 @@ export default function Navigation() {
                     </Link>
                   </motion.div>
                 ))}
+
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.15 }}
+                  className="px-4 py-2 flex items-center justify-between"
+                >
+                  <span className="text-sm font-medium text-slate-400">Theme</span>
+                  <ThemeToggle />
+                </motion.div>
 
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
