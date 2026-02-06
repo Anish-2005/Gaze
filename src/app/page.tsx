@@ -2,6 +2,7 @@
 
 import { lazy, Suspense } from 'react'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { motion } from 'framer-motion'
 
 // Lazy load components for better performance
 const Hero = lazy(() => import('@/components/Hero'))
@@ -14,11 +15,18 @@ const SocialImpact = lazy(() => import('@/components/SocialImpact'))
 const CTA = lazy(() => import('@/components/CTA'))
 const Footer = lazy(() => import('@/components/Footer'))
 
-// Loading component
+// Premium loading skeleton
 function ComponentLoader() {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+    <div className="min-h-[60vh] flex items-center justify-center bg-slate-900">
+      <div className="flex flex-col items-center gap-4">
+        <motion.div
+          className="w-12 h-12 rounded-full border-2 border-blue-500 border-t-transparent"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+        />
+        <span className="text-sm text-slate-500">Loading...</span>
+      </div>
     </div>
   )
 }
@@ -26,17 +34,20 @@ function ComponentLoader() {
 // Error fallback component
 function ComponentErrorFallback({ componentName }: { componentName: string }) {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+    <div className="min-h-[40vh] flex items-center justify-center bg-slate-900">
+      <div className="text-center p-8 rounded-2xl bg-slate-800/50 border border-slate-700/50 max-w-md mx-4">
+        <div className="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center mx-auto mb-4">
+          <span className="text-2xl">⚠️</span>
+        </div>
+        <h2 className="text-xl font-semibold text-white mb-2">
           Failed to load {componentName}
         </h2>
-        <p className="text-gray-600 mb-4">
+        <p className="text-slate-400 mb-4">
           Please refresh the page to try again.
         </p>
         <button
           onClick={() => window.location.reload()}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+          className="px-6 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-medium transition-colors"
         >
           Refresh Page
         </button>
@@ -64,7 +75,7 @@ function LazyComponent({
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen bg-slate-900">
       <LazyComponent Component={Hero} componentName="Hero" />
       <LazyComponent Component={Problem} componentName="Problem" />
       <LazyComponent Component={Solution} componentName="Solution" />
