@@ -1,141 +1,90 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Hospital, Home, GraduationCap, Stethoscope, HeartPulse, Building2 } from 'lucide-react'
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.2 }
-  }
-}
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
-}
+import { Building2, GraduationCap, HeartPulse, Home, Hospital, Stethoscope } from 'lucide-react'
 
 const useCases = [
   {
-    title: 'Intensive Care Units',
-    description: 'Enable communication for ventilated patients who cannot speak or move. Quick deployment when every moment matters.',
+    title: 'Intensive care units',
+    description: 'Supports communication for ventilated or immobile patients during high-acuity treatment windows.',
+    context: 'Critical care support',
     icon: HeartPulse,
-    gradient: 'from-red-500 to-rose-600',
-    stats: { value: '47%', label: 'of ICU patients' }
   },
   {
-    title: 'Rehabilitation Centers',
-    description: 'Support stroke and TBI recovery with adaptive communication tools that grow with patient progress.',
+    title: 'Rehabilitation centers',
+    description: 'Enables continuity between speech therapy plans and day-to-day communication practice.',
+    context: 'Recovery pathway',
     icon: Hospital,
-    gradient: 'from-blue-500 to-cyan-600',
-    stats: { value: '2.4M', label: 'stroke survivors/yr' }
   },
   {
-    title: 'Home Care',
-    description: 'Empower patients with ALS, MS, and other conditions to communicate independently from home.',
+    title: 'Home care environments',
+    description: 'Gives patients and families a reliable communication channel without expensive hardware procurement.',
+    context: 'At-home independence',
     icon: Home,
-    gradient: 'from-emerald-500 to-teal-600',
-    stats: { value: '30K+', label: 'US ALS patients' }
   },
   {
-    title: 'Research Institutions',
-    description: 'Conduct accessible communication research with standardized, affordable eye-tracking.',
-    icon: GraduationCap,
-    gradient: 'from-purple-500 to-violet-600',
-    stats: { value: '500+', label: 'research labs' }
-  },
-  {
-    title: 'Pediatric Care',
-    description: 'Child-friendly interfaces designed for young patients with communication challenges.',
+    title: 'Pediatric care',
+    description: 'Provides adaptable interfaces for younger patients with neuromotor or speech limitations.',
+    context: 'Child-centered design',
     icon: Stethoscope,
-    gradient: 'from-pink-500 to-rose-600',
-    stats: { value: '1 in 68', label: 'children affected' }
   },
   {
-    title: 'Senior Care Facilities',
-    description: 'Bridge communication gaps for elderly patients with dementia or reduced mobility.',
+    title: 'Research institutions',
+    description: 'Offers a repeatable, affordable platform for communication and human-computer interaction studies.',
+    context: 'Research enablement',
+    icon: GraduationCap,
+  },
+  {
+    title: 'Senior care facilities',
+    description: 'Helps residents with progressive neurological conditions maintain clearer communication with staff.',
+    context: 'Long-term care',
     icon: Building2,
-    gradient: 'from-amber-500 to-orange-600',
-    stats: { value: '5.8M', label: 'with dementia' }
-  }
+  },
 ]
 
 export default function UseCases() {
   return (
-    <section className="relative py-20 sm:py-32 bg-[rgb(var(--section-bg-alt))] overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[rgb(var(--bg-tertiary))] to-transparent" />
-        <div className="absolute top-1/2 left-1/4 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[120px]" />
-      </div>
-
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
+    <section className="section-shell-alt">
+      <div className="section-grid">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
+          viewport={{ once: true, margin: '-120px' }}
+          className="mx-auto max-w-3xl text-center"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 mb-6">
-            <Hospital className="w-4 h-4 text-blue-400" />
-            <span className="text-sm font-medium text-blue-400">Use Cases</span>
+          <div className="section-badge mx-auto mb-5">
+            <Hospital className="h-3.5 w-3.5" />
+            Deployment contexts
           </div>
-
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[rgb(var(--text-primary))] mb-6">
-            Built for{' '}
-            <span style={{ background: 'linear-gradient(to right, #60a5fa, #22d3ee)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-              Real-World Impact
-            </span>
-          </h2>
-
-          <p className="text-lg text-[rgb(var(--text-secondary))] max-w-2xl mx-auto">
-            From emergency rooms to living rooms, GAZE adapts to diverse
-            healthcare environments and patient needs.
+          <h2 className="section-title">Built for clinical reality, not just lab demos.</h2>
+          <p className="section-subtitle mx-auto">
+            GAZE adapts to the workflows of hospitals, rehabilitation teams, and families while keeping the user experience simple.
           </p>
         </motion.div>
 
-        {/* Use Cases Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-          {useCases.map((useCase) => (
-            <motion.div
+        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {useCases.map((useCase, index) => (
+            <motion.article
               key={useCase.title}
-              variants={itemVariants}
-              className="group relative p-6 rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)] backdrop-blur-sm hover:border-black/10 transition-all duration-300 overflow-hidden"
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{ delay: index * 0.05 }}
+              className="surface-card-hover p-6"
             >
-              {/* Gradient accent on hover */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${useCase.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
-
-              {/* Icon */}
-              <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${useCase.gradient} flex items-center justify-center mb-5 shadow-lg group-hover:scale-110 transition-transform`}>
-                <useCase.icon className="w-7 h-7 text-white" />
+              <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-cyan-500/10 text-cyan-400">
+                <useCase.icon className="h-5 w-5" />
               </div>
-
-              {/* Content */}
-              <h3 className="text-xl font-semibold text-[rgb(var(--text-primary))] mb-3">
-                {useCase.title}
-              </h3>
-              <p className="text-sm text-[rgb(var(--text-secondary))] leading-relaxed mb-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.08em]" style={{ color: 'rgb(var(--text-muted))' }}>
+                {useCase.context}
+              </p>
+              <h3 className="mt-2 text-lg font-semibold">{useCase.title}</h3>
+              <p className="mt-3 text-sm leading-relaxed" style={{ color: 'rgb(var(--text-secondary))' }}>
                 {useCase.description}
               </p>
-
-              {/* Stats */}
-              <div className="pt-4 border-t border-[var(--card-border)]">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-bold text-[rgb(var(--text-primary))]">{useCase.stats.value}</span>
-                  <span className="text-xs text-[rgb(var(--text-muted))]">{useCase.stats.label}</span>
-                </div>
-              </div>
-            </motion.div>
+            </motion.article>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   )
