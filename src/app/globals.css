@@ -178,23 +178,44 @@
   }
 
   .glass {
-    @apply surface-card;
+    @apply rounded-2xl border backdrop-blur-sm;
+    background: var(--card-bg);
+    border-color: var(--card-border);
   }
 
   .glass-dark {
-    @apply surface-card-strong;
+    @apply rounded-2xl border backdrop-blur-sm;
+    background: var(--card-bg-strong);
+    border-color: var(--card-border);
   }
 
   .glass-card {
-    @apply surface-card;
+    @apply rounded-2xl border backdrop-blur-sm;
+    background: var(--card-bg);
+    border-color: var(--card-border);
   }
 
   .card-hover {
-    @apply surface-card-hover;
+    @apply rounded-2xl border backdrop-blur-sm transition-all duration-300;
+    background: var(--card-bg);
+    border-color: var(--card-border);
+  }
+
+  .card-hover:hover {
+    border-color: color-mix(in oklab, rgb(var(--accent-blue)) 35%, var(--card-border));
+    transform: translateY(-2px);
+    box-shadow: 0 16px 36px rgba(5, 12, 24, 0.16);
   }
 
   .btn-primary {
-    @apply btn-brand;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold text-white;
+    background: linear-gradient(120deg, rgb(var(--accent-blue)) 0%, rgb(var(--accent-cyan)) 100%);
+    box-shadow: 0 10px 24px color-mix(in oklab, rgb(var(--accent-blue)) 35%, transparent);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 28px color-mix(in oklab, rgb(var(--accent-blue)) 44%, transparent);
   }
 
   .btn-shimmer {
