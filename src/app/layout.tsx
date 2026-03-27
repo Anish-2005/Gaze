@@ -1,19 +1,6 @@
-import { Manrope, Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
 import ClientLayout from '@/components/ClientLayout'
 import { Suspense } from 'react'
-
-const plusJakarta = Plus_Jakarta_Sans({
-  subsets: ['latin'],
-  variable: '--font-plus-jakarta',
-  display: 'swap',
-})
-
-const manrope = Manrope({
-  subsets: ['latin'],
-  variable: '--font-manrope',
-  display: 'swap',
-})
 
 export const metadata = {
   title: 'GAZE - Giving Voice to the Paralyzed',
@@ -47,7 +34,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${plusJakarta.variable} ${manrope.variable} font-sans antialiased min-h-screen flex flex-col`}>
+      <body className="font-sans antialiased min-h-screen flex flex-col">
         <Suspense fallback={<div>Loading...</div>}>
           <ClientLayout>
             {children}

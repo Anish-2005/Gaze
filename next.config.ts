@@ -4,8 +4,10 @@ const nextConfig: NextConfig = {
   // Performance optimizations
   reactCompiler: true,
 
-  // Turbopack configuration to allow webpack usage
-  turbopack: {},
+  // Turbopack configuration to keep project root scoped to this workspace
+  turbopack: {
+    root: process.cwd(),
+  },
 
   // Enable typed routes
   typedRoutes: true,

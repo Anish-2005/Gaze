@@ -57,7 +57,7 @@
   }
 
   body {
-    font-family: var(--font-plus-jakarta), sans-serif;
+    font-family: "Aptos", "Segoe UI Variable", "Segoe UI", "Trebuchet MS", sans-serif;
     background-image:
       radial-gradient(circle at 15% 12%, rgba(var(--accent-blue), 0.14), transparent 42%),
       radial-gradient(circle at 85% 4%, rgba(var(--accent-cyan), 0.1), transparent 38%),
@@ -69,7 +69,7 @@
   h2,
   h3,
   h4 {
-    font-family: var(--font-manrope), sans-serif;
+    font-family: "Avenir Next", "Segoe UI Semibold", "Segoe UI", "Trebuchet MS", sans-serif;
     letter-spacing: -0.02em;
   }
 
