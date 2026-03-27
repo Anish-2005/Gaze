@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { motion } from 'framer-motion'
 import { Sun, Moon } from 'lucide-react'
@@ -20,10 +20,11 @@ export default function ThemeToggle() {
       aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
     >
       {theme === 'dark' ? (
-        <Moon className="h-4.5 w-4.5" style={{ color: 'rgb(var(--text-secondary))' }} />
+        <Moon className="h-[18px] w-[18px]" style={{ color: 'rgb(var(--text-secondary))' }} />
       ) : (
-        <Sun className="h-4.5 w-4.5" style={{ color: 'rgb(var(--accent-blue))' }} />
+        <Sun className="h-[18px] w-[18px]" style={{ color: 'rgb(var(--accent-blue))' }} />
       )}
     </motion.button>
   )
 }
+

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { motion } from 'framer-motion'
 import { AlertTriangle, Clock3, DollarSign, Globe2, Users } from 'lucide-react'
@@ -87,3 +87,4 @@ export default function Problem() {
     </section>
   )
 }
+

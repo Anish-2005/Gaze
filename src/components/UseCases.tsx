@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { motion } from 'framer-motion'
 import { Building2, GraduationCap, HeartPulse, Home, Hospital, Stethoscope } from 'lucide-react'
@@ -89,3 +89,4 @@ export default function UseCases() {
     </section>
   )
 }
+

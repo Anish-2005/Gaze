@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { motion } from 'framer-motion'
 import { ArrowRight, Building2, Check, User, Workflow } from 'lucide-react'
@@ -106,3 +106,4 @@ export default function Pricing() {
     </section>
   )
 }
+

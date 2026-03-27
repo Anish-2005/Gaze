@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { motion } from 'framer-motion'
 import { ArrowRight, Brain, CheckCircle2, Globe2, ShieldCheck, Smartphone, Wifi } from 'lucide-react'
@@ -109,3 +109,4 @@ export default function Solution() {
     </section>
   )
 }
+

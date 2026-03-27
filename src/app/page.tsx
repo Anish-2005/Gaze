@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import dynamic from 'next/dynamic'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
@@ -64,7 +64,7 @@ function ComponentErrorFallback({ componentName }: { componentName: string }) {
     <div className="min-h-[40vh] flex items-center justify-center">
       <div className="text-center p-8 rounded-2xl bg-slate-800/50 border border-slate-700/50 max-w-md mx-4">
         <div className="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center mx-auto mb-4">
-          <span className="text-2xl">⚠️</span>
+          <span className="text-2xl font-bold text-red-300">!</span>
         </div>
         <h2 className="text-xl font-semibold text-white mb-2">
           Failed to load {componentName}

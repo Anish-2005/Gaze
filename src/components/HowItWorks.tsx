@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { motion } from 'framer-motion'
 import { Brain, Camera, CheckCircle2, MessageSquareText, Monitor } from 'lucide-react'
@@ -95,3 +95,4 @@ export default function HowItWorks() {
     </section>
   )
 }
+

@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 @layer base {
   :root,
@@ -293,3 +293,4 @@
   background: color-mix(in oklab, rgb(var(--accent-blue)) 26%, transparent);
   color: rgb(var(--text-primary));
 }
+

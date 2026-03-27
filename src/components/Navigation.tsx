@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { Menu, X, Eye, ArrowUpRight } from 'lucide-react'
@@ -44,7 +44,7 @@ export default function Navigation() {
         <div className="flex h-16 items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-sky-500 text-white shadow-[0_10px_24px_rgba(37,99,235,0.35)]">
-              <Eye className="h-4.5 w-4.5" />
+              <Eye className="h-[18px] w-[18px]" />
             </div>
             <div>
               <p className="text-sm font-semibold leading-tight" style={{ color: 'rgb(var(--text-primary))' }}>
@@ -129,3 +129,4 @@ export default function Navigation() {
     </nav>
   )
 }
+
