@@ -1,253 +1,137 @@
-# GAZE 🤖
+﻿# GAZE
 
-[![Next.js](https://img.shields.io/badge/Next.js-16.1.4-black)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React-19.2.3-blue)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4+-38B2AC)](https://tailwindcss.com/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+<p align="center">
+  <strong>Assistive communication infrastructure powered by camera-based eye tracking.</strong><br />
+  <em>Restoring communication access without expensive dedicated hardware.</em>
+</p>
 
-> **Assistive Communication Infrastructure** - Restoring human communication through software
+<p align="center">
+  <a href="https://nextjs.org/"><img alt="Next.js" src="https://img.shields.io/badge/Next.js-16.1.4-000000?style=for-the-badge&logo=next.js" /></a>
+  <a href="https://react.dev/"><img alt="React" src="https://img.shields.io/badge/React-19.2.3-149ECA?style=for-the-badge&logo=react&logoColor=white" /></a>
+  <a href="https://www.typescriptlang.org/"><img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.x-2F74C0?style=for-the-badge&logo=typescript&logoColor=white" /></a>
+  <a href="https://tailwindcss.com/"><img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-4.x-0EA5E9?style=for-the-badge&logo=tailwindcss&logoColor=white" /></a>
+  <a href="./LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-16A34A?style=for-the-badge" /></a>
+</p>
 
-GAZE is a revolutionary assistive communication system that enables people with speech disabilities to communicate using only their eyes. By leveraging computer vision and machine learning, GAZE transforms any standard camera-equipped device into an accessible communication tool, eliminating the need for expensive specialized hardware.
+---
 
-## 🎯 The Problem
+## Overview
 
-Millions of people worldwide lose the ability to speak due to:
-- **Neurological conditions** (ALS, stroke, Parkinson's)
-- **Paralysis** and mobility impairments
-- **Critical care interventions** (ventilators, sedation)
-- **Developmental disabilities**
+GAZE is a Next.js platform for accessible communication. It combines browser-based gaze interaction, predictive text workflows, and a production-oriented web app architecture to support people who cannot rely on speech or motor input.
 
-Current solutions rely on specialized eye-tracking hardware costing **$10,000+**, making basic communication inaccessible to most families, hospitals, and public systems.
+### Why GAZE
 
-## 💡 The Solution
+| Problem | GAZE Approach |
+| --- | --- |
+| AAC hardware can be costly and hard to scale | Use commodity cameras and modern web tech |
+| Communication workflows are fragmented across tools | Provide unified typing, prediction, and UX flows |
+| Accessibility is often an afterthought | Treat accessibility, privacy, and performance as core constraints |
 
-GAZE replaces expensive hardware with **software that runs on any camera**. Using advanced computer vision and on-device AI processing, GAZE enables:
+## Product Surfaces
 
-- **Gaze-based typing** and text input
-- **Word prediction** and smart suggestions
-- **Voice synthesis** for speech output
-- **Real-time communication** without specialized equipment
+| Route | Purpose | Highlights |
+| --- | --- | --- |
+| `/` | Product homepage | Problem framing, value proposition, and deployment narrative |
+| `/demo` | Interactive experience | Gaze simulation, calibration, dwell detection, predictive keyboard |
+| `/governance` | Ethics and safety | Privacy architecture, safety modes, accountability framing |
+| `/institutions` | Enterprise and healthcare context | Compliance, rollout planning, institutional workflow fit |
+| `/pitch` | Decision support deck | Structured presentation for stakeholders and funding conversations |
 
-## 🚀 Live Demonstration
+## System Architecture
 
-Experience GAZE in action through our interactive demo:
+```mermaid
+flowchart LR
+    A[User Camera Input] --> B[MediaPipe Face Mesh]
+    B --> C[Gaze + Dwell Detection]
+    C --> D[Typing Intent Engine]
+    D --> E[Prediction API /app/api/predict]
+    E --> F[Suggestion Rendering]
+    D --> G[Message + Voice UX]
+    F --> G
+    G --> H[Communication Output]
+```
 
-[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-Visit_Now-4F46E5?style=for-the-badge)](/demo)
+## Stack
 
-The demo showcases:
-- Real-time eye tracking using your device's camera
-- Gaze-controlled keyboard interface
-- Word prediction and auto-completion
-- Voice synthesis capabilities
-- Accessibility features for various needs
+| Layer | Technologies |
+| --- | --- |
+| App framework | Next.js 16, React 19, TypeScript |
+| Styling and motion | Tailwind CSS 4, Framer Motion |
+| CV and inference | MediaPipe Face Mesh, ONNX Runtime Web |
+| State and data flow | Zustand, SWR |
+| Reliability and ops | Sentry, Jest, Lighthouse |
 
-## 🏗️ Architecture & Technology
-
-### Core Technologies
-- **Frontend**: Next.js 16, React 19, TypeScript
-- **Styling**: Tailwind CSS, Framer Motion
-- **Computer Vision**: MediaPipe Face Mesh, ONNX Runtime
-- **AI/ML**: OpenAI integration for word prediction
-- **State Management**: Zustand
-- **Backend Services**: Firebase, Sentry monitoring
-
-### Key Features
-- 🔒 **Privacy-First**: All processing happens on-device, no biometric data storage
-- 📱 **Cross-Platform**: Works on phones, tablets, laptops, and desktops
-- ⚡ **Real-Time**: Sub-millisecond response times
-- 🎯 **Accessible**: WCAG compliant, screen reader friendly
-- 🌐 **Offline-Capable**: Core functionality works without internet
-- 🔧 **Extensible**: Modular architecture for customization
-
-## 📦 Installation & Setup
+## Quick Start
 
 ### Prerequisites
+
 - Node.js 18+
-- npm, yarn, or pnpm
-- Modern web browser with camera access
+- npm 9+
+- A modern browser with camera permissions
 
-### Quick Start
+### Local Development
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/your-username/gaze.git
-   cd gaze
-   ```
+```bash
+git clone <your-fork-url>
+cd Gaze
+npm install
+npm run dev
+```
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   # or
-   yarn install
-   # or
-   pnpm install
-   ```
+Open `http://localhost:3000`.
 
-3. **Start development server**
-   ```bash
-   npm run dev
-   ```
-
-4. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
-
-### Build for Production
+### Production Build
 
 ```bash
 npm run build
 npm run start
 ```
 
-## 🧪 Testing
+## Scripts
 
-```bash
-# Run all tests
-npm test
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start development server with webpack |
+| `npm run dev:turbo` | Start development server with Turbopack |
+| `npm run build` | Create production build |
+| `npm run start` | Run production server |
+| `npm run lint` | Run ESLint |
+| `npm run type-check` | Run TypeScript checks |
+| `npm test` | Run Jest tests |
+| `npm run test:watch` | Run tests in watch mode |
+| `npm run test:coverage` | Generate coverage report |
+| `npm run performance` | Run Lighthouse audit against localhost |
+| `npm run analyze` | Build with bundle analysis |
 
-# Run tests in watch mode
-npm run test:watch
+## Repository Layout
 
-# Generate coverage report
-npm run test:coverage
-```
-
-## 📊 Performance Monitoring
-
-```bash
-# Run Lighthouse performance audit
-npm run performance
-
-# Bundle analysis
-npm run analyze
-```
-
-## 🎨 Project Structure
-
-```
+```text
 src/
-├── app/                    # Next.js app router
-│   ├── demo/              # Interactive demo pages
-│   ├── governance/        # Governance & ethics
-│   ├── institutions/      # Institutional deployment
-│   └── pitch/             # Product pitch deck
-├── components/            # Reusable UI components
-│   ├── governance/        # Governance components
-│   ├── institutions/      # Institutional components
-│   └── pitch/             # Pitch deck components
-├── hooks/                 # Custom React hooks
-├── lib/                   # Utility functions
-└── services/             # External service integrations
+  app/
+    api/predict/          # Prediction endpoint
+    demo/                 # Interactive demo flows
+    governance/           # Governance and ethics pages
+    institutions/         # Institution-facing pages
+    pitch/                # Pitch deck experience
+  components/
+    governance/           # Governance-specific UI
+    institutions/         # Institutional UI
+    pitch/                # Pitch-specific UI
+  lib/                    # Shared logic, stores, helpers
+public/                   # Static assets
 ```
 
-## 🤝 Contributing
+## Engineering Principles
 
-We welcome contributions! This project is in active development and needs:
+- Accessibility first: build keyboard and assistive-tech-friendly interfaces.
+- Privacy by design: minimize and isolate sensitive processing.
+- Real-time UX: keep feedback loops low latency.
+- Progressive reliability: test, monitor, and fail safely.
 
-- **Frontend Developers**: React, TypeScript, accessibility
-- **Computer Vision Engineers**: MediaPipe, ONNX, eye tracking
-- **UX/UI Designers**: Accessibility-focused design
-- **Medical Professionals**: Domain expertise and validation
-- **Translators**: Multi-language support
+## Contributing
 
-### Development Guidelines
+Contributions are welcome. Start with the contributor guide: [CONTRIBUTING.md](./CONTRIBUTING.md)
 
-1. **Accessibility First**: All features must meet WCAG 2.1 AA standards
-2. **Privacy by Design**: No biometric data leaves the device
-3. **Performance Critical**: Real-time responsiveness is essential
-4. **Cross-Platform**: Test on multiple devices and browsers
+## License
 
-### Code Quality
-
-```bash
-# Lint code
-npm run lint
-
-# Type checking
-npm run type-check
-
-# Format code (if prettier configured)
-npm run format
-```
-
-## 📄 Pages & Features
-
-### 🏠 Homepage
-- Hero section with value proposition
-- Problem/solution overview
-- Use cases and impact stories
-- Pricing and deployment options
-
-### 🎮 Interactive Demo (`/demo`)
-- Live eye-tracking demonstration
-- Gaze-controlled keyboard
-- Word prediction system
-- Voice synthesis preview
-- Accessibility settings
-
-### 🏛️ Governance (`/governance`)
-- Ethical design principles
-- Privacy and security architecture
-- Safety failure modes
-- Transparency and accountability
-
-### 🏥 Institutions (`/institutions`)
-- Hospital workflow integration
-- Compliance and governance
-- Pilot rollout planning
-- Licensing models
-
-### 📊 Pitch Deck (`/pitch`)
-- Automated presentation system
-- Live proof-of-concept
-- Impact metrics and scaling
-- Decision framework
-
-## 🔒 Privacy & Security
-
-GAZE is designed with privacy as a core principle:
-
-- **On-Device Processing**: All computer vision runs locally
-- **No Data Storage**: Biometric data never leaves your device
-- **Open Source**: Transparent algorithms and processing
-- **User Control**: Full control over data and permissions
-
-## 🌍 Impact & Mission
-
-GAZE aims to democratize assistive communication by:
-- Reducing costs by **90%** compared to hardware solutions
-- Enabling deployment at **global scale** through software
-- Supporting **millions** of people worldwide
-- Maintaining **dignity and privacy** for all users
-
-## ⚠️ Work in Progress
-
-**This software is currently in active development.** While the core eye-tracking technology is functional, the following areas are still being developed:
-
-- Advanced calibration algorithms
-- Multi-language support
-- Integration with AAC devices
-- Clinical validation studies
-- Production deployment infrastructure
-
-## 📞 Contact & Support
-
-- **Website**: [gaze-accessibility.com](https://gaze-accessibility.com)
-- **Demo**: [gaze-accessibility.com/demo](https://gaze-accessibility.com/demo)
-- **Email**: hello@gaze-accessibility.com
-- **GitHub Issues**: [Report bugs or request features](https://github.com/your-username/gaze/issues)
-
-## 📜 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **Open Source Community**: MediaPipe, ONNX, and countless other projects
-- **Accessibility Advocates**: For their tireless work and guidance
-- **Medical Professionals**: For their domain expertise and validation
-- **Users**: For their courage and inspiration
-
----
-
-**GAZE** - Because communication is a human right, not a privilege.
+This project is licensed under the MIT License. See [LICENSE](./LICENSE).
