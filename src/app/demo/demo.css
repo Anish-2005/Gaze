@@ -1,0 +1,64 @@
+.demo-root {
+  position: relative;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 12% 14%, rgba(var(--accent-blue), 0.16), transparent 42%),
+    radial-gradient(circle at 84% 10%, rgba(var(--accent-cyan), 0.14), transparent 36%),
+    linear-gradient(180deg, rgb(var(--bg-primary)) 0%, rgb(var(--bg-secondary)) 52%, rgb(var(--bg-primary)) 100%);
+}
+
+.demo-grid-overlay {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(var(--text-muted), 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--text-muted), 0.08) 1px, transparent 1px);
+  background-size: 38px 38px;
+  mask-image: radial-gradient(circle at center, black 22%, transparent 85%);
+  opacity: 0.2;
+}
+
+.demo-top-strip {
+  border-bottom: 1px solid var(--nav-border);
+  background: var(--nav-bg);
+  backdrop-filter: blur(16px);
+}
+
+.demo-floating-link {
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  color: rgb(var(--text-secondary));
+}
+
+.demo-floating-link:hover {
+  border-color: color-mix(in oklab, rgb(var(--accent-blue)) 34%, var(--card-border));
+  color: rgb(var(--text-primary));
+}
+
+.demo-floating-link-accent {
+  border: 1px solid color-mix(in oklab, rgb(var(--accent-blue)) 42%, var(--card-border));
+  background: color-mix(in oklab, rgb(var(--accent-blue)) 16%, var(--card-bg));
+  color: rgb(var(--text-primary));
+}
+
+.demo-floating-link-accent:hover {
+  border-color: color-mix(in oklab, rgb(var(--accent-cyan)) 44%, var(--card-border));
+  background: color-mix(in oklab, rgb(var(--accent-cyan)) 18%, var(--card-bg));
+}
+
+.judge-mode body {
+  cursor: none !important;
+}
+
+.judge-mode nav {
+  display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .judge-mode * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -5,7 +5,7 @@ import { Home, Maximize2, Minimize2, Presentation } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useJudgeMode } from '@/lib/useJudgeMode'
 import { cn } from '@/lib/utils'
-import './demo.module.css'
+import './demo.css'
 
 export default function DemoLayoutClient({
   children,
@@ -46,7 +46,10 @@ export default function DemoLayoutClient({
         }
       }
 
-      if (e.key === ' ' && (!(e.target instanceof HTMLElement) || e.target.tagName !== 'INPUT')) {
+      const targetTag = e.target instanceof HTMLElement ? e.target.tagName : ''
+      const isInteractiveTarget = ['INPUT', 'TEXTAREA', 'BUTTON', 'SELECT'].includes(targetTag)
+
+      if (e.key === ' ' && !isInteractiveTarget) {
         e.preventDefault()
         window.dispatchEvent(new CustomEvent('speak'))
       }
@@ -94,21 +97,36 @@ export default function DemoLayoutClient({
   }
 
   return (
-    <div className={cn('relative min-h-screen', judgeMode ? 'pt-0' : 'pt-20')}>
+    <div className={cn('demo-root', judgeMode ? 'pt-0' : 'pt-20')}>
+      <div className="demo-grid-overlay" />
+
       {judgeMode && (
-        <div className="fixed inset-x-0 top-0 z-[70] border-b border-cyan-400/20 bg-slate-950/90 backdrop-blur-xl">
-          <div className="mx-auto flex h-10 w-full max-w-[1400px] items-center justify-between px-4 text-xs text-slate-300 sm:px-6 lg:px-8">
-            <div className="flex items-center gap-3">
-              <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2.5 py-1 text-[11px] font-medium text-emerald-300">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" />
+        <div className="demo-top-strip fixed inset-x-0 top-0 z-[70]">
+          <div className="mx-auto flex h-10 w-full max-w-[1400px] items-center justify-between px-4 text-xs sm:px-6 lg:px-8">
+            <div className="flex items-center gap-3" style={{ color: 'rgb(var(--text-secondary))' }}>
+              <span
+                className="inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-[11px] font-semibold"
+                style={{
+                  color: 'rgb(var(--accent-emerald))',
+                  background: 'color-mix(in oklab, rgb(var(--accent-emerald)) 16%, transparent)',
+                  border: '1px solid color-mix(in oklab, rgb(var(--accent-emerald)) 36%, transparent)',
+                }}
+              >
+                <span className="h-1.5 w-1.5 rounded-full" style={{ background: 'rgb(var(--accent-emerald))' }} />
                 Judge Mode Active
               </span>
-              <span className="hidden text-slate-400 sm:inline">Space: Speak</span>
-              <span className="hidden text-slate-400 sm:inline">Esc: Clear</span>
+              <span className="hidden sm:inline">Space: Speak</span>
+              <span className="hidden sm:inline">Esc: Clear</span>
             </div>
+
             <button
               onClick={toggleFullscreen}
-              className="inline-flex items-center gap-2 rounded-md border border-slate-700 px-2.5 py-1 text-[11px] text-slate-300 transition hover:border-slate-500 hover:text-white"
+              className="inline-flex items-center gap-2 rounded-md border px-2.5 py-1 text-[11px] transition"
+              style={{
+                borderColor: 'var(--card-border)',
+                color: 'rgb(var(--text-secondary))',
+                background: 'var(--card-bg)',
+              }}
               title="Toggle fullscreen"
             >
               {isFullscreen ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
@@ -122,22 +140,22 @@ export default function DemoLayoutClient({
         <div className="pointer-events-none fixed right-4 top-24 z-[65] flex flex-col gap-2 sm:right-6">
           <Link
             href="/"
-            className="pointer-events-auto inline-flex items-center gap-2 rounded-xl border border-slate-700/70 bg-slate-900/80 px-3 py-2 text-xs font-medium text-slate-200 backdrop-blur-xl transition hover:border-slate-500 hover:text-white"
+            className="demo-floating-link pointer-events-auto inline-flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium backdrop-blur-xl transition"
           >
             <Home className="h-3.5 w-3.5" />
             Overview
           </Link>
           <Link
             href="/pitch"
-            className="pointer-events-auto inline-flex items-center gap-2 rounded-xl border border-slate-700/70 bg-slate-900/80 px-3 py-2 text-xs font-medium text-slate-200 backdrop-blur-xl transition hover:border-slate-500 hover:text-white"
+            className="demo-floating-link pointer-events-auto inline-flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium backdrop-blur-xl transition"
           >
             <Presentation className="h-3.5 w-3.5" />
             Pitch Mode
           </Link>
           <button
             onClick={toggleFullscreen}
-            className="pointer-events-auto inline-flex items-center gap-2 rounded-xl border border-cyan-400/35 bg-cyan-400/10 px-3 py-2 text-xs font-medium text-cyan-200 backdrop-blur-xl transition hover:border-cyan-300 hover:text-cyan-100"
-            title="Enter fullscreen mode"
+            className="demo-floating-link-accent pointer-events-auto inline-flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium backdrop-blur-xl transition"
+            title="Toggle fullscreen mode"
           >
             {isFullscreen ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
             {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
@@ -151,7 +169,14 @@ export default function DemoLayoutClient({
 
       {isFullscreen && (
         <div className="fixed right-4 top-4 z-[80] sm:right-6">
-          <div className="rounded-full border border-slate-700 bg-slate-900/90 px-3 py-1.5 text-xs font-medium text-slate-200 backdrop-blur">
+          <div
+            className="rounded-full border px-3 py-1.5 text-xs font-medium backdrop-blur"
+            style={{
+              borderColor: 'var(--card-border)',
+              background: 'var(--card-bg-strong)',
+              color: 'rgb(var(--text-primary))',
+            }}
+          >
             Fullscreen active
           </div>
         </div>

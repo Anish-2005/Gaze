@@ -78,22 +78,40 @@ export default function GazeKeyboard({
   return (
     <div className="w-full max-w-3xl">
       <motion.div
-        className="relative overflow-hidden rounded-2xl border border-slate-700 bg-slate-900/70 p-4 shadow-[0_16px_40px_rgba(2,6,23,0.35)] sm:p-6"
+        className="relative overflow-hidden rounded-2xl border p-4 sm:p-6"
+        style={{
+          borderColor: 'var(--card-border)',
+          background: 'var(--card-bg)',
+        }}
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        <div className="mb-5 flex items-center justify-between border-b border-slate-700/70 pb-4">
+        <div className="mb-5 flex items-center justify-between border-b pb-4" style={{ borderColor: 'var(--card-border)' }}>
           <div className="flex items-center gap-2">
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-cyan-400/30 bg-cyan-400/10 text-cyan-200">
+            <span
+              className="inline-flex h-8 w-8 items-center justify-center rounded-lg border"
+              style={{
+                borderColor: 'color-mix(in oklab, rgb(var(--accent-blue)) 34%, var(--card-border))',
+                background: 'color-mix(in oklab, rgb(var(--accent-blue)) 14%, transparent)',
+                color: 'rgb(var(--accent-blue))',
+              }}
+            >
               <KeyboardIcon className="h-4 w-4" />
             </span>
             <div>
-              <p className="text-sm font-semibold text-slate-100">Gaze Keyboard</p>
-              <p className="text-xs text-slate-500">Dwell to select, tap for manual fallback</p>
+              <p className="text-sm font-semibold" style={{ color: 'rgb(var(--text-primary))' }}>Gaze Keyboard</p>
+              <p className="text-xs" style={{ color: 'rgb(var(--text-muted))' }}>Dwell to select, tap for manual fallback</p>
             </div>
           </div>
-          <span className="rounded-full border border-slate-700 bg-slate-950 px-2.5 py-1 text-[11px] text-slate-400">
+          <span
+            className="rounded-full border px-2.5 py-1 text-[11px]"
+            style={{
+              borderColor: 'var(--card-border)',
+              background: 'var(--card-bg-strong)',
+              color: 'rgb(var(--text-muted))',
+            }}
+          >
             25-key optimized layout
           </span>
         </div>
@@ -125,8 +143,15 @@ export default function GazeKeyboard({
           ))}
         </div>
 
-        <div className="mt-5 rounded-xl border border-slate-700/80 bg-slate-950/80 px-4 py-2 text-center text-xs text-slate-400">
-          Keep gaze stable for approximately 1.5s to trigger a key selection. Suggestions use faster dwell.
+        <div
+          className="mt-5 rounded-xl border px-4 py-2 text-center text-xs"
+          style={{
+            borderColor: 'var(--card-border)',
+            background: 'var(--card-bg-strong)',
+            color: 'rgb(var(--text-muted))',
+          }}
+        >
+          Keep gaze stable for around 1.5 seconds to trigger a key selection. Suggestions use faster dwell.
         </div>
       </motion.div>
 

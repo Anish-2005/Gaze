@@ -16,7 +16,7 @@ interface StatusBarProps {
   trackingActive: boolean
   calibrationComplete: boolean
   trackingMode: 'real' | 'simulation'
-  confidence?: number
+  confidence?: number | undefined
   onToggleCalibration?: () => void
   onToggleTracking?: () => void
   onSwitchMode?: () => void
@@ -33,7 +33,7 @@ export default function StatusBar({
   onSwitchMode,
 }: StatusBarProps) {
   return (
-    <div className="rounded-2xl border border-slate-700/70 bg-slate-950/70 p-4 shadow-[0_14px_32px_rgba(2,6,23,0.35)] sm:p-5">
+    <div className="surface-card p-4 sm:p-5">
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <StatusItem
@@ -94,15 +94,32 @@ function StatusItem({
   tone: 'ok' | 'warn' | 'neutral'
 }) {
   const toneStyles = {
-    ok: 'border-emerald-400/30 bg-emerald-400/10 text-emerald-200',
-    warn: 'border-amber-400/30 bg-amber-400/10 text-amber-200',
-    neutral: 'border-slate-600 bg-slate-900/80 text-slate-200',
+    ok: {
+      borderColor: 'color-mix(in oklab, rgb(var(--accent-emerald)) 32%, var(--card-border))',
+      background: 'color-mix(in oklab, rgb(var(--accent-emerald)) 12%, var(--card-bg))',
+      color: 'rgb(var(--text-primary))',
+      iconColor: 'rgb(var(--accent-emerald))',
+    },
+    warn: {
+      borderColor: 'rgba(245, 158, 11, 0.45)',
+      background: 'rgba(245, 158, 11, 0.14)',
+      color: 'rgb(var(--text-primary))',
+      iconColor: 'rgb(245 158 11)',
+    },
+    neutral: {
+      borderColor: 'var(--card-border)',
+      background: 'var(--card-bg-strong)',
+      color: 'rgb(var(--text-primary))',
+      iconColor: 'rgb(var(--accent-blue))',
+    },
   }
 
+  const palette = toneStyles[tone]
+
   return (
-    <div className={cn('rounded-xl border p-3', toneStyles[tone])}>
-      <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.12em] opacity-80">
-        <Icon className="h-3.5 w-3.5" />
+    <div className="rounded-xl border p-3" style={{ borderColor: palette.borderColor, background: palette.background, color: palette.color }}>
+      <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.12em]" style={{ color: 'rgb(var(--text-muted))' }}>
+        <Icon className="h-3.5 w-3.5" style={{ color: palette.iconColor }} />
         {label}
       </div>
       <p className="mt-1 text-sm font-semibold">{value}</p>
@@ -126,12 +143,21 @@ function ControlButton({
       onClick={onClick}
       className={cn(
         'inline-flex items-center justify-center gap-2 rounded-xl border px-3 py-2 text-xs font-medium transition sm:text-sm',
-        emphasized
-          ? 'border-cyan-400/40 bg-cyan-400/10 text-cyan-100 hover:border-cyan-300 hover:bg-cyan-400/15'
-          : 'border-slate-700 bg-slate-900 text-slate-200 hover:border-slate-500 hover:bg-slate-800'
+        emphasized ? 'hover:-translate-y-[1px]' : 'hover:-translate-y-[1px]'
       )}
+      style={emphasized
+        ? {
+            borderColor: 'color-mix(in oklab, rgb(var(--accent-blue)) 38%, var(--card-border))',
+            background: 'color-mix(in oklab, rgb(var(--accent-blue)) 16%, var(--card-bg))',
+            color: 'rgb(var(--text-primary))',
+          }
+        : {
+            borderColor: 'var(--card-border)',
+            background: 'var(--card-bg)',
+            color: 'rgb(var(--text-secondary))',
+          }}
     >
-      <Icon className="h-3.5 w-3.5" />
+      <Icon className="h-3.5 w-3.5" style={{ color: emphasized ? 'rgb(var(--accent-blue))' : 'rgb(var(--text-muted))' }} />
       {label}
     </button>
   )
