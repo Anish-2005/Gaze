@@ -97,7 +97,7 @@ export default function DemoLayoutClient({
   }
 
   return (
-    <div className={cn('demo-root', judgeMode ? 'pt-0' : 'pt-20')}>
+    <div className={cn('demo-root', judgeMode ? 'pt-0' : 'pt-4 sm:pt-5')}>
       <div className="demo-grid-overlay" />
 
       {judgeMode && (
@@ -137,17 +137,17 @@ export default function DemoLayoutClient({
       )}
 
       {!judgeMode && (
-        <div className="pointer-events-none fixed right-4 top-24 z-[65] flex flex-col gap-2 sm:right-6">
+        <div className="pointer-events-none fixed right-4 top-4 z-[65] flex flex-col gap-2 sm:right-6 sm:top-6">
           <Link
             href="/"
-            className="demo-floating-link pointer-events-auto inline-flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium backdrop-blur-xl transition"
+            className="demo-floating-link pointer-events-auto hidden items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium backdrop-blur-xl transition sm:inline-flex"
           >
             <Home className="h-3.5 w-3.5" />
             Overview
           </Link>
           <Link
             href="/pitch"
-            className="demo-floating-link pointer-events-auto inline-flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium backdrop-blur-xl transition"
+            className="demo-floating-link pointer-events-auto hidden items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium backdrop-blur-xl transition sm:inline-flex"
           >
             <Presentation className="h-3.5 w-3.5" />
             Pitch Mode

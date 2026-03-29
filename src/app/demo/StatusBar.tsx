@@ -88,7 +88,7 @@ function StatusItem({
   value,
   tone,
 }: {
-  icon: React.ComponentType<{ className?: string }>
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>
   label: string
   value: string
   tone: 'ok' | 'warn' | 'neutral'
@@ -133,7 +133,7 @@ function ControlButton({
   onClick,
   emphasized = false,
 }: {
-  icon: React.ComponentType<{ className?: string }>
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>
   label: string
   onClick: () => void
   emphasized?: boolean

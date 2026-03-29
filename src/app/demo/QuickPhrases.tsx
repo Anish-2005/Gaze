@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils'
 
 interface Phrase {
   text: string
-  icon: React.ComponentType<{ className?: string }>
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>
   keyId: string
   tone: 'critical' | 'support'
 }
@@ -56,16 +56,25 @@ export default function QuickPhrases({
   dwellProgress,
 }: QuickPhrasesProps) {
   return (
-    <section className="rounded-2xl border border-slate-700/70 bg-slate-950/70 p-5 shadow-[0_16px_38px_rgba(2,6,23,0.35)] sm:p-6">
+    <section className="surface-card p-5 sm:p-6">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-slate-300">Quick Phrases</h2>
-        <span className="rounded-full border border-slate-700 bg-slate-900 px-2.5 py-1 text-[11px] text-slate-400">
+        <h2 className="text-sm font-semibold uppercase tracking-[0.12em]" style={{ color: 'rgb(var(--text-secondary))' }}>
+          Quick Phrases
+        </h2>
+        <span
+          className="rounded-full border px-2.5 py-1 text-[11px]"
+          style={{
+            borderColor: 'var(--card-border)',
+            background: 'var(--card-bg-strong)',
+            color: 'rgb(var(--text-muted))',
+          }}
+        >
           High-priority communication
         </span>
       </div>
 
       <div>
-        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.12em] text-rose-200">Critical</p>
+        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.12em]" style={{ color: 'rgb(var(--accent-rose))' }}>Critical</p>
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           {CRITICAL_PHRASES.map((item) => (
             <PhraseButton
@@ -82,7 +91,7 @@ export default function QuickPhrases({
       </div>
 
       <div className="mt-4">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.12em] text-cyan-100">Common</p>
+        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.12em]" style={{ color: 'rgb(var(--accent-blue))' }}>Common</p>
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           {COMMON_PHRASES.map((item) => (
             <PhraseButton
@@ -112,6 +121,20 @@ function PhraseButton({
   const Icon = phrase.icon
   const active = hoveredKey === phrase.keyId
 
+  const toneStyle = phrase.tone === 'critical'
+    ? {
+        borderColor: 'color-mix(in oklab, rgb(var(--accent-rose)) 35%, var(--card-border))',
+        background: 'color-mix(in oklab, rgb(var(--accent-rose)) 12%, var(--card-bg))',
+        color: 'rgb(var(--text-primary))',
+        iconColor: 'rgb(var(--accent-rose))',
+      }
+    : {
+        borderColor: 'color-mix(in oklab, rgb(var(--accent-blue)) 34%, var(--card-border))',
+        background: 'color-mix(in oklab, rgb(var(--accent-blue)) 12%, var(--card-bg))',
+        color: 'rgb(var(--text-primary))',
+        iconColor: 'rgb(var(--accent-blue))',
+      }
+
   return (
     <div className="relative">
       <button
@@ -119,25 +142,37 @@ function PhraseButton({
         onMouseEnter={() => setHoveredKey(phrase.keyId)}
         onMouseLeave={() => setHoveredKey(null)}
         data-gaze-key={phrase.keyId}
-        className={cn(
-          'w-full rounded-xl border px-3 py-3 text-left transition',
-          phrase.tone === 'critical'
-            ? 'border-rose-400/30 bg-rose-400/10 text-rose-100 hover:bg-rose-400/15'
-            : 'border-cyan-400/30 bg-cyan-400/10 text-cyan-100 hover:bg-cyan-400/15',
-          active && 'ring-2 ring-cyan-300/60'
-        )}
+        className={cn('w-full rounded-xl border px-3 py-3 text-left transition')}
+        style={active
+          ? {
+              ...toneStyle,
+              boxShadow: '0 0 0 2px color-mix(in oklab, rgb(var(--accent-cyan)) 32%, transparent)',
+            }
+          : toneStyle}
       >
         <div className="flex items-start gap-3">
-          <span className="mt-0.5 inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/20 bg-white/10">
-            <Icon className="h-4 w-4" />
+          <span
+            className="mt-0.5 inline-flex h-8 w-8 items-center justify-center rounded-lg border"
+            style={{
+              borderColor: 'color-mix(in oklab, currentColor 24%, transparent)',
+              background: 'color-mix(in oklab, currentColor 8%, transparent)',
+            }}
+          >
+            <Icon className="h-4 w-4" style={{ color: toneStyle.iconColor }} />
           </span>
           <span className="text-sm font-semibold">{phrase.text}</span>
         </div>
       </button>
 
       {active && isDwelling && (
-        <div className="absolute inset-x-3 -bottom-1 h-1 overflow-hidden rounded-full bg-slate-800">
-          <div className="h-full bg-gradient-to-r from-cyan-300 to-emerald-300 transition-all" style={{ width: `${dwellProgress}%` }} />
+        <div className="absolute inset-x-3 -bottom-1 h-1 overflow-hidden rounded-full" style={{ background: 'var(--card-bg-strong)' }}>
+          <div
+            className="h-full transition-all"
+            style={{
+              width: `${dwellProgress}%`,
+              background: 'linear-gradient(90deg, rgb(var(--accent-blue)) 0%, rgb(var(--accent-cyan)) 60%, rgb(var(--accent-emerald)) 100%)',
+            }}
+          />
         </div>
       )}
     </div>

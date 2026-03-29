@@ -59,26 +59,41 @@ export default function CalibrationOverlay({
   const progressOffset = circumference * (1 - calibrationProgress / 100)
 
   return (
-    <div className="fixed inset-0 z-[90] bg-slate-950/92 backdrop-blur-md">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.15),transparent_55%)]" />
+    <div className="fixed inset-0 z-[90]" style={{ background: 'color-mix(in oklab, rgb(var(--bg-primary)) 82%, black 18%)' }}>
+      <div
+        className="absolute inset-0"
+        style={{
+          background: 'radial-gradient(circle at center, color-mix(in oklab, rgb(var(--accent-blue)) 22%, transparent) 0%, transparent 55%)',
+          backdropFilter: 'blur(8px)',
+        }}
+      />
 
       <div className="relative flex h-full flex-col items-center justify-center px-4">
         <div className="absolute top-8 text-center sm:top-10">
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-cyan-200">Calibration In Progress</p>
-          <h2 className="mt-2 text-2xl font-semibold text-white sm:text-3xl">Follow the target with your eyes</h2>
-          <p className="mt-2 text-sm text-slate-300">Maintain focus until each target completes.</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.14em]" style={{ color: 'rgb(var(--accent-blue))' }}>
+            Calibration In Progress
+          </p>
+          <h2 className="mt-2 text-2xl font-semibold sm:text-3xl" style={{ color: 'rgb(var(--text-primary))' }}>
+            Follow the target with your eyes
+          </h2>
+          <p className="mt-2 text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>
+            Maintain focus until each target completes.
+          </p>
         </div>
 
         {CALIBRATION_POINTS.map((point, index) => (
           <span
             key={index}
-            className={cn(
-              'absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border',
-              index === currentPoint ? 'border-cyan-300 bg-cyan-300/80' : 'border-slate-500 bg-slate-700/70'
-            )}
+            className={cn('absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border')}
             style={{
               left: `${point.x}%`,
               top: `${point.y}%`,
+              borderColor: index === currentPoint
+                ? 'color-mix(in oklab, rgb(var(--accent-blue)) 60%, transparent)'
+                : 'color-mix(in oklab, rgb(var(--text-muted)) 42%, transparent)',
+              background: index === currentPoint
+                ? 'color-mix(in oklab, rgb(var(--accent-blue)) 45%, transparent)'
+                : 'color-mix(in oklab, rgb(var(--text-muted)) 20%, transparent)',
             }}
           />
         ))}
@@ -92,10 +107,19 @@ export default function CalibrationOverlay({
           }}
         >
           <div className="relative h-28 w-28">
-            <div className="absolute inset-0 rounded-full border border-cyan-300/40 bg-cyan-400/10" />
-            <div className="absolute inset-4 rounded-full border border-cyan-200/60" />
+            <div
+              className="absolute inset-0 rounded-full border"
+              style={{
+                borderColor: 'color-mix(in oklab, rgb(var(--accent-blue)) 45%, transparent)',
+                background: 'color-mix(in oklab, rgb(var(--accent-blue)) 12%, transparent)',
+              }}
+            />
+            <div
+              className="absolute inset-4 rounded-full border"
+              style={{ borderColor: 'color-mix(in oklab, rgb(var(--accent-cyan)) 58%, transparent)' }}
+            />
             <div className="absolute inset-0 flex items-center justify-center">
-              <Target className="h-10 w-10 text-cyan-200" />
+              <Target className="h-10 w-10" style={{ color: 'rgb(var(--accent-blue))' }} />
             </div>
 
             <svg className="absolute inset-0 h-full w-full -rotate-90">
@@ -103,7 +127,7 @@ export default function CalibrationOverlay({
                 cx="50%"
                 cy="50%"
                 r="44"
-                stroke="rgba(148,163,184,0.25)"
+                stroke="color-mix(in oklab, rgb(var(--text-muted)) 28%, transparent)"
                 strokeWidth="4"
                 fill="none"
               />
@@ -111,7 +135,7 @@ export default function CalibrationOverlay({
                 cx="50%"
                 cy="50%"
                 r="44"
-                stroke="rgb(103,232,249)"
+                stroke="rgb(var(--accent-cyan))"
                 strokeWidth="4"
                 fill="none"
                 strokeLinecap="round"
@@ -122,24 +146,41 @@ export default function CalibrationOverlay({
           </div>
         </div>
 
-        <div className="absolute bottom-12 w-full max-w-lg rounded-2xl border border-slate-700 bg-slate-900/85 p-5 text-center sm:bottom-14">
-          <p className="text-sm text-slate-300">
+        <div
+          className="absolute bottom-12 w-full max-w-lg rounded-2xl border p-5 text-center sm:bottom-14"
+          style={{
+            borderColor: 'var(--card-border)',
+            background: 'var(--card-bg-strong)',
+          }}
+        >
+          <p className="text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>
             Point {currentPoint + 1} of {CALIBRATION_POINTS.length}
           </p>
-          <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-800">
+          <div className="mt-3 h-2 overflow-hidden rounded-full" style={{ background: 'color-mix(in oklab, var(--card-border) 70%, transparent)' }}>
             <div
-              className="h-full rounded-full bg-gradient-to-r from-cyan-300 via-blue-300 to-emerald-300 transition-all"
-              style={{ width: `${((currentPoint + calibrationProgress / 100) / CALIBRATION_POINTS.length) * 100}%` }}
+              className="h-full rounded-full transition-all"
+              style={{
+                width: `${((currentPoint + calibrationProgress / 100) / CALIBRATION_POINTS.length) * 100}%`,
+                background: 'linear-gradient(90deg, rgb(var(--accent-blue)) 0%, rgb(var(--accent-cyan)) 55%, rgb(var(--accent-emerald)) 100%)',
+              }}
             />
           </div>
         </div>
 
         {currentPoint === CALIBRATION_POINTS.length - 1 && calibrationProgress >= 100 && (
-          <div className="absolute inset-0 flex items-center justify-center bg-slate-950/88">
-            <div className="rounded-2xl border border-emerald-400/35 bg-emerald-400/10 p-8 text-center">
-              <CheckCircle2 className="mx-auto h-16 w-16 text-emerald-300" />
-              <p className="mt-4 text-2xl font-semibold text-white">Calibration complete</p>
-              <p className="mt-2 text-sm text-emerald-100">Tracking profile has been updated for this session.</p>
+          <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'color-mix(in oklab, rgb(var(--bg-primary)) 88%, black 12%)' }}>
+            <div
+              className="rounded-2xl border p-8 text-center"
+              style={{
+                borderColor: 'color-mix(in oklab, rgb(var(--accent-emerald)) 40%, var(--card-border))',
+                background: 'color-mix(in oklab, rgb(var(--accent-emerald)) 14%, var(--card-bg))',
+              }}
+            >
+              <CheckCircle2 className="mx-auto h-16 w-16" style={{ color: 'rgb(var(--accent-emerald))' }} />
+              <p className="mt-4 text-2xl font-semibold" style={{ color: 'rgb(var(--text-primary))' }}>Calibration complete</p>
+              <p className="mt-2 text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>
+                Tracking profile has been updated for this session.
+              </p>
             </div>
           </div>
         )}

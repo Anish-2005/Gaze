@@ -8,11 +8,14 @@ import { useJudgeMode } from '@/lib/useJudgeMode'
 import { usePerformanceMonitoring } from '@/lib/performance'
 import { useWebVitals, usePerformanceObserver, useMemoryMonitor } from '@/lib/webVitals'
 import { useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import { ThemeProvider } from '@/lib/ThemeContext'
 
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const judgeMode = useJudgeMode()
+  const pathname = usePathname()
+  const isDemoRoute = pathname?.startsWith('/demo') ?? false
 
   // Performance monitoring
   usePerformanceMonitoring()
@@ -145,9 +148,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   return (
     <ThemeProvider>
       <ErrorBoundary>
-        <Navigation />
-        <JudgeModeIndicator />
-        <KeyboardShortcuts />
+        {!isDemoRoute && <Navigation />}
+        {!isDemoRoute && <JudgeModeIndicator />}
+        {!isDemoRoute && <KeyboardShortcuts />}
         {children}
       </ErrorBoundary>
     </ThemeProvider>

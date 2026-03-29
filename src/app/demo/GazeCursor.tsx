@@ -32,7 +32,7 @@ export default function GazeCursor({ x, y, visible }: GazeCursorProps) {
             transform: 'translate(-50%, -50%)',
             width: `${7 - index * 1}px`,
             height: `${7 - index * 1}px`,
-            background: `rgba(103, 232, 249, ${0.45 - index * 0.07})`,
+            background: `color-mix(in oklab, rgb(var(--accent-cyan)) ${Math.max(10, 48 - index * 9)}%, transparent)`,
           }}
         />
       ))}
@@ -43,22 +43,27 @@ export default function GazeCursor({ x, y, visible }: GazeCursorProps) {
           left: `${x}%`,
           top: `${y}%`,
           transform: 'translate(-50%, -50%)',
-          background: 'radial-gradient(circle, rgba(34,211,238,0.22) 0%, rgba(34,211,238,0) 72%)',
+          background: 'radial-gradient(circle, color-mix(in oklab, rgb(var(--accent-cyan)) 32%, transparent) 0%, transparent 72%)',
         }}
       />
 
       <div
-        className="pointer-events-none fixed z-[87] h-6 w-6 rounded-full border border-cyan-300/80 bg-cyan-300/15"
+        className="pointer-events-none fixed z-[87] h-6 w-6 rounded-full border"
         style={{
           left: `${x}%`,
           top: `${y}%`,
           transform: 'translate(-50%, -50%)',
-          boxShadow: '0 0 24px rgba(34,211,238,0.35)',
+          borderColor: 'color-mix(in oklab, rgb(var(--accent-blue)) 58%, transparent)',
+          background: 'color-mix(in oklab, rgb(var(--accent-cyan)) 14%, transparent)',
+          boxShadow: '0 0 20px color-mix(in oklab, rgb(var(--accent-blue)) 30%, transparent)',
           backdropFilter: 'blur(2px)',
         }}
       >
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="h-1.5 w-1.5 rounded-full bg-cyan-100" />
+          <span
+            className="h-1.5 w-1.5 rounded-full"
+            style={{ background: 'rgb(var(--accent-blue))' }}
+          />
         </div>
       </div>
     </>

@@ -25,10 +25,14 @@ export default function WordPredictions({
     <motion.section
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="mt-4 rounded-2xl border border-slate-700 bg-slate-950/70 p-4"
+      className="mt-4 rounded-2xl border p-4"
+      style={{
+        borderColor: 'var(--card-border)',
+        background: 'var(--card-bg)',
+      }}
     >
-      <div className="mb-3 flex items-center gap-2 text-slate-300">
-        <Sparkles className="h-4 w-4 text-cyan-300" />
+      <div className="mb-3 flex items-center gap-2" style={{ color: 'rgb(var(--text-secondary))' }}>
+        <Sparkles className="h-4 w-4" style={{ color: 'rgb(var(--accent-blue))' }} />
         <span className="text-xs font-semibold uppercase tracking-[0.12em]">
           {isGenerating ? 'Generating suggestions' : 'Predicted words'}
         </span>
@@ -52,19 +56,27 @@ export default function WordPredictions({
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.04 }}
-              className={cn(
-                'rounded-xl border px-4 py-2 text-sm font-medium transition',
-                hoveredKey === `WORD_${index}`
-                  ? 'border-cyan-300/50 bg-cyan-300/15 text-white'
-                  : 'border-slate-600 bg-slate-900 text-slate-200 hover:border-slate-400 hover:bg-slate-800'
-              )}
+              className={cn('rounded-xl border px-4 py-2 text-sm font-medium transition')}
+              style={hoveredKey === `WORD_${index}`
+                ? {
+                    borderColor: 'color-mix(in oklab, rgb(var(--accent-blue)) 40%, var(--card-border))',
+                    background: 'color-mix(in oklab, rgb(var(--accent-blue)) 14%, var(--card-bg))',
+                    color: 'rgb(var(--text-primary))',
+                  }
+                : {
+                    borderColor: 'var(--card-border)',
+                    background: 'var(--card-bg-strong)',
+                    color: 'rgb(var(--text-secondary))',
+                  }}
             >
               {word}
             </motion.button>
           ))}
         </div>
       ) : (
-        <p className="text-sm text-slate-500">No suggestions available from the recent key sequence.</p>
+        <p className="text-sm" style={{ color: 'rgb(var(--text-muted))' }}>
+          No suggestions available from the recent key sequence.
+        </p>
       )}
     </motion.section>
   )
