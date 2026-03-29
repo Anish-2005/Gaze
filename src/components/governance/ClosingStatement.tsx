@@ -5,61 +5,47 @@ import { Heart, Mail } from 'lucide-react'
 
 export default function ClosingStatement() {
   return (
-    <section className="py-24 bg-gradient-to-br from-gray-900 to-gray-800 text-white">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="section-shell pb-24 sm:pb-28">
+      <div className="section-grid">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-7xl mx-auto"
+          viewport={{ once: true, margin: '-120px' }}
+          className="surface-card-strong mx-auto max-w-5xl p-8 sm:p-10"
         >
-          <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/10 text-white text-sm font-medium mb-6">
-            <Heart className="w-4 h-4 mr-2" />
-            Our Commitment
+          <div className="section-badge mb-5 inline-flex" style={{ color: 'rgb(var(--accent-rose))' }}>
+            <Heart className="h-3.5 w-3.5" />
+            Our commitment
           </div>
 
-          <h2 className="text-3xl md:text-4xl font-semibold mb-8">
-            Restoring communication should never compromise dignity
+          <h2 className="text-3xl font-semibold leading-tight sm:text-4xl lg:text-5xl">
+            Restoring communication should never compromise dignity.
           </h2>
 
-          <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
+          <div className="mt-6 space-y-4 text-base leading-relaxed sm:text-lg" style={{ color: 'rgb(var(--text-secondary))' }}>
             <p>
-              Assistive communication technologies carry profound responsibility.
-              They operate at the intersection of human vulnerability and technological capability,
-              where every design decision can either empower or diminish.
+              Assistive communication technologies carry deep responsibility. They operate where human vulnerability and
+              technical decisions directly intersect.
             </p>
-
             <p>
-              GAZE is built on the conviction that restoring a person&apos;s ability to communicate
-              must never come at the cost of their privacy, autonomy, or dignity. We believe
-              technology should serve people in their most vulnerable moments without creating
-              new vulnerabilities.
+              GAZE is built on the principle that communication recovery must not come at the cost of privacy,
+              autonomy, or human dignity.
             </p>
-
             <p>
-              This governance framework isn&apos;t just a compliance document—it&apos;s our operational
-              DNA. It guides how we build, deploy, and maintain communication systems for
-              people who depend on them for their most basic human connections.
+              This framework is operational guidance, not abstract policy. It governs how we build, deploy, and maintain
+              systems for people who depend on communication access in critical moments.
             </p>
           </div>
 
-          {/* Contact for Ethics Inquiries */}
-          <div className="mt-12 pt-8 border-t border-white/20">
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-              <div>
-                <h4 className="font-bold mb-2">Ethics & Governance Inquiries</h4>
-                <p className="text-gray-400">
-                  For questions about our ethical framework, compliance documentation, or governance practices
-                </p>
-              </div>
-              <a
-                href="mailto:ethics@gaze.com"
-                className="inline-flex items-center text-white hover:text-blue-300 transition-colors"
-              >
-                <Mail className="w-5 h-5 mr-2" />
-                ethics@gaze.com
-              </a>
-            </div>
+          <div className="mt-8 border-t pt-6" style={{ borderColor: 'var(--card-border)' }}>
+            <h4 className="text-base font-semibold">Ethics and governance inquiries</h4>
+            <p className="mt-1 text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>
+              For compliance documentation, governance reviews, or ethics questions.
+            </p>
+            <a href="mailto:ethics@gaze.com" className="btn-secondary mt-4 inline-flex">
+              <Mail className="h-4 w-4" />
+              ethics@gaze.com
+            </a>
           </div>
         </motion.div>
       </div>

@@ -1,99 +1,92 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { CheckCircle } from 'lucide-react'
+import { CheckCircle2 } from 'lucide-react'
+
+const workflowSteps = [
+  {
+    step: '01',
+    title: 'Device preparation',
+    description: 'Load GAZE on existing tablets, laptops, or ward terminals with no dedicated hardware.',
+    details: ['2-minute initialization', 'Offline-capable mode', 'No patient video storage'],
+  },
+  {
+    step: '02',
+    title: 'Bedside calibration',
+    description: 'Position device and complete gaze setup in under a minute for immediate communication readiness.',
+    details: ['30-second calibration target', 'Adaptive lighting tolerance', 'Posture-aware tuning'],
+  },
+  {
+    step: '03',
+    title: 'Live communication',
+    description: 'Patient uses gaze keyboard and critical phrases for care interactions and urgent requests.',
+    details: ['Emergency phrase shortcuts', 'Predictive text support', 'Fast voice output path'],
+  },
+]
+
+const impactMetrics = [
+  { value: '5 min', label: 'Average deployment time' },
+  { value: '30 sec', label: 'Patient setup time' },
+  { value: '0%', label: 'Specialized hardware dependency' },
+]
 
 export default function HospitalWorkflow() {
   return (
-    <section className="py-12 md:py-24 bg-[#F7F9FC] text-[#0F172A]">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="section-shell">
+      <div className="section-grid">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-5xl mx-auto"
+          viewport={{ once: true, margin: '-120px' }}
+          className="mx-auto max-w-3xl text-center"
         >
-          <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-6">
-              <span className="text-slate-600">Hospital workflow</span>
-            </h2>
-            <p className="text-base md:text-lg text-slate-600 max-w-3xl mx-auto px-4">
-              Deployable at bedside within minutes using existing hospital devices—no IT department involvement required.
-            </p>
-          </div>
+          <h2 className="section-title">Bedside workflow built for speed under pressure.</h2>
+          <p className="section-subtitle mx-auto">
+            Institutional teams can deploy and operate GAZE quickly without a specialized IT project.
+          </p>
+        </motion.div>
 
-          {/* Workflow Steps */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-            {[
-              {
-                step: '1',
-                title: 'Device Preparation',
-                description: 'Load GAZE onto any hospital tablet, iPad, or laptop',
-                details: ['2-minute installation', 'Works offline', 'No patient data stored'],
-              },
-              {
-                step: '2',
-                title: 'Bedside Setup',
-                description: 'Position device, calibrate gaze in 30 seconds',
-                details: ['Single calibration', 'Works in any lighting', 'Adaptive to movement'],
-              },
-              {
-                step: '3',
-                title: 'Patient Communication',
-                description: 'Immediate eye-controlled typing and speech',
-                details: ['Emergency phrases', 'Pain communication', 'Basic needs'],
-              },
-            ].map((step, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.2 }}
-                className="bg-white border border-slate-200 rounded-xl p-6 md:p-8 relative"
-              >
-                {/* Step indicator */}
-                <div className="absolute -top-3 md:-top-4 -left-3 md:-left-4 w-10 md:w-12 h-10 md:h-12 rounded-xl bg-slate-900 flex items-center justify-center text-white text-lg md:text-xl font-bold">
-                  {step.step}
-                </div>
+        <div className="mt-12 grid gap-4 md:grid-cols-3">
+          {workflowSteps.map((step, index) => (
+            <motion.article
+              key={step.step}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{ delay: index * 0.08 }}
+              className="surface-card-hover p-6"
+            >
+              <span className="inline-flex rounded-md bg-blue-500/10 px-2.5 py-1 text-xs font-semibold text-blue-400">
+                STEP {step.step}
+              </span>
+              <h3 className="mt-3 text-lg font-semibold">{step.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed" style={{ color: 'rgb(var(--text-secondary))' }}>
+                {step.description}
+              </p>
+              <ul className="mt-4 space-y-2">
+                {step.details.map((detail) => (
+                  <li key={detail} className="flex items-start gap-2 text-xs" style={{ color: 'rgb(var(--text-muted))' }}>
+                    <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-emerald-400" />
+                    {detail}
+                  </li>
+                ))}
+              </ul>
+            </motion.article>
+          ))}
+        </div>
 
-                <div className="mb-4 md:mb-6">
-                  <h3 className="text-lg md:text-xl font-semibold mb-3">{step.title}</h3>
-                  <p className="text-slate-600 mb-4 text-sm md:text-base">{step.description}</p>
-                </div>
-
-                <ul className="space-y-2">
-                  {step.details.map((detail, i) => (
-                    <li key={i} className="flex items-center text-xs md:text-sm text-slate-500">
-                      <CheckCircle className="w-3 md:w-4 h-3 md:h-4 text-green-500 mr-2 flex-shrink-0" />
-                      {detail}
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Impact Metrics */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="mt-12 md:mt-16 bg-white border border-slate-200 rounded-xl p-6 md:p-8"
-          >
-            <div className="grid grid-cols-3 gap-4 md:gap-8">
-              {[
-                { value: '5 min', label: 'Average deployment time' },
-                { value: '30 sec', label: 'Patient setup time' },
-                { value: '0%', label: 'Hardware failure risk' },
-              ].map((metric, index) => (
-                <div key={index} className="text-center">
-                  <div className="text-2xl md:text-3xl font-semibold text-slate-900 mb-2">{metric.value}</div>
-                  <div className="text-xs md:text-sm text-slate-600">{metric.label}</div>
-                </div>
-              ))}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          className="mt-8 grid gap-4 sm:grid-cols-3"
+        >
+          {impactMetrics.map((metric) => (
+            <div key={metric.label} className="surface-card p-5 text-center">
+              <p className="kpi-value">{metric.value}</p>
+              <p className="kpi-label mt-1">{metric.label}</p>
             </div>
-          </motion.div>
+          ))}
         </motion.div>
       </div>
     </section>

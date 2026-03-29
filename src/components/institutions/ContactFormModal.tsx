@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { X } from 'lucide-react'
 
 interface ContactFormModalProps {
   isOpen: boolean
@@ -11,83 +12,83 @@ export default function ContactFormModal({ isOpen, onClose }: ContactFormModalPr
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div
+      className="fixed inset-0 z-[90] flex items-center justify-center p-4"
+      style={{ background: 'color-mix(in oklab, rgb(var(--bg-primary)) 76%, black 24%)' }}
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Schedule Discovery Call"
+    >
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto"
+        initial={{ opacity: 0, scale: 0.95, y: 12 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        className="surface-card-strong max-h-[90vh] w-full max-w-lg overflow-y-auto p-6 sm:p-8"
+        onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-6 md:p-8">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-xl md:text-2xl font-bold">Schedule Discovery Call</h3>
-            <button
-              onClick={onClose}
-              className="text-gray-500 hover:text-gray-700 text-xl"
+        <div className="mb-6 flex items-center justify-between">
+          <h3 className="text-xl font-semibold sm:text-2xl">Schedule Discovery Call</h3>
+          <button
+            onClick={onClose}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-lg border transition"
+            style={{ borderColor: 'var(--card-border)', color: 'rgb(var(--text-secondary))' }}
+            aria-label="Close dialog"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        <form className="space-y-4">
+          {[{ label: 'Name', type: 'text', placeholder: 'John Smith' },
+            { label: 'Organization', type: 'text', placeholder: 'Hospital or institution name' },
+            { label: 'Email', type: 'email', placeholder: 'john@hospital.org' }].map((field) => (
+            <div key={field.label}>
+              <label className="mb-2 block text-sm font-medium" style={{ color: 'rgb(var(--text-secondary))' }}>
+                {field.label}
+              </label>
+              <input
+                type={field.type}
+                className="w-full rounded-xl border px-4 py-2.5 text-sm"
+                style={{
+                  borderColor: 'var(--card-border)',
+                  background: 'var(--card-bg)',
+                  color: 'rgb(var(--text-primary))',
+                }}
+                placeholder={field.placeholder}
+              />
+            </div>
+          ))}
+
+          <div>
+            <label className="mb-2 block text-sm font-medium" style={{ color: 'rgb(var(--text-secondary))' }}>
+              Deployment Interest
+            </label>
+            <select
+              className="w-full rounded-xl border px-4 py-2.5 text-sm"
+              style={{
+                borderColor: 'var(--card-border)',
+                background: 'var(--card-bg)',
+                color: 'rgb(var(--text-primary))',
+              }}
+              defaultValue=""
             >
-              ✕
-            </button>
+              <option value="" disabled>Select primary interest</option>
+              <option>Hospital or ICU deployment</option>
+              <option>Rehabilitation center</option>
+              <option>NGO or nonprofit program</option>
+              <option>Government initiative</option>
+              <option>Research partnership</option>
+            </select>
           </div>
 
-          <form className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Name
-              </label>
-              <input
-                type="text"
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-slate-500 text-sm md:text-base"
-                placeholder="John Smith"
-              />
-            </div>
+          <button type="submit" className="btn-brand w-full justify-center">
+            Request Call
+          </button>
+        </form>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Organization
-              </label>
-              <input
-                type="text"
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-slate-500 text-sm md:text-base"
-                placeholder="Hospital/Institution Name"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email
-              </label>
-              <input
-                type="email"
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-slate-500 text-sm md:text-base"
-                placeholder="john@hospital.org"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Deployment Interest
-              </label>
-              <select className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-slate-500 text-sm md:text-base">
-                <option>Select primary interest</option>
-                <option>Hospital/ICU Deployment</option>
-                <option>Rehabilitation Center</option>
-                <option>NGO/Nonprofit Program</option>
-                <option>Government Initiative</option>
-                <option>Research Partnership</option>
-              </select>
-            </div>
-
-            <button
-              type="submit"
-              className="w-full bg-slate-600 text-white py-3 rounded-lg font-semibold hover:bg-slate-700 transition-colors text-sm md:text-base"
-            >
-              Request Call
-            </button>
-          </form>
-
-          <p className="mt-4 text-xs md:text-sm text-gray-500 text-center">
-            We&apos;ll respond within 24 hours to schedule a 45-minute discovery call.
-          </p>
-        </div>
+        <p className="mt-4 text-center text-xs sm:text-sm" style={{ color: 'rgb(var(--text-muted))' }}>
+          Response time is typically within 24 hours for scheduling.
+        </p>
       </motion.div>
     </div>
   )

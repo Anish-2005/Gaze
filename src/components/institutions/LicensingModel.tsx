@@ -1,122 +1,108 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { DollarSign, Server, Lock, BarChart, CheckCircle } from 'lucide-react'
+import { BarChart3, CheckCircle2, DollarSign, Lock, Server } from 'lucide-react'
+
+const deploymentOptions = [
+  {
+    icon: Server,
+    title: 'Standard cloud deployment',
+    description: 'For institutions with reliable connectivity and centralized operations.',
+    tags: ['Automated updates', 'Usage analytics', 'Managed backups'],
+  },
+  {
+    icon: Lock,
+    title: 'Offline and air-gapped',
+    description: 'For high-security care environments requiring local-only operation.',
+    tags: ['No internet dependency', 'Local data boundary', 'Manual update window'],
+  },
+  {
+    icon: BarChart3,
+    title: 'Hybrid model',
+    description: 'For mixed environments balancing local resilience and central oversight.',
+    tags: ['Flexible rollout', 'Site-level governance', 'Central visibility'],
+  },
+]
 
 export default function LicensingModel() {
   return (
-    <section className="py-12 md:py-24 bg-white text-[#0F172A]">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="section-shell-alt" id="institutional-pricing">
+      <div className="section-grid">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-5xl mx-auto"
+          viewport={{ once: true, margin: '-120px' }}
+          className="mx-auto max-w-3xl text-center"
         >
-          <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-6">
-              Institutional <span className="text-slate-600">licensing model</span>
-            </h2>
-            <p className="text-base md:text-lg text-slate-600 max-w-3xl mx-auto px-4">
-              Flat annual licensing enabling unlimited usage across shared devices—designed for institutional budgets and scale.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
-            {/* Pricing Model */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="bg-white border border-slate-200 rounded-xl p-6 md:p-8"
-            >
-              <div className="flex items-center mb-4 md:mb-6">
-                <DollarSign className="w-6 md:w-8 h-6 md:h-8 text-slate-600 mr-3" />
-                <h3 className="text-xl md:text-2xl font-semibold">Annual Institutional License</h3>
-              </div>
-
-              <div className="mb-6 md:mb-8">
-                <div className="flex items-baseline mb-2">
-                  <span className="text-3xl md:text-4xl font-semibold">$5,000</span>
-                  <span className="text-slate-600 ml-2 text-sm md:text-base">/year per institution</span>
-                </div>
-                <p className="text-slate-600 text-sm md:text-base">
-                  Unlimited usage across all devices and patients
-                </p>
-              </div>
-
-              <ul className="space-y-3 md:space-y-4 mb-6 md:mb-8">
-                {[
-                  'No per-device or per-user fees',
-                  'Unlimited patient deployments',
-                  'Priority technical support',
-                  'Regular software updates',
-                  'Training materials included',
-                  'Bulk access management',
-                ].map((feature, index) => (
-                  <li key={index} className="flex items-center">
-                    <CheckCircle className="w-4 md:w-5 h-4 md:h-5 text-green-500 mr-3 flex-shrink-0" />
-                    <span className="text-slate-700 text-sm md:text-base">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="p-3 md:p-4 bg-slate-50 rounded-lg border border-slate-200">
-                <div className="text-xs md:text-sm text-slate-700">
-                  <strong>Comparison:</strong> Traditional hardware solutions cost $10,000+ per device
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Deployment Options */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="space-y-4 md:space-y-6"
-            >
-              {[
-                {
-                  title: 'Standard Cloud Deployment',
-                  description: 'For institutions with reliable internet',
-                  features: ['Automatic updates', 'Usage analytics', 'Cloud backups'],
-                  icon: <Server className="w-5 md:w-6 h-5 md:h-6" />,
-                },
-                {
-                  title: 'Offline / Air-Gapped',
-                  description: 'For high-security environments',
-                  features: ['No internet required', 'Local data only', 'Manual updates'],
-                  icon: <Lock className="w-5 md:w-6 h-5 md:h-6" />,
-                },
-                {
-                  title: 'Hybrid Model',
-                  description: 'Mix of cloud and offline deployments',
-                  features: ['Flexible deployment', 'Centralized management', 'Local processing'],
-                  icon: <BarChart className="w-5 md:w-6 h-5 md:h-6" />,
-                },
-              ].map((option, index) => (
-                <div key={index} className="bg-white rounded-xl border border-slate-200 p-4 md:p-6 hover:shadow-lg transition-shadow">
-                  <div className="flex items-start">
-                    <div className="w-10 md:w-12 h-10 md:h-12 rounded-lg bg-slate-100 flex items-center justify-center mr-3 md:mr-4 flex-shrink-0">
-                      <div className="text-slate-600">{option.icon}</div>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold md:font-bold mb-1 md:mb-2 text-sm md:text-base">{option.title}</h4>
-                      <p className="text-slate-600 text-xs md:text-sm mb-2 md:mb-3">{option.description}</p>
-                      <ul className="flex flex-wrap gap-1 md:gap-2">
-                        {option.features.map((feature, i) => (
-                          <li key={i} className="text-xs bg-slate-100 text-slate-700 px-2 py-1 rounded">
-                            {feature}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </motion.div>
-          </div>
+          <h2 className="section-title">Institutional licensing designed for predictable scale.</h2>
+          <p className="section-subtitle mx-auto">
+            Flat annual licensing with unlimited usage across shared devices and patient sessions.
+          </p>
         </motion.div>
+
+        <div className="mt-12 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+          <motion.article
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            className="surface-card-strong p-7"
+          >
+            <div className="mb-5 flex items-center gap-3">
+              <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400">
+                <DollarSign className="h-5 w-5" />
+              </div>
+              <h3 className="text-xl font-semibold">Annual institutional license</h3>
+            </div>
+
+            <p className="text-4xl font-semibold">$5,000<span className="ml-2 text-base font-medium" style={{ color: 'rgb(var(--text-muted))' }}>/year</span></p>
+            <p className="mt-2 text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>
+              Unlimited usage across devices and patients, with support and update coverage.
+            </p>
+
+            <ul className="mt-6 space-y-3">
+              {[
+                'No per-device or per-user fees',
+                'Unlimited patient deployments',
+                'Priority support and updates',
+                'Deployment and onboarding material included',
+                'Bulk access management tools',
+              ].map((feature) => (
+                <li key={feature} className="flex items-start gap-2 text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-400" />
+                  {feature}
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-6 rounded-xl border px-4 py-3 text-sm" style={{ borderColor: 'var(--card-border)', background: 'var(--card-bg)' }}>
+              Traditional hardware-first systems often exceed $10,000 per device before maintenance.
+            </div>
+          </motion.article>
+
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            className="space-y-4"
+          >
+            {deploymentOptions.map((option) => (
+              <article key={option.title} className="surface-card-hover p-5">
+                <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/10 text-blue-400">
+                  <option.icon className="h-5 w-5" />
+                </div>
+                <h4 className="text-lg font-semibold">{option.title}</h4>
+                <p className="mt-1 text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>{option.description}</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {option.tags.map((tag) => (
+                    <span key={tag} className="rounded-full border px-2.5 py-1 text-xs" style={{ borderColor: 'var(--card-border)', color: 'rgb(var(--text-muted))' }}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </motion.div>
+        </div>
       </div>
     </section>
   )

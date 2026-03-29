@@ -12,7 +12,7 @@ import {
 
 export default function GovernancePage() {
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen">
       <GovernanceHero />
       <EthicalDesignPrinciples />
       <PrivacyArchitecture />

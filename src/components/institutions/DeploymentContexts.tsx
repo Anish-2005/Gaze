@@ -1,75 +1,77 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Stethoscope, Users, Heart, Globe, CheckCircle } from 'lucide-react'
+import { CheckCircle2, Globe2, HeartPulse, Hospital, Users } from 'lucide-react'
+
+const contexts = [
+  {
+    icon: Hospital,
+    title: 'Hospitals and ICUs',
+    description: 'Enable communication for intubated or temporarily paralyzed patients on shared bedside devices.',
+    features: ['Emergency communication phrases', 'No procurement dependency', 'Rapid nurse onboarding'],
+  },
+  {
+    icon: Users,
+    title: 'Rehabilitation centers',
+    description: 'Support long-term recovery journeys for stroke, ALS, and spinal cord injury populations.',
+    features: ['Therapy-aligned workflows', 'Adaptive interaction profiles', 'Progress continuity'],
+  },
+  {
+    icon: HeartPulse,
+    title: 'NGOs and non-profits',
+    description: 'Scale communication programs across constrained budgets and mixed infrastructure settings.',
+    features: ['Bulk access provisioning', 'Offline-ready deployments', 'Multi-language support'],
+  },
+  {
+    icon: Globe2,
+    title: 'Public sector programs',
+    description: 'Deploy as regional or national accessibility infrastructure through government initiatives.',
+    features: ['Central governance controls', 'Compliance alignment', 'Staff training enablement'],
+  },
+]
 
 export default function DeploymentContexts() {
   return (
-    <section className="py-12 md:py-24 bg-white text-[#0F172A]">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="section-shell-alt">
+      <div className="section-grid">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-4xl mx-auto text-center mb-12 md:mb-16"
+          viewport={{ once: true, margin: '-120px' }}
+          className="mx-auto max-w-3xl text-center"
         >
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-6">
-            Designed for <span className="text-slate-600">institutional scale</span>
-          </h2>
-          <p className="text-base md:text-lg text-slate-600 px-4">
-            From bedside communication in ICUs to national accessibility programs
+          <h2 className="section-title">Designed for institutional scale and operational reality.</h2>
+          <p className="section-subtitle mx-auto">
+            A single platform pattern that adapts across acute care, rehabilitation, and public-service deployment models.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-6">
-          {[
-            {
-              icon: <Stethoscope className="w-6 md:w-8 h-6 md:h-8" />,
-              title: 'Hospitals & ICUs',
-              description: 'Enable communication for intubated or temporarily paralyzed patients using shared tablets and existing infrastructure.',
-              features: ['Emergency communication', 'No hardware procurement', 'HIPAA compliant'],
-            },
-            {
-              icon: <Users className="w-6 md:w-8 h-6 md:h-8" />,
-              title: 'Rehabilitation Centers',
-              description: 'Support long-term recovery for stroke, ALS, and spinal injury patients with progressive communication tools.',
-              features: ['Therapy integration', 'Progress tracking', 'Customizable interfaces'],
-            },
-            {
-              icon: <Heart className="w-6 md:w-8 h-6 md:h-8" />,
-              title: 'NGOs & Nonprofits',
-              description: 'Scale assistive communication programs within constrained budgets across multiple facilities.',
-              features: ['Bulk licensing', 'Offline deployment', 'Multi-language support'],
-            },
-            {
-              icon: <Globe className="w-6 md:w-8 h-6 md:h-8" />,
-              title: 'Public Sector Programs',
-              description: 'Deploy as national assistive infrastructure through government accessibility initiatives.',
-              features: ['Centralized management', 'Local compliance', 'Training programs'],
-            },
-          ].map((context, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
+        <div className="mt-12 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {contexts.map((context, index) => (
+            <motion.article
+              key={context.title}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="bg-white border border-slate-200 rounded-xl p-6 md:p-8 hover:shadow-lg transition-shadow"
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{ delay: index * 0.06 }}
+              className="surface-card-hover p-6"
             >
-              <div className="w-10 md:w-12 h-10 md:h-12 rounded-lg bg-slate-100 flex items-center justify-center mb-4 md:mb-6">
-                <div className="text-slate-600">{context.icon}</div>
+              <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400">
+                <context.icon className="h-5 w-5" />
               </div>
-              <h3 className="text-lg md:text-xl font-semibold mb-3">{context.title}</h3>
-              <p className="text-slate-600 mb-4 text-sm md:text-base">{context.description}</p>
-              <ul className="space-y-2">
-                {context.features.map((feature, i) => (
-                  <li key={i} className="flex items-center text-xs md:text-sm text-slate-500">
-                    <CheckCircle className="w-3 md:w-4 h-3 md:h-4 text-green-500 mr-2 flex-shrink-0" />
+              <h3 className="text-lg font-semibold">{context.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed" style={{ color: 'rgb(var(--text-secondary))' }}>
+                {context.description}
+              </p>
+              <ul className="mt-4 space-y-2">
+                {context.features.map((feature) => (
+                  <li key={feature} className="flex items-start gap-2 text-xs" style={{ color: 'rgb(var(--text-muted))' }}>
+                    <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-emerald-400" />
                     {feature}
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </motion.article>
           ))}
         </div>
       </div>

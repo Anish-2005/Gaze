@@ -1,128 +1,114 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { BookOpen, Network, FileText, Mail, ShieldCheck, Users, Clock } from 'lucide-react'
+import { BookOpen, Clock, FileText, Mail, Network, ShieldCheck, Users } from 'lucide-react'
+
+const documentation = [
+  {
+    icon: BookOpen,
+    title: 'System behavior documentation',
+    description: 'Clear references for inference flow, edge cases, and fallback logic.',
+  },
+  {
+    icon: Network,
+    title: 'Data-flow transparency',
+    description: 'Traceable boundaries for where data is processed, cached, and discarded.',
+  },
+  {
+    icon: FileText,
+    title: 'Limitations disclosure',
+    description: 'Explicit statements of capability limits and failure conditions.',
+  },
+]
+
+const oversight = [
+  {
+    icon: Mail,
+    title: 'Feedback channels',
+    description: 'Users and caregivers can report concerns and improvements continuously.',
+  },
+  {
+    icon: ShieldCheck,
+    title: 'Audit support',
+    description: 'Documentation and controls for institutional compliance review cycles.',
+  },
+  {
+    icon: Users,
+    title: 'Advisory input',
+    description: 'Regular consultation with disability advocates and medical professionals.',
+  },
+]
 
 export default function TransparencyAccountability() {
   return (
-    <section className="py-24 bg-[#F7F9FC] text-[#0F172A]">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="section-shell-alt">
+      <div className="section-grid">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-7xl mx-auto"
+          viewport={{ once: true, margin: '-120px' }}
+          className="mx-auto max-w-3xl text-center"
         >
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-semibold mb-6">
-              Transparency & accountability
-            </h2>
-            <p className="text-lg text-slate-600 max-w-3xl mx-auto">
-              Clear documentation, audit trails, and ongoing oversight mechanisms
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-12">
-            <div>
-              <h3 className="text-xl font-bold mb-6">Documentation & Disclosure</h3>
-              <div className="space-y-6">
-                {[
-                  {
-                    title: 'System Behavior Documentation',
-                    description: 'Detailed technical documentation of how the system processes gaze data, makes predictions, and handles edge cases.',
-                    icon: <BookOpen className="w-5 h-5" />,
-                  },
-                  {
-                    title: 'Data Flow Diagrams',
-                    description: 'Visual maps showing exactly what data is processed where, when, and for how long.',
-                    icon: <Network className="w-5 h-5" />,
-                  },
-                  {
-                    title: 'Limitations Documentation',
-                    description: 'Clear statements about what the system cannot do, conditions that affect performance, and known failure modes.',
-                    icon: <FileText className="w-5 h-5" />,
-                  },
-                ].map((item, index) => (
-                  <div key={index} className="flex items-start">
-                    <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center mr-4 flex-shrink-0">
-                      <div className="text-slate-600">{item.icon}</div>
-                    </div>
-                    <div>
-                      <h4 className="font-medium mb-1">{item.title}</h4>
-                      <p className="text-sm text-slate-600">{item.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-xl font-bold mb-6">Oversight & Feedback</h3>
-              <div className="space-y-6">
-                {[
-                  {
-                    title: 'User Feedback Mechanisms',
-                    description: 'Multiple channels for users and caregivers to report issues, suggest improvements, or raise concerns.',
-                    icon: <Mail className="w-5 h-5" />,
-                  },
-                  {
-                    title: 'Institutional Audit Support',
-                    description: 'Tools and documentation to support internal and external audits for healthcare institutions.',
-                    icon: <ShieldCheck className="w-5 h-5" />,
-                  },
-                  {
-                    title: 'Ethics Advisory Input',
-                    description: 'Regular consultation with disability advocates, ethicists, and medical professionals.',
-                    icon: <Users className="w-5 h-5" />,
-                  },
-                ].map((item, index) => (
-                  <div key={index} className="flex items-start">
-                    <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center mr-4 flex-shrink-0">
-                      <div className="text-slate-600">{item.icon}</div>
-                    </div>
-                    <div>
-                      <h4 className="font-medium mb-1">{item.title}</h4>
-                      <p className="text-sm text-slate-600">{item.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Audit Trail Feature */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="mt-12 p-8 bg-slate-50 rounded-2xl border border-slate-200"
-          >
-            <div className="flex items-start">
-              <FileText className="w-8 h-8 text-slate-600 mr-4 flex-shrink-0 mt-1" />
-              <div>
-                <h4 className="font-bold mb-2">Audit Trail System</h4>
-                <p className="text-slate-600 mb-4">
-                  Institutional deployments include configurable audit trails that log:
-                </p>
-                <div className="grid md:grid-cols-2 gap-4">
-                  {[
-                    'System activations and deactivations',
-                    'Emergency mode usage',
-                    'Configuration changes',
-                    'Data export/import events',
-                    'User consent changes',
-                    'Caregiver interventions',
-                  ].map((item, i) => (
-                    <div key={i} className="flex items-center text-sm">
-                      <Clock className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" />
-                      {item}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </motion.div>
+          <h2 className="section-title">Transparency and accountability mechanisms.</h2>
+          <p className="section-subtitle mx-auto">
+            Governance is operationalized through documentation, auditable controls, and feedback loops.
+          </p>
         </motion.div>
+
+        <div className="mt-12 grid gap-6 lg:grid-cols-2">
+          <div className="surface-card p-6">
+            <h3 className="text-xl font-semibold">Documentation and disclosure</h3>
+            <div className="mt-5 space-y-4">
+              {documentation.map((item) => (
+                <article key={item.title} className="flex items-start gap-3">
+                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/10 text-blue-400">
+                    <item.icon className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-semibold">{item.title}</h4>
+                    <p className="mt-1 text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>{item.description}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          <div className="surface-card p-6">
+            <h3 className="text-xl font-semibold">Oversight and feedback</h3>
+            <div className="mt-5 space-y-4">
+              {oversight.map((item) => (
+                <article key={item.title} className="flex items-start gap-3">
+                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/10 text-blue-400">
+                    <item.icon className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-semibold">{item.title}</h4>
+                    <p className="mt-1 text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>{item.description}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="surface-card-strong mt-8 p-6">
+          <h4 className="text-base font-semibold">Audit trail configuration</h4>
+          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            {[
+              'System activation and deactivation events',
+              'Emergency mode usage records',
+              'Configuration change history',
+              'Data export and import events',
+              'Consent state updates',
+              'Caregiver intervention logs',
+            ].map((item) => (
+              <div key={item} className="flex items-start gap-2 text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>
+                <Clock className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-400" />
+                {item}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   )

@@ -1,124 +1,117 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Eye, Timer, Target, RotateCcw, Volume2, Keyboard, Globe, FileText } from 'lucide-react'
+import { Eye, FileText, Globe, Keyboard, RotateCcw, Target, Timer, Volume2 } from 'lucide-react'
+
+const visualStandards = [
+  {
+    icon: Eye,
+    title: 'High-contrast interface',
+    description: 'Contrast and legibility support users with varied visual capability needs.',
+  },
+  {
+    icon: Timer,
+    title: 'Adjustable dwell timing',
+    description: 'Dwell windows can be tuned to match motor precision and fatigue patterns.',
+  },
+  {
+    icon: Target,
+    title: 'Predictable focus states',
+    description: 'Consistent state signaling reduces cognitive load and ambiguity.',
+  },
+  {
+    icon: RotateCcw,
+    title: 'Reduced-motion option',
+    description: 'Motion effects can be minimized for vestibular comfort and clarity.',
+  },
+]
+
+const technicalStandards = [
+  {
+    icon: Volume2,
+    title: 'Screen reader compatibility',
+    description: 'Semantic structure supports NVDA, VoiceOver, TalkBack, and related tooling.',
+  },
+  {
+    icon: Keyboard,
+    title: 'Keyboard operation path',
+    description: 'Core workflows remain accessible through keyboard-only interaction.',
+  },
+  {
+    icon: Globe,
+    title: 'Multilingual support',
+    description: 'Interface and communication outputs support broad language coverage.',
+  },
+  {
+    icon: FileText,
+    title: 'Low-literacy modes',
+    description: 'Phrase and symbol-assisted flows reduce literacy burden in urgent contexts.',
+  },
+]
 
 export default function AccessibilityStandards() {
   return (
-    <section className="py-24 bg-[#F7F9FC] text-[#0F172A]">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="section-shell-alt">
+      <div className="section-grid">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-7xl mx-auto"
+          viewport={{ once: true, margin: '-120px' }}
+          className="mx-auto max-w-3xl text-center"
         >
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-semibold mb-6">
-              Accessibility standards
-            </h2>
-            <p className="text-lg text-slate-600 max-w-3xl mx-auto">
-              Designed to WCAG 2.1 AA standards with additional considerations for severe motor impairments
+          <h2 className="section-title">Accessibility standards for severe motor and speech impairment use cases.</h2>
+          <p className="section-subtitle mx-auto">
+            WCAG-aligned design plus assistive interaction safeguards for clinical communication contexts.
+          </p>
+        </motion.div>
+
+        <div className="mt-12 grid gap-6 lg:grid-cols-2">
+          <div className="surface-card p-6">
+            <h3 className="text-xl font-semibold">Visual and interaction standards</h3>
+            <div className="mt-5 space-y-4">
+              {visualStandards.map((item) => (
+                <article key={item.title} className="flex items-start gap-3">
+                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/10 text-blue-400">
+                    <item.icon className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-semibold">{item.title}</h4>
+                    <p className="mt-1 text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>{item.description}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          <div className="surface-card p-6">
+            <h3 className="text-xl font-semibold">Technical compatibility standards</h3>
+            <div className="mt-5 space-y-4">
+              {technicalStandards.map((item) => (
+                <article key={item.title} className="flex items-start gap-3">
+                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/10 text-blue-400">
+                    <item.icon className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-semibold">{item.title}</h4>
+                    <p className="mt-1 text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>{item.description}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="surface-card-strong mt-8 flex flex-col gap-3 p-6 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h4 className="text-base font-semibold">WCAG 2.1 AA alignment</h4>
+            <p className="mt-1 text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>
+              Interfaces are tested against WCAG criteria and reviewed with disability-centered feedback loops.
             </p>
           </div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* Visual & Interaction Standards */}
-            <div className="space-y-6">
-              <h3 className="text-xl font-bold mb-4">Visual & Interaction Standards</h3>
-              {[
-                {
-                  title: 'High Contrast Interface',
-                  description: 'Minimum 4.5:1 contrast ratio with adjustable themes for varying visual capabilities',
-                  icon: <Eye className="w-5 h-5" />,
-                },
-                {
-                  title: 'Adjustable Dwell Timing',
-                  description: 'User-configurable dwell times from 0.5 to 3 seconds to match motor capabilities',
-                  icon: <Timer className="w-5 h-5" />,
-                },
-                {
-                  title: 'Predictable Focus States',
-                  description: 'Clear, consistent visual indicators for gaze focus and selection states',
-                  icon: <Target className="w-5 h-5" />,
-                },
-                {
-                  title: 'Reduced Motion Options',
-                  description: 'Animation controls and reduced motion settings for vestibular disorder accommodation',
-                  icon: <RotateCcw className="w-5 h-5" />,
-                },
-              ].map((standard, index) => (
-                <div key={index} className="flex items-start">
-                  <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center mr-4 flex-shrink-0">
-                    <div className="text-slate-600">{standard.icon}</div>
-                  </div>
-                  <div>
-                    <h4 className="font-medium mb-1">{standard.title}</h4>
-                    <p className="text-sm text-slate-600">{standard.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Technical & Compatibility Standards */}
-            <div className="space-y-6">
-              <h3 className="text-xl font-bold mb-4">Technical & Compatibility Standards</h3>
-              {[
-                {
-                  title: 'Screen Reader Compatibility',
-                  description: 'Full support for NVDA, JAWS, VoiceOver, and TalkBack with semantic HTML structure',
-                  icon: <Volume2 className="w-5 h-5" />,
-                },
-                {
-                  title: 'Keyboard Navigation',
-                  description: 'Complete keyboard-only operation for users who can only use a single switch',
-                  icon: <Keyboard className="w-5 h-5" />,
-                },
-                {
-                  title: 'Multilingual Support',
-                  description: 'Interface and predictive text in 20+ languages with RTL language support',
-                  icon: <Globe className="w-5 h-5" />,
-                },
-                {
-                  title: 'Low-Literacy Modes',
-                  description: 'Symbol-based communication and phrase prediction for users with literacy challenges',
-                  icon: <FileText className="w-5 h-5" />,
-                },
-              ].map((standard, index) => (
-                <div key={index} className="flex items-start">
-                  <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center mr-4 flex-shrink-0">
-                    <div className="text-slate-600">{standard.icon}</div>
-                  </div>
-                  <div>
-                    <h4 className="font-medium mb-1">{standard.title}</h4>
-                    <p className="text-sm text-slate-600">{standard.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* WCAG Compliance Badge */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="mt-12 p-8 bg-slate-50 rounded-2xl border border-slate-200"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <h4 className="font-bold mb-2">WCAG 2.1 AA Compliance</h4>
-                <p className="text-slate-600">
-                  All interfaces are tested against WCAG 2.1 AA standards. We maintain an
-                  accessibility statement and welcome feedback from users with disabilities.
-                </p>
-              </div>
-              <div className="px-4 py-2 bg-white border border-slate-200 rounded-lg font-medium">
-                WCAG 2.1 AA
-              </div>
-            </div>
-          </motion.div>
-        </motion.div>
+          <span className="rounded-lg border px-3 py-1.5 text-sm font-semibold" style={{ borderColor: 'var(--card-border)', background: 'var(--card-bg)' }}>
+            WCAG 2.1 AA
+          </span>
+        </div>
       </div>
     </section>
   )
