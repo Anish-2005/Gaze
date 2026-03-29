@@ -1,8 +1,11 @@
 'use client'
 
-import { useJudgeMode } from '@/lib/useJudgeMode'
-import './demo.module.css'
+import Link from 'next/link'
+import { Home, Maximize2, Minimize2, Presentation } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { useJudgeMode } from '@/lib/useJudgeMode'
+import { cn } from '@/lib/utils'
+import './demo.module.css'
 
 export default function DemoLayoutClient({
   children,
@@ -11,32 +14,29 @@ export default function DemoLayoutClient({
 }) {
   const { judgeMode, enterJudgeMode } = useJudgeMode()
   const [isFullscreen, setIsFullscreen] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
-  // Auto-enter judge mode if ?judge=true is in URL
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     if (params.get('judge') === 'true') {
       enterJudgeMode()
     }
+    setMounted(true)
   }, [enterJudgeMode])
 
-  // Track fullscreen status
   useEffect(() => {
     const checkFullscreen = () => {
-      setIsFullscreen(!!document.fullscreenElement)
+      setIsFullscreen(Boolean(document.fullscreenElement))
     }
 
     document.addEventListener('fullscreenchange', checkFullscreen)
-    // Also check on mount
     checkFullscreen()
 
     return () => document.removeEventListener('fullscreenchange', checkFullscreen)
   }, [])
 
-  // Handle keyboard shortcuts for demo
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Fullscreen toggle with F11 or F
       if (e.key === 'F11' || (e.key === 'f' && e.ctrlKey)) {
         e.preventDefault()
         if (!document.fullscreenElement) {
@@ -46,31 +46,23 @@ export default function DemoLayoutClient({
         }
       }
 
-      // Space to trigger speak event
-      if (e.key === ' ' && !e.target || (e.target as HTMLElement).tagName !== 'INPUT') {
+      if (e.key === ' ' && (!(e.target instanceof HTMLElement) || e.target.tagName !== 'INPUT')) {
         e.preventDefault()
-        const speakEvent = new CustomEvent('speak')
-        window.dispatchEvent(speakEvent)
+        window.dispatchEvent(new CustomEvent('speak'))
       }
 
-      // Escape to trigger clear event
       if (e.key === 'Escape') {
-        const clearEvent = new CustomEvent('clear')
-        window.dispatchEvent(clearEvent)
+        window.dispatchEvent(new CustomEvent('clear'))
       }
 
-      // R to reset demo
       if (e.key === 'r' && e.ctrlKey) {
         e.preventDefault()
-        const resetEvent = new CustomEvent('reset')
-        window.dispatchEvent(resetEvent)
+        window.dispatchEvent(new CustomEvent('reset'))
       }
 
-      // C for calibration
       if (e.key === 'c' && e.ctrlKey) {
         e.preventDefault()
-        const calibrateEvent = new CustomEvent('calibrate')
-        window.dispatchEvent(calibrateEvent)
+        window.dispatchEvent(new CustomEvent('calibrate'))
       }
     }
 
@@ -78,7 +70,6 @@ export default function DemoLayoutClient({
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [])
 
-  // Apply judge-mode class to document element
   useEffect(() => {
     if (judgeMode) {
       document.documentElement.classList.add('judge-mode')
@@ -86,106 +77,82 @@ export default function DemoLayoutClient({
       document.documentElement.classList.remove('judge-mode')
     }
 
-    // Cleanup on unmount
     return () => {
       document.documentElement.classList.remove('judge-mode')
     }
   }, [judgeMode])
 
+  const toggleFullscreen = () => {
+    if (!mounted) return
+
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(console.log)
+      return
+    }
+
+    document.exitFullscreen().catch(console.log)
+  }
+
   return (
-    <div className={`h-full bg-gray-50 my-24 ${judgeMode ? 'pt-0' : ''}`}>
-      {/* Demo Status Bar (Visible in Judge Mode) */}
+    <div className={cn('relative min-h-screen', judgeMode ? 'pt-0' : 'pt-20')}>
       {judgeMode && (
-        <div className="fixed top-0 left-0 right-0 z-50 bg-gray-900 text-gray-100 border-b border-gray-800">
-          <div className="container mx-auto px-4">
-            <div className="flex items-center justify-between h-8 text-xs">
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                  <span className="font-mono">DEMO ACTIVE</span>
-                </div>
-                <span className="text-gray-400">|</span>
-                <div className="hidden sm:flex items-center space-x-2">
-                  <kbd className="px-2 py-1 bg-gray-800 rounded text-xs">SPACE</kbd>
-                  <span className="text-gray-400">to speak</span>
-                </div>
-                <div className="hidden sm:flex items-center space-x-2">
-                  <kbd className="px-2 py-1 bg-gray-800 rounded text-xs">ESC</kbd>
-                  <span className="text-gray-400">to clear</span>
-                </div>
-                {/* Mobile shortcuts hint */}
-                <div className="sm:hidden flex items-center space-x-2">
-                  <span className="text-gray-400 text-xs">Use buttons below</span>
-                </div>
-              </div>
-
-              <div className="flex items-center space-x-4">
-                <button
-                  onClick={() => {
-                    if (!document.fullscreenElement) {
-                      document.documentElement.requestFullscreen().catch(console.log)
-                    } else {
-                      document.exitFullscreen().catch(console.log)
-                    }
-                  }}
-                  className="text-xs text-gray-400 hover:text-white transition-colors"
-                  title="Toggle Fullscreen (F11 or Ctrl+F)"
-                >
-                  {document.fullscreenElement ? 'Exit Fullscreen' : 'Fullscreen'}
-                </button>
-
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                  <span className="text-gray-400">Judge Mode</span>
-                </div>
-              </div>
+        <div className="fixed inset-x-0 top-0 z-[70] border-b border-cyan-400/20 bg-slate-950/90 backdrop-blur-xl">
+          <div className="mx-auto flex h-10 w-full max-w-[1400px] items-center justify-between px-4 text-xs text-slate-300 sm:px-6 lg:px-8">
+            <div className="flex items-center gap-3">
+              <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2.5 py-1 text-[11px] font-medium text-emerald-300">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" />
+                Judge Mode Active
+              </span>
+              <span className="hidden text-slate-400 sm:inline">Space: Speak</span>
+              <span className="hidden text-slate-400 sm:inline">Esc: Clear</span>
             </div>
+            <button
+              onClick={toggleFullscreen}
+              className="inline-flex items-center gap-2 rounded-md border border-slate-700 px-2.5 py-1 text-[11px] text-slate-300 transition hover:border-slate-500 hover:text-white"
+              title="Toggle fullscreen"
+            >
+              {isFullscreen ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
+              {isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
+            </button>
           </div>
         </div>
       )}
 
-      {/* Main Demo Content */}
-      <div className={`h-full ${judgeMode ? 'pt-8' : ''}`}>
-        {/* Elegant Navigation Header */}
-        {!judgeMode && (
-          <div className="absolute top-90 left-4 right-4 z-[10000]">
-            <div className="flex items-center justify-between">
-              <a
-                href="/pitch"
-                className="inline-flex items-center space-x-2 px-3 py-2 bg-white/90 backdrop-blur-sm rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:bg-white hover:shadow-lg transition-all"
-              >
-                <span>←</span>
-                <span>Back to Pitch</span>
-              </a>
+      {!judgeMode && (
+        <div className="pointer-events-none fixed right-4 top-24 z-[65] flex flex-col gap-2 sm:right-6">
+          <Link
+            href="/"
+            className="pointer-events-auto inline-flex items-center gap-2 rounded-xl border border-slate-700/70 bg-slate-900/80 px-3 py-2 text-xs font-medium text-slate-200 backdrop-blur-xl transition hover:border-slate-500 hover:text-white"
+          >
+            <Home className="h-3.5 w-3.5" />
+            Overview
+          </Link>
+          <Link
+            href="/pitch"
+            className="pointer-events-auto inline-flex items-center gap-2 rounded-xl border border-slate-700/70 bg-slate-900/80 px-3 py-2 text-xs font-medium text-slate-200 backdrop-blur-xl transition hover:border-slate-500 hover:text-white"
+          >
+            <Presentation className="h-3.5 w-3.5" />
+            Pitch Mode
+          </Link>
+          <button
+            onClick={toggleFullscreen}
+            className="pointer-events-auto inline-flex items-center gap-2 rounded-xl border border-cyan-400/35 bg-cyan-400/10 px-3 py-2 text-xs font-medium text-cyan-200 backdrop-blur-xl transition hover:border-cyan-300 hover:text-cyan-100"
+            title="Enter fullscreen mode"
+          >
+            {isFullscreen ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
+            {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
+          </button>
+        </div>
+      )}
 
-              <button
-                onClick={() => {
-                  if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen().catch(console.log)
-                  }
-                }}
-                className="inline-flex items-center space-x-2 px-3 py-2 bg-blue-600/90 backdrop-blur-sm text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-all shadow-lg"
-                title="Enter fullscreen mode for optimal demo experience"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-                </svg>
-                <span>Fullscreen</span>
-              </button>
-            </div>
-          </div>
-        )}
-
+      <div className={cn('min-h-screen', judgeMode && 'pt-10')}>
         {children}
       </div>
 
-
-
-      {/* Fullscreen Indicator */}
       {isFullscreen && (
-        <div className="fixed top-4 right-4 z-30">
-          <div className="px-3 py-1.5 bg-black/70 text-white text-xs rounded-full backdrop-blur-sm">
-            Fullscreen Mode
+        <div className="fixed right-4 top-4 z-[80] sm:right-6">
+          <div className="rounded-full border border-slate-700 bg-slate-900/90 px-3 py-1.5 text-xs font-medium text-slate-200 backdrop-blur">
+            Fullscreen active
           </div>
         </div>
       )}

@@ -2,9 +2,9 @@
 
 import { useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { Keyboard as KeyboardIcon } from 'lucide-react'
 import Key from './Key'
 import WordPredictions from './WordPredictions'
-import { Keyboard as KeyboardIcon } from 'lucide-react'
 
 interface GazeKeyboardProps {
   onSelect: (key: string) => void
@@ -33,26 +33,23 @@ export default function GazeKeyboard({
   hoveredKey,
   dwellProgress,
   setHoveredKey,
-  isGenerating = false
+  isGenerating = false,
 }: GazeKeyboardProps) {
-
-  /* ---------- GAZE EVENTS ---------- */
   useEffect(() => {
     const handleGazeHover = (event: CustomEvent) => {
       const key = event.detail.key
       setHoveredKey(key)
-      // Track hovered keys for word prediction (only letters)
       if (key && key.length === 1 && /[A-Z]/.test(key)) {
         addHoveredKey(key)
       }
     }
 
     window.addEventListener('gazehover', handleGazeHover as EventListener)
-    return () =>
+    return () => {
       window.removeEventListener('gazehover', handleGazeHover as EventListener)
+    }
   }, [setHoveredKey, addHoveredKey])
 
-  /* ---------- KEYBOARD (JUDGE MODE) ---------- */
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const key = event.key.toUpperCase()
@@ -79,50 +76,38 @@ export default function GazeKeyboard({
   }, [onSelect, setHoveredKey])
 
   return (
-    <div className="w-full max-w-xl mx-auto">
-
-      {/* Keyboard shell */}
+    <div className="w-full max-w-3xl">
       <motion.div
-        className="glass-card p-4 sm:p-6 relative overflow-hidden"
-        initial={{ opacity: 0, y: 20 }}
+        className="relative overflow-hidden rounded-2xl border border-slate-700 bg-slate-900/70 p-4 shadow-[0_16px_40px_rgba(2,6,23,0.35)] sm:p-6"
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.4 }}
       >
-        {/* Header */}
-        <div className="flex items-center justify-center gap-2 mb-4 pb-4 border-b border-slate-700/50">
-          <motion.div
-            className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center"
-            animate={{ rotate: [0, 5, -5, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <KeyboardIcon className="w-4 h-4 text-blue-400" />
-          </motion.div>
-          <span className="text-sm font-medium text-slate-400">Eye-Controlled Keyboard</span>
+        <div className="mb-5 flex items-center justify-between border-b border-slate-700/70 pb-4">
+          <div className="flex items-center gap-2">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-cyan-400/30 bg-cyan-400/10 text-cyan-200">
+              <KeyboardIcon className="h-4 w-4" />
+            </span>
+            <div>
+              <p className="text-sm font-semibold text-slate-100">Gaze Keyboard</p>
+              <p className="text-xs text-slate-500">Dwell to select, tap for manual fallback</p>
+            </div>
+          </div>
+          <span className="rounded-full border border-slate-700 bg-slate-950 px-2.5 py-1 text-[11px] text-slate-400">
+            25-key optimized layout
+          </span>
         </div>
 
-        {/* Ambient background glow */}
-        <div className="absolute inset-0 pointer-events-none">
-          <motion.div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl"
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.05, 0.1, 0.05],
-            }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </div>
-
-        {/* Rows */}
-        <div className="space-y-3 sm:space-y-4 relative z-10">
+        <div className="space-y-2.5 sm:space-y-3">
           {KEYBOARD_LAYOUT.map((row, rowIndex) => (
             <motion.div
               key={rowIndex}
               className="flex justify-center gap-2 sm:gap-3"
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: rowIndex * 0.05 }}
+              transition={{ delay: rowIndex * 0.04 }}
             >
-              {row.map(letter => (
+              {row.map((letter) => (
                 <Key
                   key={letter}
                   letter={letter}
@@ -140,19 +125,11 @@ export default function GazeKeyboard({
           ))}
         </div>
 
-        {/* Mobile hint */}
-        <motion.div
-          className="mt-4 sm:hidden text-center text-xs text-slate-500 flex items-center justify-center gap-2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-        >
-          <span className="w-1 h-1 rounded-full bg-slate-600" />
-          Focus on a letter to select • Tap to test
-        </motion.div>
+        <div className="mt-5 rounded-xl border border-slate-700/80 bg-slate-950/80 px-4 py-2 text-center text-xs text-slate-400">
+          Keep gaze stable for approximately 1.5s to trigger a key selection. Suggestions use faster dwell.
+        </div>
       </motion.div>
 
-      {/* Word Predictions */}
       <WordPredictions
         predictions={predictions}
         onSelectWord={onSelectWord}
@@ -160,19 +137,6 @@ export default function GazeKeyboard({
         setHoveredKey={setHoveredKey}
         isGenerating={isGenerating}
       />
-
-      {/* Desktop hint */}
-      <motion.div
-        className="hidden sm:flex mt-4 text-center text-sm text-slate-500 items-center justify-center gap-2"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.6 }}
-      >
-        <span className="w-1.5 h-1.5 rounded-full bg-blue-500/50" />
-        Focus on a letter for a moment to type
-        <span className="mx-2 text-slate-600">•</span>
-        Press <kbd className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-400 font-mono text-xs">Space</kbd> to speak
-      </motion.div>
     </div>
   )
 }

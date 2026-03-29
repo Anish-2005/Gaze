@@ -1,8 +1,8 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { cn } from '@/lib/utils'
 import { Sparkles } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 interface WordPredictionsProps {
   predictions: string[]
@@ -17,34 +17,27 @@ export default function WordPredictions({
   onSelectWord,
   hoveredKey,
   setHoveredKey,
-  isGenerating = false
+  isGenerating = false,
 }: WordPredictionsProps) {
-  // Don't show anything if no predictions and not generating
   if (predictions.length === 0 && !isGenerating) return null
 
   return (
-    <motion.div
+    <motion.section
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="mt-4 glass-card p-4"
+      className="mt-4 rounded-2xl border border-slate-700 bg-slate-950/70 p-4"
     >
-      {/* Header */}
-      <div className="flex items-center gap-2 mb-3">
-        <Sparkles className="w-4 h-4 text-blue-400" />
-        <span className="text-xs font-medium text-slate-400">
-          {isGenerating ? 'Generating suggestions...' : 'Word suggestions'}
+      <div className="mb-3 flex items-center gap-2 text-slate-300">
+        <Sparkles className="h-4 w-4 text-cyan-300" />
+        <span className="text-xs font-semibold uppercase tracking-[0.12em]">
+          {isGenerating ? 'Generating suggestions' : 'Predicted words'}
         </span>
       </div>
 
       {isGenerating ? (
-        <div className="flex items-center gap-3 py-2">
-          {/* Skeleton loading */}
+        <div className="flex flex-wrap gap-2">
           {[1, 2, 3].map((i) => (
-            <div
-              key={i}
-              className="skeleton h-8 w-16 rounded-lg"
-              style={{ animationDelay: `${i * 0.2}s` }}
-            />
+            <div key={i} className="skeleton h-9 w-24 rounded-xl" style={{ animationDelay: `${i * 0.15}s` }} />
           ))}
         </div>
       ) : predictions.length > 0 ? (
@@ -56,33 +49,23 @@ export default function WordPredictions({
               onMouseEnter={() => setHoveredKey(`WORD_${index}`)}
               onMouseLeave={() => setHoveredKey(null)}
               data-gaze-key={`WORD_${index}`}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: index * 0.05 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.04 }}
               className={cn(
-                'px-4 py-2 text-sm rounded-xl border transition-all duration-200',
-                'bg-slate-800/50 border-slate-700',
-                'hover:bg-slate-700 hover:border-slate-600',
-                hoveredKey === `WORD_${index}` && 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 border-blue-500/50 text-white shadow-lg shadow-blue-500/10'
+                'rounded-xl border px-4 py-2 text-sm font-medium transition',
+                hoveredKey === `WORD_${index}`
+                  ? 'border-cyan-300/50 bg-cyan-300/15 text-white'
+                  : 'border-slate-600 bg-slate-900 text-slate-200 hover:border-slate-400 hover:bg-slate-800'
               )}
             >
-              <span className={cn(
-                'text-slate-300',
-                hoveredKey === `WORD_${index}` && 'text-white'
-              )}>
-                {word}
-              </span>
+              {word}
             </motion.button>
           ))}
         </div>
       ) : (
-        <div className="text-sm text-slate-500 italic py-2 flex items-center gap-2">
-          <span className="w-1 h-1 rounded-full bg-slate-600" />
-          No words found from collected letters
-        </div>
+        <p className="text-sm text-slate-500">No suggestions available from the recent key sequence.</p>
       )}
-    </motion.div>
+    </motion.section>
   )
 }

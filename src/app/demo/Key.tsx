@@ -24,27 +24,28 @@ export default function Key({
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const [ripple, setRipple] = useState<{ x: number; y: number } | null>(null)
 
-  /* ---------- SAFE AUDIO (SELECTION ONLY) ---------- */
   const handleSelect = (e: React.MouseEvent | React.TouchEvent) => {
-    // Create ripple effect
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
-    const x = 'touches' in e ? ((e as React.TouchEvent).touches[0]?.clientX ?? 0) - rect.left : (e as React.MouseEvent).clientX - rect.left
-    const y = 'touches' in e ? ((e as React.TouchEvent).touches[0]?.clientY ?? 0) - rect.top : (e as React.MouseEvent).clientY - rect.top
-    setRipple({ x, y })
-    setTimeout(() => setRipple(null), 600)
+    const x = 'touches' in e
+      ? ((e as React.TouchEvent).touches[0]?.clientX ?? 0) - rect.left
+      : (e as React.MouseEvent).clientX - rect.left
+    const y = 'touches' in e
+      ? ((e as React.TouchEvent).touches[0]?.clientY ?? 0) - rect.top
+      : (e as React.MouseEvent).clientY - rect.top
 
-    // Play audio
+    setRipple({ x, y })
+    setTimeout(() => setRipple(null), 500)
+
     if (audioRef.current) {
       audioRef.current.currentTime = 0
-      audioRef.current.play().catch(() => { })
+      audioRef.current.play().catch(() => {})
     } else if (typeof Audio !== 'undefined') {
       const audio = new Audio('/click.mp3')
-      audio.volume = 0.25
-      audio.play().catch(() => { })
+      audio.volume = 0.22
+      audio.play().catch(() => {})
       audioRef.current = audio
     }
 
-    // Haptic feedback
     if ('vibrate' in navigator) {
       navigator.vibrate(8)
     }
@@ -68,36 +69,23 @@ export default function Key({
         onMouseLeave?.()
         setTimeout(() => handleSelect(e), 40)
       }}
-      whileTap={{ scale: 0.95 }}
+      whileTap={{ scale: 0.96 }}
     >
-      {/* KEY BODY */}
       <motion.div
         className={cn(
-          'flex items-center justify-center relative overflow-hidden',
-          'h-12 w-12 sm:h-14 sm:w-14',
-          'rounded-xl border font-semibold text-lg',
-          'select-none cursor-default transition-all duration-200',
+          'relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl border text-lg font-semibold transition-all sm:h-14 sm:w-14',
           isHovered
-            ? 'bg-gradient-to-br from-blue-500 to-purple-600 border-blue-400/50 text-white shadow-lg'
-            : 'bg-slate-800/80 border-slate-700 text-slate-200 hover:bg-slate-700 hover:border-slate-600'
+            ? 'border-cyan-300/50 bg-gradient-to-br from-cyan-500/35 to-blue-500/35 text-white shadow-[0_0_0_1px_rgba(125,211,252,0.22),0_12px_24px_rgba(14,116,144,0.35)]'
+            : 'border-slate-600 bg-slate-900/85 text-slate-100 hover:border-slate-400 hover:bg-slate-800'
         )}
-        animate={isHovered ? {
-          boxShadow: [
-            '0 0 20px rgba(59, 130, 246, 0.3), 0 0 40px rgba(139, 92, 246, 0.2)',
-            '0 0 30px rgba(59, 130, 246, 0.4), 0 0 50px rgba(139, 92, 246, 0.3)',
-            '0 0 20px rgba(59, 130, 246, 0.3), 0 0 40px rgba(139, 92, 246, 0.2)',
-          ],
-          scale: 1.08,
-        } : { scale: 1 }}
-        transition={{ duration: 1, repeat: isHovered ? Infinity : 0 }}
+        animate={isHovered ? { y: -2, scale: 1.05 } : { y: 0, scale: 1 }}
+        transition={{ duration: 0.15 }}
       >
-        {/* Letter */}
         <span className="relative z-10">{letter}</span>
 
-        {/* Ripple effect */}
         {ripple && (
           <motion.span
-            className="absolute bg-white/30 rounded-full pointer-events-none"
+            className="pointer-events-none absolute rounded-full bg-white/30"
             style={{
               left: ripple.x,
               top: ripple.y,
@@ -106,64 +94,26 @@ export default function Key({
               marginLeft: -5,
               marginTop: -5,
             }}
-            initial={{ scale: 0, opacity: 0.6 }}
-            animate={{ scale: 10, opacity: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
+            initial={{ scale: 0, opacity: 0.5 }}
+            animate={{ scale: 8, opacity: 0 }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
           />
         )}
 
-        {/* Inner glow when hovered */}
-        {isHovered && (
-          <div className="absolute inset-0 bg-gradient-to-t from-white/10 to-transparent" />
-        )}
+        {isHovered && <div className="absolute inset-0 bg-gradient-to-t from-white/10 to-transparent" />}
       </motion.div>
 
-      {/* DWELL PROGRESS - Enhanced */}
       {isHovered && dwellProgress > 0 && (
         <motion.div
-          className="absolute inset-x-0 -bottom-3 h-2 rounded-full bg-slate-800 overflow-hidden border border-slate-700"
-          initial={{ opacity: 0, y: -5 }}
-          animate={{ opacity: 1, y: 0 }}
+          className="absolute inset-x-0 -bottom-2 h-1.5 overflow-hidden rounded-full border border-cyan-500/30 bg-slate-900"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
         >
-          <motion.div
-            className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500"
-            style={{
-              width: `${dwellProgress}%`,
-              backgroundSize: '200% 100%',
-            }}
-            animate={{
-              backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
-            }}
-            transition={{ duration: 2, repeat: Infinity }}
+          <div
+            className="h-full rounded-full bg-gradient-to-r from-cyan-300 via-blue-300 to-emerald-300 transition-all"
+            style={{ width: `${dwellProgress}%` }}
           />
         </motion.div>
-      )}
-
-      {/* Outer glow effect on hover */}
-      {isHovered && (
-        <motion.div
-          className="absolute inset-0 rounded-xl -z-10"
-          initial={{ opacity: 0 }}
-          animate={{
-            opacity: [0.3, 0.5, 0.3],
-            scale: [1, 1.15, 1],
-          }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-          style={{
-            background: 'radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, transparent 70%)',
-            filter: 'blur(8px)',
-          }}
-        />
-      )}
-
-      {/* Pulse ring when dwelling */}
-      {isHovered && dwellProgress > 50 && (
-        <motion.div
-          className="absolute inset-0 rounded-xl border-2 border-blue-400 -z-10"
-          initial={{ scale: 1, opacity: 0.5 }}
-          animate={{ scale: 1.3, opacity: 0 }}
-          transition={{ duration: 0.8, repeat: Infinity }}
-        />
       )}
     </motion.div>
   )
